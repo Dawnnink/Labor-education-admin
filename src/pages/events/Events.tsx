@@ -1,5 +1,12 @@
+import { Stack } from '@mui/joy'
+import { EventTable } from '~/components/EventTable'
+
 const Events = () => {
-  return <div>Events</div>
+  return (
+    <Stack>
+      <EventTable />
+    </Stack>
+  )
 }
 
 export default Events

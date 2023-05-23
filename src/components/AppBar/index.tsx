@@ -4,7 +4,14 @@ import logoSvg from './logo.svg'
 
 const Brand = () => {
   return (
-    <Stack spacing={2} direction="row" alignItems="center">
+    <Stack
+      spacing={2}
+      direction="row"
+      alignItems="center"
+      sx={{
+        userSelect: 'none',
+      }}
+    >
       <img src={logoSvg} />
       <Typography level="h5">南昌大学劳动教育平台管理端</Typography>
     </Stack>
