@@ -34,6 +34,13 @@ const joyTheme = joyExtendTheme({
       },
     },
   },
+  colorSchemes: {
+    dark: {
+      palette: {
+        background: { body: '#191921' },
+      },
+    },
+  },
 })
 
 // https://mui.com/joy-ui/guides/using-joy-ui-and-material-ui-together/
