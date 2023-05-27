@@ -1,6 +1,7 @@
 import { Box, Button, Link, Stack, Table } from '@mui/joy'
 import { Activity } from '~/utils/types'
 import { ActivitiesStatus } from '../ActivityStatus'
+import { Link as RouterLink } from 'react-router-dom'
 
 export interface ActivityTableProps {
   activities: Activity[]
@@ -29,14 +30,15 @@ export const ActivityTable = ({
           <th>名额</th>
           <th>报名截至</th>
           <th>活动开始</th>
-          <th>操作</th>
         </tr>
       </thead>
       <tbody>
         {activities.map((activity) => (
           <tr key={activity.id}>
             <td>
-              <Link>{activity.name}</Link>
+              <Link component={RouterLink} to={`/activities/${activity.id}`}>
+                {activity.name}
+              </Link>
             </td>
             <td>
               <ActivitiesStatus status={activity.state} />
@@ -45,14 +47,6 @@ export const ActivityTable = ({
             <td>{activity.quota}</td>
             <td>{new Date(activity.activity_end_time).toLocaleString()}</td>
             <td>{new Date(activity.activity_start_time).toLocaleString()}</td>
-            <td>
-              <Stack direction="row" spacing={1}>
-                <Button size="sm">导出名单</Button>
-                <Button size="sm" color="danger">
-                  删除
-                </Button>
-              </Stack>
-            </td>
           </tr>
         ))}
         {activities.length === 0 && (
