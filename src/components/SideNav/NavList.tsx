@@ -18,7 +18,7 @@ export interface NavListButtonProps {
 }
 
 const NavListButton = ({ to, title, Icon }: NavListButtonProps) => {
-  const match = useMatch(to)
+  const match = useMatch(to + '/*')
   return (
     <ListItemButton
       selected={!!match}
