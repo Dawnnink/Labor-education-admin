@@ -1,12 +1,12 @@
 import { Box, Button, Link, Stack, Table } from '@mui/joy'
 import { Activity } from '~/utils/types'
-import { ActivityStatus } from '../ActivityStatus'
+import { ActivitiesStatus } from '../ActivityStatus'
 
-export interface EventTableProps {
+export interface ActivityTableProps {
   activities: Activity[]
 }
 
-export const EventTable = ({
+export const ActivityTable = ({
   activities = [
     {
       id: 1,
@@ -18,7 +18,7 @@ export const EventTable = ({
       activity_start_time: '2021-10-10T00:00:00.000Z',
     },
   ],
-}: EventTableProps) => {
+}: ActivityTableProps) => {
   return (
     <Table>
       <thead>
@@ -39,7 +39,7 @@ export const EventTable = ({
               <Link>{activity.name}</Link>
             </td>
             <td>
-              <ActivityStatus status={activity.state} />
+              <ActivitiesStatus status={activity.state} />
             </td>
             <td>{activity.enroll_number}</td>
             <td>{activity.quota}</td>

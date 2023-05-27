@@ -5,7 +5,7 @@ import { Activity } from '~/utils/types'
  *
  * @returns A component of a dot with different colors representing different activity status and the status name.
  */
-export const ActivityStatus = ({
+export const ActivitiesStatus = ({
   status,
   size = 8,
 }: {

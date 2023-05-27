@@ -1,11 +1,11 @@
 import { Breadcrumbs, Link, Stack, Typography } from '@mui/joy'
 import { Outlet } from 'react-router-dom'
 
-const EventsLayout = () => {
+const ActivitiesLayout = () => {
   return (
     <Stack spacing={2}>
       <Breadcrumbs>
-        <Link href="/events">活动管理</Link>
+        <Link href="/activities">活动管理</Link>
         <Typography fontSize="inherit">创建活动</Typography>
       </Breadcrumbs>
 
@@ -14,4 +14,4 @@ const EventsLayout = () => {
   )
 }
 
-export default EventsLayout
+export default ActivitiesLayout

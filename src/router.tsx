@@ -5,10 +5,12 @@ import { makeLazy } from './utils/lazy'
 
 // Lazily import pages for code-splitting.
 const Dashboard = makeLazy(() => import('./pages/Dashboard'))
-const Events = makeLazy(() => import('./pages/events/Events'))
-const Create = makeLazy(() => import('./pages/events/Create'))
-const Details = makeLazy(() => import('./pages/events/Details'))
-const EventsLayout = makeLazy(() => import('./pages/events/EventsLayout'))
+const Activities = makeLazy(() => import('./pages/activities/Activities'))
+const Create = makeLazy(() => import('./pages/activities/Create'))
+const Details = makeLazy(() => import('./pages/activities/Details'))
+const ActivitiesLayout = makeLazy(
+  () => import('./pages/activities/ActivitiesLayout')
+)
 const Permission = makeLazy(() => import('./pages/Permission'))
 
 export const router = createBrowserRouter([
@@ -25,12 +27,12 @@ export const router = createBrowserRouter([
         element: <Dashboard />,
       },
       {
-        path: 'events',
-        element: <EventsLayout />,
+        path: 'activities',
+        element: <ActivitiesLayout />,
         children: [
           {
             path: '',
-            element: <Events />,
+            element: <Activities />,
           },
           {
             path: 'create',
