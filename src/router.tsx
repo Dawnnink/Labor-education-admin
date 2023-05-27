@@ -9,6 +9,7 @@ const Events = makeLazy(() => import('./pages/events/Events'))
 const Create = makeLazy(() => import('./pages/events/Create'))
 const Details = makeLazy(() => import('./pages/events/Details'))
 const EventsLayout = makeLazy(() => import('./pages/events/EventsLayout'))
+const Permission = makeLazy(() => import('./pages/Permission'))
 
 export const router = createBrowserRouter([
   {
@@ -40,6 +41,10 @@ export const router = createBrowserRouter([
             element: <Details />,
           },
         ],
+      },
+      {
+        path: 'permission',
+        element: <Permission />,
       },
     ],
   },

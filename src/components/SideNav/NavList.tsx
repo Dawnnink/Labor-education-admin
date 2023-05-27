@@ -1,5 +1,6 @@
 import EventNoteIcon from '@mui/icons-material/EventNote'
 import DashboardIcon from '@mui/icons-material/Dashboard'
+import ManageAccountsIcon from '@mui/icons-material/ManageAccounts'
 import {
   List,
   ListItem,
@@ -36,6 +37,7 @@ const NavListButton = ({ to, title, Icon }: NavListButtonProps) => {
 const links: NavListButtonProps[] = [
   { title: '活动大厅', to: '/dashboard', Icon: DashboardIcon },
   { title: '活动管理', to: '/events', Icon: EventNoteIcon },
+  { title: '权限管理', to: '/permission', Icon: ManageAccountsIcon },
 ]
 
 export const NavList = () => {
