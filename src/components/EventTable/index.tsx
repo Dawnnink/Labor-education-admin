@@ -1,3 +1,72 @@
-export const EventTable = () => {
-  return <div>EventTable</div>
+import { Box, Button, Link, Stack, Table } from '@mui/joy'
+import { Activity } from '~/utils/types'
+import { ActivityStatus } from '../ActivityStatus'
+
+export interface EventTableProps {
+  activities: Activity[]
+}
+
+export const EventTable = ({
+  activities = [
+    {
+      id: 1,
+      name: '活动1',
+      state: '审核失败',
+      enroll_number: 10,
+      quota: 100,
+      activity_end_time: '2021-10-10T00:00:00.000Z',
+      activity_start_time: '2021-10-10T00:00:00.000Z',
+    },
+  ],
+}: EventTableProps) => {
+  return (
+    <Table>
+      <thead>
+        <tr>
+          <th>活动名称</th>
+          <th>活动状态</th>
+          <th>报名人数</th>
+          <th>名额</th>
+          <th>报名截至</th>
+          <th>活动开始</th>
+          <th>操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        {activities.map((activity) => (
+          <tr key={activity.id}>
+            <td>
+              <Link>{activity.name}</Link>
+            </td>
+            <td>
+              <ActivityStatus status={activity.state} />
+            </td>
+            <td>{activity.enroll_number}</td>
+            <td>{activity.quota}</td>
+            <td>{new Date(activity.activity_end_time).toLocaleString()}</td>
+            <td>{new Date(activity.activity_start_time).toLocaleString()}</td>
+            <td>
+              <Stack direction="row" spacing={1}>
+                <Button size="sm">导出名单</Button>
+                <Button size="sm" color="danger">
+                  删除
+                </Button>
+              </Stack>
+            </td>
+          </tr>
+        ))}
+        {activities.length === 0 && (
+          <Box
+            component="tr"
+            sx={() => ({
+              textAlign: 'center',
+              opacity: 0.7,
+            })}
+          >
+            <td colSpan={7}>暂无活动</td>
+          </Box>
+        )}
+      </tbody>
+    </Table>
+  )
 }
