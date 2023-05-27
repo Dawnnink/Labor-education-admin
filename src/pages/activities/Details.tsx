@@ -1,7 +1,7 @@
 import { Stack } from '@mui/joy'
 import { useParams } from 'react-router-dom'
 import { ActivityEditor } from '~/components/ActivityEditor'
-import { Activitiestudents } from '~/components/Activitiestudents'
+import { ActivityStudents } from '~/components/ActivityStudents'
 
 const Details = () => {
   const { id } = useParams()
@@ -12,7 +12,7 @@ const Details = () => {
   return (
     <Stack spacing={2}>
       <Stack direction="row" spacing={2}></Stack>
-      <Activitiestudents activityId={activityId} />
+      <ActivityStudents activityId={activityId} />
       <ActivityEditor activityId={activityId} />
     </Stack>
   )
