@@ -1,4 +1,4 @@
-import { Box, Button, Link, Stack, Table } from '@mui/joy'
+import { Box, Link, Table } from '@mui/joy'
 import { Activity } from '~/utils/types'
 import { ActivitiesStatus } from '../ActivityStatus'
 import { Link as RouterLink } from 'react-router-dom'

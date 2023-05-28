@@ -1,4 +1,4 @@
-import { Stack } from '@mui/joy'
+import { Box, Stack } from '@mui/joy'
 import { ActivityTable } from '~/components/ActivityTable'
 
 const Activities = () => {

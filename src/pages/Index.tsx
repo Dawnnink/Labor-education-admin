@@ -32,6 +32,7 @@ const Index = () => {
           backgroundColor:
             theme.palette.mode === 'light' ? '#fbfbfb' : undefined,
           minHeight: '100vh',
+          width: '100%',
         })}
       >
         <AppBar
@@ -41,6 +42,7 @@ const Index = () => {
         <Container
           sx={{
             py: 2,
+            width: '100%',
           }}
         >
           <Outlet />
