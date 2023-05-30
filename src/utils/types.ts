@@ -20,3 +20,11 @@ export interface Activity {
   activity_start_time: string
   activity_end_time: string
 }
+
+export interface User {
+  id: number
+  college: string
+  sex: '男' | '女'
+  class: string
+  phone_number: string
+}
