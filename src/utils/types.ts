@@ -23,6 +23,9 @@ export interface Activity {
 
 export interface User {
   id: number
+  name: string
+  uid: string
+  avatar: string
   college: string
   sex: '男' | '女'
   class: string

@@ -19,7 +19,7 @@ const Details = () => {
     >
       <Stack direction="row" spacing={2}></Stack>
       <OverflowWrapper>
-        <ActivityStudents activityId={activityId} />
+        <ActivityStudents students={[]} />
       </OverflowWrapper>
       <ActivityEditor activityId={activityId} />
     </Stack>

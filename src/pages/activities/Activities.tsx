@@ -4,7 +4,7 @@ import { ActivityTable } from '~/components/ActivityTable'
 const Activities = () => {
   return (
     <Stack>
-      <ActivityTable />
+      <ActivityTable activities={[]} />
     </Stack>
   )
 }

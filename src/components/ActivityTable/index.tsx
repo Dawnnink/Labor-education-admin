@@ -1,7 +1,7 @@
-import { Box, Link, Table } from '@mui/joy'
+import { Box, Link, Table, useTheme } from '@mui/joy'
 import { Activity } from '~/utils/types'
-import { ActivitiesStatus } from '../ActivityStatus'
 import { Link as RouterLink } from 'react-router-dom'
+import { StatusDot } from '../StatusDot'
 
 export interface ActivityTableProps {
   activities: Activity[]
@@ -20,6 +20,19 @@ export const ActivityTable = ({
     },
   ],
 }: ActivityTableProps) => {
+  const theme = useTheme()
+  const getColor = (status: string) => {
+    switch (status) {
+      case '审核成功':
+        return theme.palette.success.solidBg
+      case '审核失败':
+        return theme.palette.danger.solidBg
+      case '审核中':
+        return theme.palette.warning.solidBg
+      default:
+        return theme.palette.neutral.solidBg
+    }
+  }
   return (
     <Table>
       <thead>
@@ -41,7 +54,7 @@ export const ActivityTable = ({
               </Link>
             </td>
             <td>
-              <ActivitiesStatus status={activity.state} />
+              <StatusDot status={activity.state} getColor={getColor} />
             </td>
             <td>{activity.enroll_number}</td>
             <td>{activity.quota}</td>

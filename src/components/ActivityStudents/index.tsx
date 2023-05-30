@@ -1,12 +1,34 @@
-import { Box, Stack, Table } from '@mui/joy'
+import { Box, Stack, Table, useTheme } from '@mui/joy'
 import { GenderIcon } from '../GenderIcon'
 import { ExpandableText } from '../ExpandableText'
+import { User } from '~/utils/types'
+import { StatusDot } from '../StatusDot'
 
 export interface ActivityStudentsProps {
-  activityId: number
+  students: {
+    participate_time: string // ISO 8601
+    participate_reason: string
+    comment: string
+    state: '报名成功' | '报名失败' | '报名审核中'
+    check_in: string // ISO 8601
+    user: User
+  }[]
 }
+export const ActivityStudents = ({ students }: ActivityStudentsProps) => {
+  const theme = useTheme()
+  const getColor = (status: string) => {
+    switch (status) {
+      case '报名成功':
+        return theme.palette.success.solidBg
+      case '报名失败':
+        return theme.palette.danger.solidBg
+      case '报名审核中':
+        return theme.palette.warning.solidBg
+      default:
+        return theme.palette.neutral.solidBg
+    }
+  }
 
-export const ActivityStudents = ({ activityId }: ActivityStudentsProps) => {
   return (
     <Table>
       <thead>
@@ -16,41 +38,40 @@ export const ActivityStudents = ({ activityId }: ActivityStudentsProps) => {
           <th>专业</th>
           <th>班级</th>
           <th>申请理由</th>
+          <th>报名状态</th>
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td>
-            <Stack direction="row" spacing={1} alignItems="center">
-              <Box>张三</Box>
-              <GenderIcon gender="女" />
-            </Stack>
-          </td>
-          <td>2018210000</td>
-          <td>计算机科学与技术</td>
-          <td>计科1801</td>
-          <td>
-            <ExpandableText text={'计算机科学与技术计算机科学与技技'} />
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <Stack direction="row" spacing={1} alignItems="center">
-              <Box>张三</Box>
-              <GenderIcon gender="男" />
-            </Stack>
-          </td>
-          <td>2018210000</td>
-          <td>计算机科学与技术</td>
-          <td>计科1801</td>
-          <td>
-            <ExpandableText
-              text={
-                'wsawtwdad wt awtdaw dwadh aw d wah a wwahwd \n watwad w haw'
-              }
-            />
-          </td>
-        </tr>
+        {students.map((student, i) => (
+          <tr key={i}>
+            <td>
+              <Stack direction="row" spacing={1} alignItems="center">
+                <Box>{student.user.name}</Box>
+                <GenderIcon gender={student.user.sex} />
+              </Stack>
+            </td>
+            <td>{student.user.id}</td>
+            <td>{student.user.college}</td>
+            <td>{student.user.class}</td>
+            <td>
+              <ExpandableText text={student.participate_reason} />
+            </td>
+            <td>
+              <StatusDot status={student.state} getColor={getColor} />
+            </td>
+          </tr>
+        ))}
+        {students.length === 0 && (
+          <Box
+            component="tr"
+            sx={() => ({
+              textAlign: 'center',
+              opacity: 0.7,
+            })}
+          >
+            <td colSpan={6}>暂无数据</td>
+          </Box>
+        )}
       </tbody>
     </Table>
   )

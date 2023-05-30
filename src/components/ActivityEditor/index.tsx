@@ -17,13 +17,14 @@ import { useMediaQuery } from '@mui/material'
 import LocationOnIcon from '@mui/icons-material/LocationOn'
 import PersonIcon from '@mui/icons-material/Person'
 import LocalPhoneIcon from '@mui/icons-material/LocalPhone'
+import { Activity } from '~/utils/types'
 
 export interface ActivityEditorProps {
-  activityId: number | null
+  initialActivity: Activity | null
 }
 
-export const ActivityEditor = ({ activityId }: ActivityEditorProps) => {
-  const disabled = activityId === null
+export const ActivityEditor = ({ initialActivity }: ActivityEditorProps) => {
+  const disabled = initialActivity === null
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
