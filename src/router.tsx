@@ -12,8 +12,14 @@ const ActivitiesLayout = makeLazy(
   () => import('./pages/activities/ActivitiesLayout')
 )
 const Permission = makeLazy(() => import('./pages/Permission'))
+const Login = makeLazy(() => import('./pages/Login'))
 
 export const router = createBrowserRouter([
+  {
+    path: 'login',
+    element: <Login />,
+  },
+
   {
     path: '/',
     element: <Index />,

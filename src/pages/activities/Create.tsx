@@ -1,7 +1,7 @@
 import { ActivityEditor } from '~/components/ActivityEditor'
 
 const Create = () => {
-  return <ActivityEditor activityId={null} />
+  return <ActivityEditor initialActivity={null} />
 }
 
 export default Create
