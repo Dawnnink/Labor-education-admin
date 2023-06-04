@@ -9,9 +9,11 @@ import {
   FormControl,
   FormLabel,
 } from '@mui/joy'
+import { AxiosError } from 'axios'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { LoginBackground } from '~/components/LoginBackground'
+import { network } from '~/utils/network'
 
 export default function Login() {
   const [credentials, setCredentials] = useState({
@@ -28,14 +30,11 @@ export default function Login() {
     ;(async () => {
       try {
         setSubmitting(true)
-
-        await service.login(credentials)
+        await network.login(credentials)
+        navigate('/', { replace: true })
       } catch (err) {
         if (err instanceof AxiosError) {
-          let message: string | undefined = err.response?.data.type
-          if (message?.includes('账号不存在')) {
-            message += '，请检查账号类型'
-          }
+          const message: string | undefined = err.response?.data.message
           setErrorMessage(message || err.message)
         } else if (err instanceof Error) {
           setErrorMessage(err.message)
