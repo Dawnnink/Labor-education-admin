@@ -1,6 +1,7 @@
 import MenuIcon from '@mui/icons-material/Menu'
-import { IconButton, IconButtonProps, Stack, Typography } from '@mui/joy'
+import { Box, IconButton, IconButtonProps, Stack, Typography } from '@mui/joy'
 import logoSvg from './logo.svg'
+import { UserInfo } from '../UserInfo'
 
 const Brand = () => {
   return (
@@ -54,6 +55,8 @@ export const AppBar = ({ onMenuClick, showMenuButton }: AppBarProps) => {
         </IconButton>
       )}
       <Brand />
+      <Box sx={{ flexGrow: 1 }} />
+      <UserInfo name="管理员" />
     </Stack>
   )
 }
