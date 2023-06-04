@@ -1,7 +1,8 @@
 import axios, { AxiosError, AxiosInstance } from 'axios'
 import useSWR from 'swr'
 import { useStore } from './store'
-import { User } from './types'
+import { Activity, User } from './types'
+import { ActivityStudentsProps } from '~/components/ActivityStudents'
 
 export type ApiError = AxiosError<{
   code: number
@@ -107,6 +108,23 @@ export class Service extends BaseService {
 
   useUser = () => {
     return this.useGet<User>(`/user/info`)
+  }
+
+  teacher = {
+    useActivities: () => {
+      return this.useGet<Activity[]>(`/teacher/activity/list`)
+    },
+
+    useActivity: (id: number) => {
+      return this.useGet<Activity>(`/teacher/activity/detail`, { id })
+    },
+
+    useActivityStudents: (id: number) => {
+      return this.useGet<ActivityStudentsProps['students']>(
+        `/teacher/activity/participate`,
+        { id }
+      )
+    },
   }
 }
 

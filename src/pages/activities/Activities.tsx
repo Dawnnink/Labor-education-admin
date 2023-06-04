@@ -1,22 +1,14 @@
 import { Stack } from '@mui/joy'
 import { ActivityTable } from '~/components/ActivityTable'
+import { ErrorDisplay } from '~/components/ErrorDisplay'
+import { network } from '~/utils/network'
 
 const Activities = () => {
+  const { data, error } = network.teacher.useActivities()
   return (
-    <Stack>
-      <ActivityTable
-        activities={[
-          {
-            id: 1,
-            name: '活动1',
-            state: '审核失败',
-            enroll_number: 10,
-            quota: 100,
-            activity_end_time: '2021-10-10T00:00:00.000Z',
-            activity_start_time: '2021-10-10T00:00:00.000Z',
-          },
-        ]}
-      />
+    <Stack spacing={2}>
+      <ErrorDisplay error={error} />
+      {data && <ActivityTable activities={data} />}
     </Stack>
   )
 }

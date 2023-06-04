@@ -2,10 +2,14 @@ import { Stack } from '@mui/joy'
 import { useParams } from 'react-router-dom'
 import { ActivityEditor } from '~/components/ActivityEditor'
 import { ActivityStudents } from '~/components/ActivityStudents'
+import { ErrorDisplay } from '~/components/ErrorDisplay'
 import { OverflowWrapper } from '~/components/OverflowWrapper'
+import { network } from '~/utils/network'
 
 const DetailsWithParams = ({ activityId }: { activityId: number }) => {
-  const data = {}
+  const { data: activity, error } = network.teacher.useActivity(activityId)
+  const { data: students } = network.teacher.useActivityStudents(activityId)
+
   return (
     <Stack
       spacing={2}
@@ -13,11 +17,11 @@ const DetailsWithParams = ({ activityId }: { activityId: number }) => {
         width: '100%',
       }}
     >
-      <Stack direction="row" spacing={2}></Stack>
+      <ErrorDisplay error={error} />
       <OverflowWrapper>
-        <ActivityStudents students={[]} />
+        {students && <ActivityStudents students={students} />}
       </OverflowWrapper>
-      <ActivityEditor initialActivity={data} />
+      {activity && <ActivityEditor initialActivity={activity} />}
     </Stack>
   )
 }
