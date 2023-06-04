@@ -44,11 +44,13 @@ export class BaseService {
 }
 
 export interface AuthRequest {
-  account: string
+  username: string
   password: string
 }
 export interface AuthResponse {
   token: string
+  message: string
+  status: number
 }
 
 export interface UpdatePasswordRequest {
@@ -87,8 +89,14 @@ export class Service extends BaseService {
 
   login = async (request: AuthRequest) => {
     const {
-      data: { token },
-    } = await this.axios.post<AuthResponse>(`/user/token`, request)
+      data: { token, message, status },
+    } = await this.axios.post<AuthResponse>(
+      `https://os.ncuos.com/api/user/token`,
+      request
+    )
+    if (status !== 1) {
+      throw new Error(message)
+    }
     useStore.getState().login(token)
   }
 

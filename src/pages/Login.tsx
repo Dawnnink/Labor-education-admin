@@ -17,7 +17,7 @@ import { network } from '~/utils/network'
 
 export default function Login() {
   const [credentials, setCredentials] = useState({
-    account: '',
+    username: '',
     password: '',
   })
   const [submitting, setSubmitting] = useState(false)
@@ -98,11 +98,11 @@ export default function Login() {
                   color="primary"
                   fullWidth
                   required
-                  value={credentials.account}
+                  value={credentials.username}
                   onChange={(event) => {
                     setCredentials({
                       ...credentials,
-                      account: event.target.value,
+                      username: event.target.value,
                     })
                     if (!event.target.value && !credentials.password) {
                       setErrorMessage('')
@@ -126,7 +126,7 @@ export default function Login() {
                       ...credentials,
                       password: event.target.value,
                     })
-                    if (!credentials.account && !event.target.value) {
+                    if (!credentials.username && !event.target.value) {
                       setErrorMessage('')
                     }
                   }}

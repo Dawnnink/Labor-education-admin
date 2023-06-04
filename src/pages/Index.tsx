@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { Outlet } from 'react-router-dom'
 import { AppBar } from '~/components/AppBar'
 import { SideNav } from '~/components/SideNav'
+import { network } from '~/utils/network'
 
 const Index = () => {
   const theme = useTheme()
@@ -17,6 +18,8 @@ const Index = () => {
   useEffect(() => {
     setTemporaryDrawerOpen(false)
   }, [upLg])
+
+  const { data: user } = network.useUser()
 
   return (
     <Stack direction="row">
@@ -38,6 +41,7 @@ const Index = () => {
         <AppBar
           onMenuClick={() => setTemporaryDrawerOpen((v) => !v)}
           showMenuButton={!upLg}
+          user={user}
         />
         <Container
           sx={{

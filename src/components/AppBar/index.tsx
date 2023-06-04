@@ -2,6 +2,7 @@ import MenuIcon from '@mui/icons-material/Menu'
 import { Box, IconButton, IconButtonProps, Stack, Typography } from '@mui/joy'
 import logoSvg from './logo.svg'
 import { UserInfo } from '../UserInfo'
+import { User } from '~/utils/types'
 
 const Brand = () => {
   return (
@@ -22,9 +23,10 @@ const Brand = () => {
 export interface AppBarProps {
   onMenuClick?: IconButtonProps['onClick']
   showMenuButton?: boolean
+  user?: User
 }
 
-export const AppBar = ({ onMenuClick, showMenuButton }: AppBarProps) => {
+export const AppBar = ({ onMenuClick, showMenuButton, user }: AppBarProps) => {
   return (
     <Stack
       spacing={2}
@@ -56,7 +58,7 @@ export const AppBar = ({ onMenuClick, showMenuButton }: AppBarProps) => {
       )}
       <Brand />
       <Box sx={{ flexGrow: 1 }} />
-      <UserInfo name="管理员" />
+      {user && <UserInfo name={user.name} avatarUrl={user.avatar} />}
     </Stack>
   )
 }
