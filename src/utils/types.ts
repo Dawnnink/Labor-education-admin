@@ -31,3 +31,8 @@ export interface User {
   class?: string
   phone_number: string
 }
+
+export interface Department {
+  id: number
+  name: string
+}

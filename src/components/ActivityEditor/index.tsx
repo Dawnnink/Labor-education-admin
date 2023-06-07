@@ -11,7 +11,7 @@ import {
   Textarea,
   useTheme,
 } from '@mui/joy'
-import { FormEvent, useCallback, useState } from 'react'
+import { FormEvent, useState } from 'react'
 import { InputDateRange } from '../InputDateRange'
 import { ImageUploader } from '../ImageUploader'
 import { useMediaQuery } from '@mui/material'
@@ -19,29 +19,16 @@ import LocationOnIcon from '@mui/icons-material/LocationOn'
 import PersonIcon from '@mui/icons-material/Person'
 import LocalPhoneIcon from '@mui/icons-material/LocalPhone'
 import { Activity } from '~/utils/types'
+import { NewActivity, network } from '~/utils/network'
 export interface ActivityEditorProps {
   initialActivity: Activity | null
+  disabled?: boolean
 }
 
-type NewActivity = Pick<
-  Activity,
-  | 'department_id'
-  | 'name'
-  | 'description'
-  | 'poster'
-  | 'icon'
-  | 'position'
-  | 'contact_person'
-  | 'contact_phone_number'
-  | 'need_audit'
-  | 'quota'
-  | 'registration_start_time'
-  | 'registration_end_time'
-  | 'activity_start_time'
-  | 'activity_end_time'
->
-
-export const ActivityEditor = ({ initialActivity }: ActivityEditorProps) => {
+export const ActivityEditor = ({
+  initialActivity,
+  disabled,
+}: ActivityEditorProps) => {
   const [activity, setActivity] = useState<Activity | NewActivity>(
     initialActivity ?? {
       name: '',
@@ -69,12 +56,8 @@ export const ActivityEditor = ({ initialActivity }: ActivityEditorProps) => {
     initialActivity?.department_id ?? null
   )
 
-  const disabled = initialActivity === null
-  const Input = useCallback(
-    (props: React.ComponentProps<typeof JoyInput>) => (
-      <Input disabled={disabled} {...props} />
-    ),
-    [disabled]
+  const Input = (props: React.ComponentProps<typeof JoyInput>) => (
+    <Input disabled={disabled} {...props} />
   )
 
   const theme = useTheme()
@@ -83,18 +66,13 @@ export const ActivityEditor = ({ initialActivity }: ActivityEditorProps) => {
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     if (initialActivity === null) {
-      createActivity()
+      network.teacher.createActivity(activity)
     } else {
-      updateActivity()
+      if (!('id' in activity)) {
+        throw new Error('Expect Activity for updateActivity')
+      }
+      network.teacher.updateActivity(activity)
     }
-  }
-
-  const createActivity = () => {
-    // Logic for creating a new activity
-  }
-
-  const updateActivity = () => {
-    // Logic for updating an existing activity
   }
 
   const handleChange = (
@@ -147,13 +125,7 @@ export const ActivityEditor = ({ initialActivity }: ActivityEditorProps) => {
     }))
   }
 
-  const departments = [
-    // Mock data
-    {
-      id: 1,
-      name: 'test',
-    },
-  ]
+  const { data: departments } = network.teacher.useDepartment()
 
   return (
     <Stack component="form" onSubmit={handleSubmit} spacing={2}>
@@ -245,7 +217,8 @@ export const ActivityEditor = ({ initialActivity }: ActivityEditorProps) => {
       <FormControl>
         <FormLabel>发布部门</FormLabel>
         <Autocomplete
-          options={departments.map((v) => v.id)}
+          loading={!!departments}
+          options={(departments ?? []).map((v) => v.id)}
           sx={{
             maxWidth: 250,
           }}
@@ -253,7 +226,7 @@ export const ActivityEditor = ({ initialActivity }: ActivityEditorProps) => {
           value={selectedDepartmentId}
           name="department"
           getOptionLabel={(option) =>
-            departments.find((v) => v.id === option)?.name || ''
+            departments?.find((v) => v.id === option)?.name ?? ''
           }
           onChange={(_, value) => setSelectedDepartmentId(value)}
         />
@@ -285,7 +258,7 @@ export const ActivityEditor = ({ initialActivity }: ActivityEditorProps) => {
               <Box>人</Box>
             </Stack>
           }
-          value={activity?.quota || ''}
+          value={quotaString}
           onChange={handleQuotaChange}
         />
       </FormControl>
@@ -296,7 +269,7 @@ export const ActivityEditor = ({ initialActivity }: ActivityEditorProps) => {
         onChange={handleChange}
       />
       <Stack direction="row" spacing={2}>
-        {initialActivity === null ? (
+        {disabled ? null : initialActivity === null ? (
           <Button type="submit" variant="solid">
             创建活动
           </Button>

@@ -1,8 +1,9 @@
 import axios, { AxiosError, AxiosInstance } from 'axios'
 import useSWR from 'swr'
 import { useStore } from './store'
-import { Activity, User } from './types'
+import { Activity, Department, User } from './types'
 import { ActivityStudentsProps } from '~/components/ActivityStudents'
+import fileDownload from 'js-file-download'
 
 export type ApiError = AxiosError<{
   code: number
@@ -59,6 +60,23 @@ export interface UpdatePasswordRequest {
   new_password: string
 }
 
+export type NewActivity = Pick<
+  Activity,
+  | 'department_id'
+  | 'name'
+  | 'description'
+  | 'poster'
+  | 'icon'
+  | 'position'
+  | 'contact_person'
+  | 'contact_phone_number'
+  | 'need_audit'
+  | 'quota'
+  | 'registration_start_time'
+  | 'registration_end_time'
+  | 'activity_start_time'
+  | 'activity_end_time'
+>
 export class Service extends BaseService {
   constructor(axios: AxiosInstance) {
     super(axios)
@@ -111,6 +129,10 @@ export class Service extends BaseService {
   }
 
   teacher = {
+    useDepartment: () => {
+      return this.useGet<Department[]>('/teacher/department/list')
+    },
+
     useActivities: () => {
       return this.useGet<Activity[]>(`/teacher/activity/list`)
     },
@@ -123,6 +145,27 @@ export class Service extends BaseService {
       return this.useGet<ActivityStudentsProps['students']>(
         `/teacher/activity/participate`,
         { id }
+      )
+    },
+
+    createActivity: async (activity: NewActivity) => {
+      await this.axios.post('/teacher/activity', activity)
+    },
+
+    updateActivity: async (activity: Activity) => {
+      await this.axios.put('/teacher/activity', activity)
+    },
+
+    downloadActivityStudentsExcel: async (activityId: number) => {
+      const { data } = await this.axios.get(
+        `/teacher/activity/participate/excel?id=${activityId}`,
+        {
+          responseType: 'blob',
+        }
+      )
+      fileDownload(
+        data,
+        `活动学生列表-${activityId}-${new Date().toLocaleDateString()}`
       )
     },
   }
