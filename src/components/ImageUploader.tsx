@@ -3,6 +3,7 @@ import { CircularProgress, IconButton, Stack } from '@mui/joy'
 import AddIcon from '@mui/icons-material/Add'
 import CloseIcon from '@mui/icons-material/Close'
 import { styled } from '@mui/joy'
+import { network } from '~/utils/network'
 
 const ImageContainer = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -37,18 +38,16 @@ export const ImageUploader = ({
 }: ImageUploaderProps) => {
   const [uploading, setUploading] = useState<boolean>(false)
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
       setUploading(true)
 
-      // Here you can add logic to upload the image.
-      // For the purpose of this example, we'll simply read it as a data URL.
-      const reader = new FileReader()
-      reader.onload = (e) => {
-        onChange(e.target?.result as string)
+      try {
+        const imageUrl = await network.uploadImage(event.target.files[0])
+        onChange(imageUrl)
+      } finally {
         setUploading(false)
       }
-      reader.readAsDataURL(event.target.files[0])
     }
   }
 
@@ -66,6 +65,7 @@ export const ImageUploader = ({
         id="upload-button"
         type="file"
         onChange={handleChange}
+        disabled={uploading}
       />
       <Stack
         htmlFor="upload-button"

@@ -4,6 +4,7 @@ import { useStore } from './store'
 import { Activity, Department, User } from './types'
 import { ActivityStudentsProps } from '~/components/ActivityStudents'
 import fileDownload from 'js-file-download'
+import imageCompression from 'browser-image-compression'
 
 export type ApiError = AxiosError<{
   code: number
@@ -77,6 +78,16 @@ export type NewActivity = Pick<
   | 'activity_start_time'
   | 'activity_end_time'
 >
+
+export interface SignOssRequest {
+  filename: string
+}
+export interface SignOssResponse {
+  upload_url: string
+  download_url: string
+  expire_seconds: number
+}
+
 export class Service extends BaseService {
   constructor(axios: AxiosInstance) {
     super(axios)
@@ -126,6 +137,34 @@ export class Service extends BaseService {
 
   useUser = () => {
     return this.useGet<User>(`/user/info`)
+  }
+
+  private signFileUploadUrl = async (
+    filename: string
+  ): Promise<SignOssResponse> => {
+    const { data } = await this.axios.post<SignOssResponse>(
+      '/teacher/activity/file',
+      {
+        filename,
+      }
+    )
+    return data
+  }
+
+  uploadImage = async (file: File): Promise<string> => {
+    const compressedFile = await imageCompression(file, {
+      maxSizeMB: 1,
+      maxWidthOrHeight: 1920,
+      useWebWorker: true,
+    })
+    const { upload_url, download_url } = await this.signFileUploadUrl(file.name)
+    // Global axios instance is used here.
+    await axios.put(upload_url, compressedFile, {
+      headers: {
+        'Content-Type': '', // Empty string to remove default header to satisfy OSS
+      },
+    })
+    return download_url
   }
 
   teacher = {
