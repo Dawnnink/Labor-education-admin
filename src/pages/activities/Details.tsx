@@ -1,10 +1,11 @@
-import { Stack } from '@mui/joy'
+import { Button, Stack } from '@mui/joy'
 import { useParams } from 'react-router-dom'
 import { ActivityEditor } from '~/components/ActivityEditor'
 import { ActivityStudents } from '~/components/ActivityStudents'
 import { ErrorDisplay } from '~/components/ErrorDisplay'
 import { OverflowWrapper } from '~/components/OverflowWrapper'
 import { network } from '~/utils/network'
+import FileDownloadIcon from '@mui/icons-material/FileDownload'
 
 const DetailsWithParams = ({ activityId }: { activityId: number }) => {
   const { data: activity, error } = network.teacher.useActivity(activityId)
@@ -21,6 +22,16 @@ const DetailsWithParams = ({ activityId }: { activityId: number }) => {
       <OverflowWrapper>
         {students && <ActivityStudents students={students} />}
       </OverflowWrapper>
+      <Stack direction="row" alignItems="flex-end">
+        <Button
+          startDecorator={<FileDownloadIcon />}
+          onClick={() => {
+            network.teacher.downloadActivityStudentsExcel(activityId)
+          }}
+        >
+          导出学生列表
+        </Button>
+      </Stack>
       {activity && <ActivityEditor initialActivity={activity} />}
     </Stack>
   )

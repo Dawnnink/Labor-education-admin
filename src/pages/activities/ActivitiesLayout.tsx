@@ -11,7 +11,7 @@ const ActivitiesLayout = () => {
     >
       <Breadcrumbs>
         <Link href="/activities">活动管理</Link>
-        <Typography fontSize="inherit">创建活动</Typography>
+        <Typography fontSize="inherit">活动</Typography>
       </Breadcrumbs>
 
       <Outlet />
