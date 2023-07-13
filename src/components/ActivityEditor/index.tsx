@@ -57,7 +57,7 @@ export const ActivityEditor = ({
   )
 
   const Input = (props: React.ComponentProps<typeof JoyInput>) => (
-    <Input disabled={disabled} {...props} />
+    <JoyInput disabled={disabled} {...props} />
   )
 
   const theme = useTheme()
