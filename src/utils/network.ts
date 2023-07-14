@@ -5,7 +5,8 @@ import { Activity, Department, User } from './types'
 import { ActivityStudentsProps } from '~/components/ActivityStudents'
 import fileDownload from 'js-file-download'
 import imageCompression from 'browser-image-compression'
-
+import { IIN } from '~/utils/hooks/getActivity'
+import React from 'react'
 export type ApiError = AxiosError<{
   code: number
   message: string
@@ -40,7 +41,7 @@ export class BaseService {
 
     return useSWR<T, ApiError>(
       url +
-        (filteredQuery ? `?${String(new URLSearchParams(filteredQuery))}` : ''),
+      (filteredQuery ? `?${String(new URLSearchParams(filteredQuery))}` : ''),
       this.fetcher
     )
   }
@@ -104,8 +105,10 @@ export class Service extends BaseService {
       if (token) {
         config.headers.Authorization = `passport ${token}`
       }
+      console.log(token)
       return config
     })
+
     this.axios.interceptors.response.use(
       (response) => response,
       (error) => {
@@ -171,9 +174,11 @@ export class Service extends BaseService {
     useDepartment: () => {
       return this.useGet<Department[]>('/teacher/department/list')
     },
-
+    delActivities: async (id: React.Key) => {
+      return this.axios.delete(`/teacher/activity?id=${id}`);
+    },
     useActivities: () => {
-      return this.useGet<Activity[]>(`/teacher/activity/list`)
+      return this.useGet<IIN[]>(`/teacher/activity/list`)
     },
 
     useActivity: (id: number) => {
@@ -189,6 +194,7 @@ export class Service extends BaseService {
 
     createActivity: async (activity: NewActivity) => {
       await this.axios.post('/teacher/activity', activity)
+
     },
 
     updateActivity: async (activity: Activity) => {
@@ -210,7 +216,7 @@ export class Service extends BaseService {
   }
 }
 
-const baseUrl = 'https://labor-be.ncuos.com/api/v1'
+export const baseUrl = 'https://labor-be.ncuos.com/api/v1'
 
 const axiosInstance = axios.create({
   baseURL: baseUrl,

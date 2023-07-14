@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react-swc'
 import path from 'path'
+import PostcssPresetEnv from 'postcss-preset-env'
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -9,5 +10,16 @@ export default defineConfig({
     alias: {
       '~': path.resolve(__dirname, './src'),
     },
+  },
+  css: {
+    modules: {
+      localsConvention: 'camelCaseOnly',
+      scopeBehaviour: "local",
+    },
+    postcss: {
+      plugins: [
+        PostcssPresetEnv()
+      ]
+    }
   },
 })

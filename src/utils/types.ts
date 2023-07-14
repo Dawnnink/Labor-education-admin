@@ -28,11 +28,32 @@ export interface User {
   avatar: string
   college: string
   sex: '男' | '女'
-  class?: string
+  classname?: string
   phone_number: string
 }
 
 export interface Department {
   id: number
   name: string
+}
+
+
+export interface showAct {
+  name: string;
+  state: number;
+  mounts: number;
+  quota: number;
+  registerAt: {
+    registration_start_time: string;
+    registration_end_time: string;
+  }
+  ActAt: {
+    activity_start_time: string;
+    activity_end_time: string;
+  }
+  Move: {
+    isExport: number;
+    isChecking: number;
+    isDelete: number;
+  }
 }

@@ -1,0 +1,30 @@
+.contain {
+    width: 100%;
+    height: 64px;
+
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.discribtion {
+    width: 96.1%;
+    height: 64px;
+    padding: 16px 8px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.title {
+    height: 100%;
+    width: 100%;
+}
+
+.excel {
+    width: 96.1%;
+    min-height: 612px;
+
+    margin: 0 auto;
+}

@@ -3,7 +3,7 @@ import { Navigate, createBrowserRouter } from 'react-router-dom'
 import Index from './pages/Index'
 import { makeLazy } from './utils/lazy'
 import { useStore } from './utils/store'
-
+import { Check } from '~/pages/activities/check'
 // Lazily import pages for code-splitting.
 const Dashboard = makeLazy(() => import('./pages/Dashboard'))
 const Activities = makeLazy(() => import('./pages/activities/Activities'))
@@ -43,26 +43,25 @@ export const router = createBrowserRouter([
       },
       {
         path: 'activities',
-        element: <ActivitiesLayout />,
-        children: [
-          {
-            path: '',
-            element: <Activities />,
-          },
-          {
-            path: 'create',
-            element: <Create />,
-          },
-          {
-            path: ':id',
-            element: <Details />,
-          },
-        ],
+        element: <Activities />,
       },
+      {
+        path: 'create',
+        element: <Create />,
+      },
+      {
+        path: ':id',
+        element: <Details />,
+      },
+
       {
         path: 'permission',
         element: <Permission />,
       },
+      {
+        path: 'check',
+        element: <Check />,
+      }
     ],
   },
 ])

@@ -29,6 +29,10 @@ export const ActivityStudents = ({ students }: ActivityStudentsProps) => {
     }
   }
 
+  function isArray<T,>(students: T): boolean {
+    return Array.isArray(students)
+  }
+
   return (
     <Table>
       <thead>
@@ -42,7 +46,7 @@ export const ActivityStudents = ({ students }: ActivityStudentsProps) => {
         </tr>
       </thead>
       <tbody>
-        {students.map((student, i) => (
+        {isArray(students) && students.map((student, i) => (
           <tr key={i}>
             <td>
               <Stack direction="row" spacing={1} alignItems="center">
@@ -52,7 +56,7 @@ export const ActivityStudents = ({ students }: ActivityStudentsProps) => {
             </td>
             <td>{student.user.id}</td>
             <td>{student.user.college}</td>
-            <td>{student.user.class}</td>
+            <td>{student.user.classname}</td>
             <td>
               <ExpandableText text={student.participate_reason} />
             </td>
@@ -61,7 +65,7 @@ export const ActivityStudents = ({ students }: ActivityStudentsProps) => {
             </td>
           </tr>
         ))}
-        {students.length === 0 && (
+        {isArray(students) && students.length === 0 && (
           <Box
             component="tr"
             sx={() => ({

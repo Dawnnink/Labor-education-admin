@@ -37,6 +37,7 @@ const NavListButton = ({ to, title, Icon }: NavListButtonProps) => {
 const links: NavListButtonProps[] = [
   { title: '活动大厅', to: '/dashboard', Icon: DashboardIcon },
   { title: '活动管理', to: '/activities', Icon: EventNoteIcon },
+  { title: '活动审核', to: '/check', Icon: EventNoteIcon },
   { title: '权限管理', to: '/permission', Icon: ManageAccountsIcon },
 ]
 

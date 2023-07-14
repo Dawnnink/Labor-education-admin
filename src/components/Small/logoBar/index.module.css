@@ -1,0 +1,25 @@
+.xbox {
+    white-space: nowrap;
+    line-height: 48px;
+    height: 48px;
+    width: 294px;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 15px;
+}
+
+.xbox img {
+    width: 32px;
+}
+
+.xbox p {
+    color: var(--character-primary-inverse, #FFF);
+    font-family: Roboto;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 32px;
+}

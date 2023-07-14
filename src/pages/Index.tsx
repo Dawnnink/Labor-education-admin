@@ -5,7 +5,7 @@ import { Outlet } from 'react-router-dom'
 import { AppBar } from '~/components/AppBar'
 import { SideNav } from '~/components/SideNav'
 import { network } from '~/utils/network'
-
+import style from './index.module.css'
 const Index = () => {
   const theme = useTheme()
 
@@ -47,7 +47,9 @@ const Index = () => {
           sx={{
             py: 2,
             width: '100%',
+            margin: '0 auto'
           }}
+          className={style.box}
         >
           <Outlet />
         </Container>

@@ -10,15 +10,18 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@ant-design/icons": "^5.1.4",
     "@emotion/react": "^11.11.0",
     "@emotion/styled": "^11.11.0",
     "@mui/icons-material": "^5.11.16",
     "@mui/joy": "5.0.0-alpha.80",
     "@mui/material": "^5.13.1",
     "@mui/utils": "^5.13.1",
+    "antd": "^5.7.0",
     "axios": "^1.4.0",
     "browser-image-compression": "^2.0.2",
     "js-file-download": "^0.4.12",
+    "postcss-preset-env": "^9.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.11.2",
