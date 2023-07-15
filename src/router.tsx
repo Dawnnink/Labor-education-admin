@@ -3,13 +3,13 @@ import { Navigate, createBrowserRouter } from 'react-router-dom'
 import Index from './pages/Index'
 import { makeLazy } from './utils/lazy'
 import { useStore } from './utils/store'
-import { Check } from '~/pages/activities/Check'
+
 // Lazily import pages for code-splitting.
 const Dashboard = makeLazy(() => import('./pages/Dashboard'))
 const Activities = makeLazy(() => import('./pages/activities/Activities'))
 const Create = makeLazy(() => import('./pages/activities/Create'))
 const Details = makeLazy(() => import('./pages/activities/Details'))
-
+const Check = makeLazy(() => import('~/pages/activities/Check'))
 const Permission = makeLazy(() => import('./pages/Permission'))
 const Login = makeLazy(() => import('./pages/Login'))
 
