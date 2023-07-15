@@ -1,6 +1,6 @@
 import { FC } from "react";
 import style from "./index.module.css"
-import { StudentCard } from "~components/Small/student_card";
+import { StudentCard } from "~/components/Small/student_card";
 import { Pagination } from "antd";
 
 interface Student {

@@ -1,13 +1,9 @@
 import { FC } from "react";
-import { StudentCard } from "~components/Small/student_card";
+import { StudentCard } from "~/components/Small/student_card";
 import style from "./index.module.css"
 import { Button } from "antd";
+import { Student } from "../tab";
 
-interface Student {
-    Name: string;
-    College: string;
-    Sex: string;
-}
 
 export const StudentCheckInfoCard: FC<Student> = (props) => {
     return <div className={style.studentCard}>

@@ -53,6 +53,7 @@ export const ActivityEditor = ({
       department_id: 0,
     }
   )
+
   const handlePosterChange = (options: any) => {
     const { file } = options; setActivity((prevActivity) => ({
       ...prevActivity,
@@ -255,39 +256,45 @@ export const ActivityEditor = ({
 
             <div className='up'>
               <Form.Item
-                name="poster"  // 指定绑定的值为 'fileList'
+                name="poster"
                 style={{ display: 'inline-block', width: 'calc(50% - 8px)', margin: '0 8px' }}
               >
-                <Upload
-                  className='uploadOne'
-                  listType="picture-card"
-                  showUploadList={false}
-                  beforeUpload={beforeUpload}
-                  onChange={(options) => {
-                    handleChangeL(options);
-                    handlePosterChange(options);
-                  }}
-                  customRequest={handleUploadL}
-                >
-                  {imageUrl ? <img src={imageUrl} alt="" style={{ width: '100%' }} /> : uploadButton}
-                </Upload>
+                <div>
+                  <Upload
+                    className=' avatar-uploader'
+                    listType="picture-card"
+                    showUploadList={false}
+                    beforeUpload={beforeUpload}
+                    onChange={(options) => {
+                      handleChangeL(options);
+                      handlePosterChange(options);
+                    }}
+                    customRequest={handleUploadL}
+                  >
+                    {imageUrl ? <img src={imageUrl} alt="" style={{ width: '100%' }} /> : uploadButton}
+                  </Upload>
+                </div>
               </Form.Item>
               <Form.Item
-                label="上传图标"
-                valuePropName='icon'  // 指定绑定的值为 'fileList'
-                name='uploadIcon'>
-                <Upload
-                  listType="picture-card"
-                  showUploadList={false}
-                  beforeUpload={beforeUpload}
-                  onChange={(options) => {
-                    handleChangeR(options);
-                    handleIconChange(options);
-                  }}
-                  customRequest={handleUploadR}
-                >
-                  {iconUrl ? <img src={iconUrl} alt="" style={{ width: '100%' }} /> : upLoadBtn}
-                </Upload>
+                label="上传图标"  // 指定绑定的值为 'fileList'
+                name='icon'
+              >
+                <div>
+                  <Upload
+                    className="avatar-uploader"
+                    listType="picture-card"
+                    showUploadList={false}
+                    beforeUpload={beforeUpload}
+                    onChange={(options) => {
+                      handleChangeR(options);
+                      handleIconChange(options);
+                    }}
+                    customRequest={handleUploadR}
+                  >
+                    {iconUrl ? <img src={iconUrl} alt="" style={{ width: '100%' }} /> : upLoadBtn}
+                  </Upload>
+                </div>
+
               </Form.Item>
             </div>
           </Form.Item>
@@ -386,9 +393,9 @@ export const ActivityEditor = ({
               <Button>保存草稿</Button>
             </Space>
           </Form.Item>
-        </Form>
-      </div>
-    </div>
+        </Form >
+      </div >
+    </div >
   )
 
 }

@@ -3,7 +3,7 @@ import { Navigate, createBrowserRouter } from 'react-router-dom'
 import Index from './pages/Index'
 import { makeLazy } from './utils/lazy'
 import { useStore } from './utils/store'
-import { Check } from '~/pages/activities/check'
+import { Check } from '~/pages/activities/Check'
 // Lazily import pages for code-splitting.
 const Dashboard = makeLazy(() => import('./pages/Dashboard'))
 const Activities = makeLazy(() => import('./pages/activities/Activities'))

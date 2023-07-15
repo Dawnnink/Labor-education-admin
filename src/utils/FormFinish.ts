@@ -37,7 +37,7 @@ const onFinish = (fieldsValue: any, departments: Department[] | undefined, image
     values.department_id = index;
     imageUrl === undefined ? values.poster = null : values.poster = imageUrl;
     iconUrl === undefined ? values.icon = null : values.icon = iconUrl;
-    console.log(JSON.stringify(values))
+    console.log(values)
     network.teacher.createActivity(values);
 }
 

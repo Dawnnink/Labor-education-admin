@@ -1,7 +1,7 @@
 import { Tabs, TabsProps } from "antd";
 import { FC } from "react";
 import { StudentList } from "../student_list";
-
+import { StudentCheckInfoCard } from "../student_check_info_card";
 const onChange = (key: string) => {
     console.log(key);
 };
@@ -10,7 +10,7 @@ interface AllStudent {
     Data: Array<Student>;
 }
 
-interface Student {
+export interface Student {
     Name: string;
     College: string;
     Sex: string;
@@ -19,7 +19,7 @@ interface Student {
 
 export const TableTag: FC<AllStudent> = (props) => {
 
-    let items: TabsProps['items'] = [
+    const items: TabsProps['items'] = [
         {
             key: '1',
             label: `已报名`,
@@ -29,7 +29,7 @@ export const TableTag: FC<AllStudent> = (props) => {
         {
             key: '2',
             label: `待审核`,
-            children: <StudentList Data={props.Data} />
+            // children: <StudentCheckInfoCard {...props.Data} />
         },
         {
             key: '3',
@@ -37,5 +37,4 @@ export const TableTag: FC<AllStudent> = (props) => {
         },
     ];
     return <><Tabs defaultActiveKey="1" items={items} onChange={onChange} /></>
-
 }

@@ -57,10 +57,19 @@ const fakeStudentListData = [
 
 export const StundesTable: FC = () => {
 
-    return <div>
-        <Card bodyStyle={{ width: "1100px" }} title={<TableTitle />} extra={<a href="#">导出</a>} style={{ width: "1100px", height: 376 }}>
+    return <>
+        <Card bodyStyle={{
+            width: "100%",
+        }}
+            title={<TableTitle />}
+            extra={<a href="#">导出</a>}
+            style={{
+                width: "1100px",
+                height: '376px',
+                margin: "0 auto",
+            }}>
             <TableTag Data={fakeStudentListData} />
-        </Card>
-    </div>
+        </Card >
+    </ >
 
 }
