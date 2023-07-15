@@ -1,0 +1,11 @@
+.tilteName{
+    font-size: 16px;
+    font-weight: 500;
+    padding-right: 8px;
+}
+
+.tilteClick{
+    font-size: 12px;
+    font-weight: 500;
+    color: #7A7979;
+}

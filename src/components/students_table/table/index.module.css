@@ -1,0 +1,20 @@
+
+.studentList {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    justify-content: flex-start;
+}
+
+.studentCard {
+    width: 14.2%;
+    margin-top: 15px;
+}
+
+.studentTable{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 236px;
+}

@@ -39,6 +39,7 @@ export interface Department {
 
 
 export interface showAct {
+  id: number;
   name: string;
   state: number;
   mounts: number;
@@ -52,8 +53,8 @@ export interface showAct {
     activity_end_time: string;
   }
   Move: {
-    isExport: number;
-    isChecking: number;
-    isDelete: number;
+    Exp: string;
+    canup: boolean;
+    cansee: boolean;
   }
 }

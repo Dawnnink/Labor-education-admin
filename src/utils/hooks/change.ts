@@ -11,7 +11,7 @@ export function ChangeData(columnsData: string[][], rowsData: showAct[][]) {
             }
         })
     }, [columnsData])
-    const newRows: showAct[] = []
+    const newRows: showAct[] = [];
     for (let i = 0; i < rowsData.length; i++) {
         for (let j = 0; j < rowsData[i].length; j++) {
             newRows.push(rowsData[i][j])
@@ -23,6 +23,7 @@ export function ChangeData(columnsData: string[][], rowsData: showAct[][]) {
                 key: index,
                 ...item,
             }
+
         })
     }, [rowsData])
 

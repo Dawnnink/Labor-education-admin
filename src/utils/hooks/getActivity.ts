@@ -21,6 +21,28 @@ export interface IIN {
     activity_start_time: string,
     activity_end_time: string,
 }
+const initialShowAct: showAct[][] = [[
+    {
+        id: 0,
+        name: '',
+        state: 0,
+        mounts: 0,
+        quota: 0,
+        registerAt: {
+            registration_start_time: '',
+            registration_end_time: '',
+        },
+        ActAt: {
+            activity_start_time: '',
+            activity_end_time: '',
+        },
+        Move: {
+            Exp: '',
+            canup: true,
+            cansee: true,
+        }
+    }
+],]
 export type IINList = IIN[]
 export const GetActivity = (props: IINList) => {
     function compareDates(date1: Date, date2: Date): number {
@@ -35,8 +57,12 @@ export const GetActivity = (props: IINList) => {
 
     // 使用示例
     function parseDateString(dateString: string): Date {
-        return new Date(dateString);
+        const [datePart, timePart] = dateString.split(' ');
+        const [year, month, day] = datePart.split('-').map(Number);
+        const [hours, minutes, seconds] = timePart.split(':').map(Number);
+        return new Date(year, month - 1, day, hours, minutes, seconds);
     }
+
     function formatTime(timeString: string): string {
         const inputDate = new Date(timeString);
         const year = inputDate.getUTCFullYear().toString().padStart(4, '0');
@@ -49,19 +75,165 @@ export const GetActivity = (props: IINList) => {
         return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
     }
 
-    // 使用示例
-    const inputTime = "0001-01-01T00:00:00Z";
-    const formattedTime = formatTime(inputTime);
-    console.log(formattedTime);
+    const currentDate = new Date();
+    let data: showAct[][] = [[]]
 
-    let data: showAct[][] = [[]];
-    data = React.useMemo(() => {
-        return props.map((item, value) => {
-            if (compareDates(new Date(), new Date(item.activity_end_time)) > 0) {
-                return [
-                    {
+    React.useMemo(() => {
+        data === undefined ? data = initialShowAct : (props.map((item, value) => {
+            // console.log(item)
+            if (item.state == "已发布") {
+                // console.log(props)
+                if (
+                    compareDates(currentDate, parseDateString(formatTime(item.activity_end_time))) > 0
+                    //如果说现在的时间在结束时间之后
+                ) {
+                    console.log(parseDateString(formatTime(item.activity_end_time)))
+                    //已结束
+                    return data.push(
+                        [{
+                            id: item.id,
+                            name: item.name,
+                            state: 4,
+                            mounts: item.enroll_number,
+                            quota: item.quota,
+                            registerAt: {
+                                registration_start_time: formatTime(item.registration_start_time),
+                                registration_end_time: formatTime(item.registration_end_time),
+                            },
+                            ActAt: {
+                                activity_start_time: formatTime(item.activity_start_time),
+                                activity_end_time: formatTime(item.activity_end_time),
+                            },
+                            Move: {
+                                Exp: "导出名单",
+                                canup: false,
+                                cansee: false,
+                            }
+                        }],
+                    )
+                }
+                else if (
+                    compareDates(currentDate, parseDateString(formatTime(item.registration_start_time))) >= 0
+                    &&
+                    compareDates(currentDate, parseDateString(formatTime(item.registration_end_time))) < 0
+                    // 现在的时间在报名时间范围内
+                ) {
+                    //报名中
+                    return data.push(
+                        [{
+                            id: item.id,
+                            name: item.name,
+                            state: 1,
+                            mounts: item.enroll_number,
+                            quota: item.quota,
+                            registerAt: {
+                                registration_start_time: formatTime(item.registration_start_time),
+                                registration_end_time: formatTime(item.registration_end_time),
+                            },
+                            ActAt: {
+                                activity_start_time: formatTime(item.activity_start_time),
+                                activity_end_time: formatTime(item.activity_end_time),
+                            },
+                            Move: {
+                                Exp: "导出名单",
+                                canup: true,
+                                cansee: true,
+                            }
+                        }],
+                    )
+                } else if (
+                    compareDates(currentDate, parseDateString(formatTime(item.registration_start_time))) < 0
+                    //现在的时间在报名时间之前
+                ) {
+                    //待报名
+                    return data.push(
+                        [{
+                            name: item.name,
+                            state: 6,
+                            mounts: item.enroll_number,
+                            quota: item.quota,
+                            registerAt: {
+                                registration_start_time: formatTime(item.registration_start_time),
+                                registration_end_time: formatTime(item.registration_end_time),
+                            },
+                            ActAt: {
+                                activity_start_time: formatTime(item.activity_start_time),
+                                activity_end_time: formatTime(item.activity_end_time),
+                            },
+                            Move: {
+                                Exp: "编辑活动",
+                                canup: false,
+                                cansee: false,
+                            },
+                            id: item.id,
+
+                        }],
+                    )
+                } else if (
+                    compareDates(currentDate, parseDateString(formatTime(item.activity_start_time))) < 0
+                    &&
+                    compareDates(currentDate, parseDateString(formatTime(item.registration_end_time))) > 0
+                    //现在时间在活动开始时间之前//报名结束时间之后
+                ) {
+                    //待开始
+                    return data.push(
+                        [{
+                            id: item.id,
+                            name: item.name,
+                            state: 7,
+                            mounts: item.enroll_number,
+                            quota: item.quota,
+                            registerAt: {
+                                registration_start_time: formatTime(item.registration_start_time),
+                                registration_end_time: formatTime(item.registration_end_time),
+                            },
+                            ActAt: {
+                                activity_start_time: formatTime(item.activity_start_time),
+                                activity_end_time: formatTime(item.activity_end_time),
+                            },
+                            Move: {
+                                Exp: "导出名单",
+                                canup: false,
+                                cansee: true,
+                            }
+                        }],
+                    )
+                } else if (
+                    compareDates(currentDate, parseDateString(formatTime(item.activity_start_time))) >= 0
+                    &&
+                    compareDates(currentDate, parseDateString(formatTime(item.activity_end_time))) < 0
+                    //正在进行
+                ) {
+                    //进行中
+                    return data.push(
+                        [{
+                            id: item.id,
+                            name: item.name,
+                            state: 8,
+                            mounts: item.enroll_number,
+                            quota: item.quota,
+                            registerAt: {
+                                registration_start_time: formatTime(item.registration_start_time),
+                                registration_end_time: formatTime(item.registration_end_time),
+                            },
+                            ActAt: {
+                                activity_start_time: formatTime(item.activity_start_time),
+                                activity_end_time: formatTime(item.activity_end_time),
+                            },
+                            Move: {
+                                Exp: "导出名单",
+                                canup: false,
+                                cansee: true,
+                            }
+                        }],
+                    )
+                }
+            } else if (item.state == '审核失败') {
+                return data.push(
+                    [{
+                        id: item.id,
                         name: item.name,
-                        state: 4,
+                        state: 3,
                         mounts: item.enroll_number,
                         quota: item.quota,
                         registerAt: {
@@ -73,17 +245,41 @@ export const GetActivity = (props: IINList) => {
                             activity_end_time: formatTime(item.activity_end_time),
                         },
                         Move: {
-                            isExport: 3,
-                            isChecking: 2,
-                            isDelete: 1,
+                            Exp: "编辑活动",
+                            canup: false,
+                            cansee: false,
                         }
-                    },
-                ]
+                    }],
+                )
+            } else if (item.state == '审核中') {
+                return data.push(
+                    [{
+                        id: item.id,
+                        name: item.name,
+                        state: 5,
+                        mounts: item.enroll_number,
+                        quota: item.quota,
+                        registerAt: {
+                            registration_start_time: formatTime(item.registration_start_time),
+                            registration_end_time: formatTime(item.registration_end_time),
+                        },
+                        ActAt: {
+                            activity_start_time: formatTime(item.activity_start_time),
+                            activity_end_time: formatTime(item.activity_end_time),
+                        },
+                        Move: {
+                            Exp: "编辑活动",
+                            canup: false,
+                            cansee: false,
+                        }
+                    }],
+                )
             }
-            if (item.state == '审核中') {
-                return [{
+            return data.push(
+                [{
+                    id: item.id,
                     name: item.name,
-                    state: 5,
+                    state: 2,
                     mounts: item.enroll_number,
                     quota: item.quota,
                     registerAt: {
@@ -95,74 +291,14 @@ export const GetActivity = (props: IINList) => {
                         activity_end_time: formatTime(item.activity_end_time),
                     },
                     Move: {
-                        isExport: 3,
-                        isChecking: 2,
-                        isDelete: 1,
+                        Exp: "编辑活动",
+                        canup: false,
+                        cansee: false,
                     }
-                },]
-            } else if (item.state == '审核失败') {
-                return [{
-                    name: item.name,
-                    state: 3,
-                    mounts: item.enroll_number,
-                    quota: item.quota,
-                    registerAt: {
-                        registration_start_time: formatTime(item.registration_start_time),
-                        registration_end_time: formatTime(item.registration_end_time),
-                    },
-                    ActAt: {
-                        activity_start_time: formatTime(item.activity_start_time),
-                        activity_end_time: formatTime(item.activity_end_time),
-                    },
-                    Move: {
-                        isExport: 4,
-                        isChecking: 2,
-                        isDelete: 1,
-                    }
-                },]
-            } else if (item.state == '已发布') {
-                return [{
-                    name: item.name,
-                    state: 1,
-                    mounts: item.enroll_number,
-                    quota: item.quota,
-                    registerAt: {
-                        registration_start_time: formatTime(item.registration_start_time),
-                        registration_end_time: formatTime(item.registration_end_time),
-                    },
-                    ActAt: {
-                        activity_start_time: formatTime(item.activity_start_time),
-                        activity_end_time: formatTime(item.activity_end_time),
-                    },
-                    Move: {
-                        isExport: 1,
-                        isChecking: 2,
-                        isDelete: 1,
-                    }
-                },]
-            }
-            //全部都不符合，就是未发布
-            return [{
-                name: item.name,
-                state: 2,
-                mounts: item.enroll_number,
-                quota: item.quota,
-                registerAt: {
-                    registration_start_time: formatTime(item.registration_start_time),
-                    registration_end_time: formatTime(item.registration_end_time),
-                },
-                ActAt: {
-                    activity_start_time: formatTime(item.activity_start_time),
-                    activity_end_time: formatTime(item.activity_end_time),
-                },
-                Move: {
-                    isExport: 2,
-                    isChecking: 1,
-                    isDelete: 1,
-                }
-            }]
-
-        })
+                }],
+            )
+        })) || [];
     }, [props])
     return data;
 }
+

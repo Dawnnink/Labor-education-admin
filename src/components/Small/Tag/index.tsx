@@ -29,6 +29,18 @@ export const Tag: React.FC<Num> = (props) => {
             color = "#DEB72D";
             text = "审核中";
             break;
+        case 6:
+            color = '#D9D9D9';
+            text = '待报名';
+            break;
+        case 7:
+            color = '#FF4D4F';
+            text = '待开始';
+            break;
+        case 8:
+            color = '#FF4D4F';
+            text = '进行中';
+            break;
         default:
             break;
     }

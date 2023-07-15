@@ -161,6 +161,8 @@ export class Service extends BaseService {
       useWebWorker: true,
     })
     const { upload_url, download_url } = await this.signFileUploadUrl(file.name)
+    console.log("postname success")
+    console.log(upload_url)
     // Global axios instance is used here.
     await axios.put(upload_url, compressedFile, {
       headers: {
@@ -171,6 +173,9 @@ export class Service extends BaseService {
   }
 
   teacher = {
+    useCode: (id: number) => {
+      return this.useGet<Code>(`/teacher/activity/code?id=${id}`)
+    },
     useDepartment: () => {
       return this.useGet<Department[]>('/teacher/department/list')
     },
@@ -223,3 +228,6 @@ const axiosInstance = axios.create({
 })
 
 export const network = new Service(axiosInstance)
+interface Code {
+  code: string;
+}

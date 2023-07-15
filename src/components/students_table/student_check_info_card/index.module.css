@@ -1,0 +1,11 @@
+.studentCard {
+    width: 25%;
+    margin-top: 15px;
+}
+
+.studentInfo{
+    display: flex;
+    flex-direction: row;
+    justify-self: center;
+    align-items: center;
+}
