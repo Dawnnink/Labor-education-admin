@@ -1,8 +1,6 @@
 import { Activity } from '~/utils/types'
-import { StatusDot } from '../StatusDot'
 import { useNavigate } from 'react-router-dom'
-import { network } from '~/utils/network';
-import React, { FC } from 'react';
+
 import style from './index.module.css';
 import { HandleData } from '../handleData';
 import { Title } from '~/components/title/index';

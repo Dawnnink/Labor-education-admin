@@ -1,4 +1,4 @@
-import React, { FC, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import style from './index.module.css'
 import {
   InfoCircleOutlined,
@@ -19,12 +19,11 @@ import {
   message,
   Select,
 } from 'antd';
-import { useStore } from '~/utils/store';
 import type { UploadChangeParam } from 'antd/es/upload';
 import type { RcFile, UploadFile, UploadProps } from 'antd/es/upload/interface';
 import { useNavigate } from 'react-router-dom'
 import { Activity } from '~/utils/types'
-import { NewActivity, network, baseUrl } from '~/utils/network'
+import { NewActivity, network } from '~/utils/network'
 import onFinish from '~/utils/FormFinish';
 export interface ActivityEditorProps {
   initialActivity: Activity | null
@@ -33,7 +32,6 @@ export interface ActivityEditorProps {
 
 export const ActivityEditor = ({
   initialActivity,
-  disabled,
 }: ActivityEditorProps) => {
   const [activity, setActivity] = useState<Activity | NewActivity>(
     initialActivity ?? {
@@ -82,13 +80,6 @@ export const ActivityEditor = ({
   }
 
   const { RangePicker } = DatePicker;
-  const config = {
-    rules: [{ type: 'object' as const, required: true, message: '请选择时间' }]
-  }
-  const rangeConfig = {
-    rules: [{ type: 'array' as const, required: true, message: '请选择时间' }]
-  }
-
   const { TextArea } = Input;
 
   const getBase64 = (img: RcFile, callback: (url: string) => void) => {
@@ -122,13 +113,13 @@ export const ActivityEditor = ({
     const { file } = options;
     console.log(file);
     const url: string = await network.uploadImage(file)
-    setImageUrl((prevState) => url);
+    setImageUrl(() => url);
   }
   const handleUploadR = async (options: any) => {
     const { file } = options;
     console.log(file);
     const url: string = await network.uploadImage(file)
-    setIconUrl((prevState) => url);
+    setIconUrl(() => url);
   }
   //控制上传图片
   const [loading, setLoading] = useState(false);
@@ -143,7 +134,7 @@ export const ActivityEditor = ({
     }
     if (info.file.status === 'done') {
       // Get this url from response in real world.
-      getBase64(info.file.originFileObj as RcFile, (url) => {
+      getBase64(info.file.originFileObj as RcFile, () => {
         setLoading(false);
         // setImageUrl(url);
       });
@@ -156,7 +147,7 @@ export const ActivityEditor = ({
     }
     if (info.file.status === 'done') {
       // Get this url from response in real world.
-      getBase64(info.file.originFileObj as RcFile, (url) => {
+      getBase64(info.file.originFileObj as RcFile, () => {
         setLoad(false);
         // setImageUrl(url);
       });

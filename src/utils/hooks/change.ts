@@ -3,7 +3,7 @@ import { showAct } from '~/utils/types'
 export function ChangeData(columnsData: string[][], rowsData: showAct[][]) {
     //columnsData的格式一般是[["name","姓名"]，["name","姓名"]，["name","姓名"]，]
     const columns = useMemo(() => {
-        return columnsData.map((item: any, index: number) => {
+        return columnsData.map((item: any) => {
             return {
                 key: item[0],
                 dataIndex: item[0],

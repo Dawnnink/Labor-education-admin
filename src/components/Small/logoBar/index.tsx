@@ -1,5 +1,5 @@
 import style from './index.module.css';
-import React, { FC } from 'react';
+import { FC } from 'react';
 import Logo from '~assets/svg/logo.svg'
 export const LogoBar: FC = () => {
 

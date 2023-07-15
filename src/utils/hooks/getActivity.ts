@@ -80,7 +80,7 @@ export const GetActivity = (props: IINList) => {
 
     React.useMemo(() => {
         console.log("date", formatTime("2023-07-22T00:28:52+08:00"))
-        data === undefined ? data = initialShowAct : (props.map((item, value) => {
+        data === undefined ? data = initialShowAct : (props.map((item) => {
             // console.log(item)
             if (item.state == "已发布") {
                 // console.log(props)

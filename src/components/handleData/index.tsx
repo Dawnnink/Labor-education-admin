@@ -1,15 +1,13 @@
 import React, { FC, useMemo } from 'react';
 import { Table, Button, message, Input } from 'antd';
 import { ChangeData } from '~/utils/hooks/change';
-import { columnsData, rowsData } from './data';
+import { columnsData } from './data';
 import { Tag } from '~/components/Small/Tag';
 import style from './index.module.css';
 import { network } from '~/utils/network';
 // import { data as acc } from './origin'
 import { GetActivity } from '~/utils/hooks/getActivity'
-import { basename } from 'node:path/win32';
 import { showAct } from '~/utils/types'
-import { IIN } from '~/utils/hooks/getActivity'
 export interface showRow {
     id: number;
     name: string;
@@ -31,7 +29,7 @@ export interface showRow {
     }
 }
 export const HandleData: FC = () => {
-    const { data, error } = network.teacher.useActivities();
+    const { data } = network.teacher.useActivities();
     // console.log("data", data)
     let base: showAct[][] | undefined = undefined;
     data === undefined ? null : base = GetActivity(data);

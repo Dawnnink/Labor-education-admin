@@ -9,9 +9,7 @@ const Dashboard = makeLazy(() => import('./pages/Dashboard'))
 const Activities = makeLazy(() => import('./pages/activities/Activities'))
 const Create = makeLazy(() => import('./pages/activities/Create'))
 const Details = makeLazy(() => import('./pages/activities/Details'))
-const ActivitiesLayout = makeLazy(
-  () => import('./pages/activities/ActivitiesLayout')
-)
+
 const Permission = makeLazy(() => import('./pages/Permission'))
 const Login = makeLazy(() => import('./pages/Login'))
 

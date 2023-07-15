@@ -1,7 +1,7 @@
 import { Tabs, TabsProps } from "antd";
 import { FC } from "react";
 import { StudentList } from "../student_list";
-import { StudentCheckInfoCard } from "../student_check_info_card";
+// import { StudentCheckInfoCard } from "../student_check_info_card";
 const onChange = (key: string) => {
     console.log(key);
 };

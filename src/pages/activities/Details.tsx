@@ -6,13 +6,12 @@ import { ErrorDisplay } from '~/components/ErrorDisplay'
 import { OverflowWrapper } from '~/components/OverflowWrapper'
 import { network } from '~/utils/network'
 import FileDownloadIcon from '@mui/icons-material/FileDownload'
-import { ActivityStudentsProps } from '~/components/ActivityStudents'
+
 
 const DetailsWithParams = ({ activityId }: { activityId: number }) => {
   const { data: activity, error } = network.teacher.useActivity(activityId)
   const { data: students } = network.teacher.useActivityStudents(activityId)
   console.log('students' + students)
-
 
 
   return (
@@ -24,7 +23,7 @@ const DetailsWithParams = ({ activityId }: { activityId: number }) => {
     >
       <ErrorDisplay error={error} />
       <OverflowWrapper>
-        {students === undefined ? null : <ActivityStudents students={{ stuendet: students as ActivityStudentsProps }} />}
+        {students === undefined ? null : <ActivityStudents students={students} />}
       </OverflowWrapper>
       <Stack direction="row" alignItems="flex-end">
         <Button
