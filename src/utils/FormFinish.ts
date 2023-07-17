@@ -33,10 +33,9 @@ const onFinish = (fieldsValue: any, departments: Department[] | undefined, image
             }
         }
     }
-    values.icon = ' ';
     values.department_id = index;
-    imageUrl === undefined ? values.poster = null : values.poster = imageUrl;
-    iconUrl === undefined ? values.icon = null : values.icon = iconUrl;
+    imageUrl === undefined ? values.poster = ' ' : values.poster = imageUrl;
+    iconUrl === undefined ? values.icon = ' ' : values.icon = iconUrl;
     console.log(values)
     network.teacher.createActivity(values);
 }

@@ -3,7 +3,8 @@ import { GenderIcon } from '../GenderIcon'
 import { ExpandableText } from '../ExpandableText'
 import { User } from '~/utils/types'
 import { StatusDot } from '../StatusDot'
-
+import { Space, Button } from 'antd'
+import { network } from '~/utils/network'
 export interface ActivityStudentsProps {
   students: {
     participate_time: string // ISO 8601
@@ -43,6 +44,7 @@ export const ActivityStudents = ({ students }: ActivityStudentsProps) => {
           <th>班级</th>
           <th>申请理由</th>
           <th>报名状态</th>
+          <th>操作</th>
         </tr>
       </thead>
       <tbody>
@@ -54,15 +56,35 @@ export const ActivityStudents = ({ students }: ActivityStudentsProps) => {
                 <GenderIcon gender={student.user.sex} />
               </Stack>
             </td>
-            <td>{student.user.id}</td>
+            <td>{student.user.uid}</td>
             <td>{student.user.college}</td>
-            <td>{student.user.classname}</td>
+            <td>{student.user.class}</td>
             <td>
               <ExpandableText text={student.participate_reason} />
             </td>
             <td>
               <StatusDot status={student.state} getColor={getColor} />
-            </td>
+            </td>{
+              student.state == "报名审核中" &&
+              <td
+                style={{
+                  display: 'flex',
+                }}
+              >
+                <Space>
+                  <Button
+                    onClick={() => { network.teacher.usePass(student.user.id) }}
+                  >通过
+                  </Button>
+                  <Button
+                    onClick={() => { network.teacher.useReject(student.user.id) }}
+                  >拒绝
+                  </Button>
+                </Space>
+
+              </td>
+            }
+
           </tr>
         ))}
         {isArray(students) && students.length === 0 && (

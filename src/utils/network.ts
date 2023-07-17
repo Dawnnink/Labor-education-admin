@@ -179,8 +179,8 @@ export class Service extends BaseService {
     useDepartment: () => {
       return this.useGet<Department[]>('/teacher/department/list')
     },
-    delActivities: async (id: React.Key) => {
-      return this.axios.delete(`/teacher/activity?id=${id}`);
+    delActivities: async (params: number) => {
+      return this.axios.delete(`/teacher/activity`, { params });
     },
     useActivities: () => {
       return this.useGet<IIN[]>(`/teacher/activity/list`)
@@ -206,6 +206,12 @@ export class Service extends BaseService {
       await this.axios.put('/teacher/activity', activity)
     },
 
+    usePass: async (id: number) => {
+      await this.axios.post('/teacher/activity/participate/pass', { id })
+    },
+    useReject: async (id: number) => {
+      await this.axios.post('/teacher/activity/participate/reject', { id })
+    },
     downloadActivityStudentsExcel: async (activityId: number) => {
       const { data } = await this.axios.get(
         `/teacher/activity/participate/excel?id=${activityId}`,

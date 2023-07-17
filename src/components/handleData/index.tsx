@@ -1,5 +1,5 @@
 import React, { FC, useMemo } from 'react';
-import { Table, Button, message, Input } from 'antd';
+import { Table, Button, message, Input, Modal } from 'antd';
 import { ChangeData } from '~/utils/hooks/change';
 import { columnsData } from './data';
 import { Tag } from '~/components/Small/Tag';
@@ -8,6 +8,8 @@ import { network } from '~/utils/network';
 // import { data as acc } from './origin'
 import { GetActivity } from '~/utils/hooks/getActivity'
 import { showAct } from '~/utils/types'
+import { useNavigate } from 'react-router-dom'
+
 export interface showRow {
     id: number;
     name: string;
@@ -29,27 +31,42 @@ export interface showRow {
     }
 }
 export const HandleData: FC = () => {
+    const Navigate = useNavigate();
     const { data } = network.teacher.useActivities();
-    // console.log("data", data)
+    console.log("data", data)
+    let flag = 0
+    if (localStorage.getItem('activity') && data != undefined) {
+        for (let i = 0; i < data.length; i++) {
+            if (data[i].id == -1) {
+                flag = 1;
+            }
+        }
+        if (flag == 0) {
+            const local = localStorage.getItem("activity")
+
+            data?.push(JSON.parse(local as string))
+        }
+    }
     let base: showAct[][] | undefined = undefined;
     data === undefined ? null : base = GetActivity(data);
-    // console.log("base", base)
 
-    // const base = GetActivity(data);
-    // console.log("base", base)
     const { columns, rows } = ChangeData(columnsData, base as showAct[][]);
-    // console.log(columns)
 
-    // console.log("acc", data)
     const columnsRender = useMemo(() => {
         if (base) {
             return columns.map((item: any, index: number) => {
                 if (index == 0) {
                     return {
                         ...item,
-                        render: (name: string) => {
+                        render: (name: string, record: showAct) => {
                             return (
-                                <p style={{ color: "#1890FF", cursor: "pointer" }}>{name}</p>
+                                <p
+                                    style={{
+                                        color: "#1890FF",
+                                        cursor: "pointer"
+                                    }}
+                                    onClick={() => Navigate(`${record?.id}`)}
+                                >{name}</p>
                             )
                         }
                     }
@@ -93,11 +110,11 @@ export const HandleData: FC = () => {
                 } else if (index == 6) {
                     return {
                         ...item,
-                        render: (Move: { Exp: string, canup: boolean, cansee: boolean }, id: showRow) => (
+                        render: (Move: { Exp: string, canup: boolean, cansee: boolean }, record: showRow) => (
                             <div className={style.move}>
-                                <Exp method={Move.Exp} />
-                                <Check canup={!Move.canup} />
-                                <Code cansee={!Move.cansee} id={id} />
+                                <Exp method={Move.Exp} id={record?.id} />
+                                <Check canup={!Move.canup} id={record?.id} />
+                                <Code cansee={!Move.cansee} id={record?.id} />
                             </div>
                         ),
                     }
@@ -119,34 +136,136 @@ export const HandleData: FC = () => {
 
 
 
-const Exp: React.FC<{ method: string }> = (props) => {
+const Exp: React.FC<{ method: string, id: number }> = (props) => {
     //传进来一个字符串是编辑活动还是导出名单
+
+    const [modal, setModal] = React.useState(false);
+    const showModal = () => {
+        setModal(true);
+    };
+
+    const handleOk = () => {
+        setModal(false);
+        Navigate(`/continue/-1`)
+    };
+    const Navigate = useNavigate()
+    const handleCancel = () => {
+        setModal(false);
+    };
+
+
     return (
-        <Button
-            style={{
-                width: "64px",
-                height: "30px",
-                padding: "0"
-            }}
-            type='primary'
-        >
-            <p style={{
-                margin: "0px",
-                padding: "0px",
-                textAlign: "center",
-                fontFamily: "Roboto",
-                fontSize: "12px",
-                fontStyle: "normal",
-                fontWeight: "400",
-                lineHeight: "24px",
-            }}>
-                {props.method}
-            </p>
-        </Button>
+        <>
+            {(props.method == "编辑活动") &&
+                <Button
+                    style={{
+                        width: "64px",
+                        height: "30px",
+                        padding: "0"
+                    }}
+                    type='primary'
+                    disabled
+                >
+                    <p style={{
+                        margin: "0px",
+                        padding: "0px",
+                        textAlign: "center",
+                        fontFamily: "Roboto",
+                        fontSize: "12px",
+                        fontStyle: "normal",
+                        fontWeight: "400",
+                        lineHeight: "24px",
+                    }}>
+                        {props.method}
+                    </p>
+                </Button >
+            }
+            {props.method == "导出名单" &&
+                <Button
+                    style={{
+                        width: "64px",
+                        height: "30px",
+                        padding: "0"
+                    }}
+                    type='primary'
+                    onClick={() => { network.teacher.downloadActivityStudentsExcel(props.id) }}
+                >
+                    <p style={{
+                        margin: "0px",
+                        padding: "0px",
+                        textAlign: "center",
+                        fontFamily: "Roboto",
+                        fontSize: "12px",
+                        fontStyle: "normal",
+                        fontWeight: "400",
+                        lineHeight: "24px",
+                    }}>
+                        {props.method}
+                    </p>
+                </Button>
+            }
+            {
+                props.method == "继续编辑" &&
+                <>
+                    <Button
+                        style={{
+                            width: "64px",
+                            height: "30px",
+                            padding: "0"
+                        }}
+                        type='primary'
+                        onClick={() => showModal()}
+                    >
+                        <p style={{
+                            margin: "0px",
+                            padding: "0px",
+                            textAlign: "center",
+                            fontFamily: "Roboto",
+                            fontSize: "12px",
+                            fontStyle: "normal",
+                            fontWeight: "400",
+                            lineHeight: "24px",
+                        }}>
+                            {props.method}
+                        </p>
+                    </Button >
+                    <Modal open={modal} onOk={handleOk} onCancel={handleCancel}>
+                        <p>是否继续编辑</p>
+                    </Modal>
+                </>
+
+            }
+            {
+                props.method == '重新编辑' &&
+                <Button
+                    style={{
+                        width: "64px",
+                        height: "30px",
+                        padding: "0"
+                    }}
+                    type='primary'
+                    onClick={() => Navigate(`/reset/${props.id}`)}
+                >
+                    <p style={{
+                        margin: "0px",
+                        padding: "0px",
+                        textAlign: "center",
+                        fontFamily: "Roboto",
+                        fontSize: "12px",
+                        fontStyle: "normal",
+                        fontWeight: "400",
+                        lineHeight: "24px",
+                    }}>
+                        {props.method}
+                    </p>
+                </Button >
+            }
+        </>
     )
 }
-const Check: React.FC<{ canup: boolean }> = (props) => {
+const Check: React.FC<{ canup: boolean, id: number }> = (props) => {
     //传进来一个bool类型值，如果是true，则可以进行审核
+    const Navigate = useNavigate();
     return (
         <Button
             style={{
@@ -155,7 +274,7 @@ const Check: React.FC<{ canup: boolean }> = (props) => {
                 padding: "0"
             }}
             type='primary'
-
+            onClick={() => Navigate(`/activities/${props.id}`)}
             disabled={props.canup}
         >
             <p style={{
@@ -174,10 +293,8 @@ const Check: React.FC<{ canup: boolean }> = (props) => {
     )
 }
 
-const Code: React.FC<{ cansee: boolean; id: showRow }> = (props) => {
-
-    const record = props.id;
-    const { data: num } = network.teacher.useCode(record.id);
+const Code: React.FC<{ cansee: boolean; id: number }> = (props) => {
+    const { data: num } = network.teacher.useCode(props.id);
 
     // console.log(num?.code)
     const [isOpen, setIsOpen] = React.useState(false)

@@ -12,7 +12,8 @@ const Details = makeLazy(() => import('./pages/activities/Details'))
 const Check = makeLazy(() => import('~/pages/activities/Check'))
 const Permission = makeLazy(() => import('./pages/Permission'))
 const Login = makeLazy(() => import('./pages/Login'))
-
+const ReEdit = makeLazy(() => import('~/pages/activities/ActivityReEdit'))
+const Continue = makeLazy(() => import('./pages/activities/ContinueSet'))
 const IndexLoginGuard = () => {
   const token = useStore((state) => state.token)
   if (!token) {
@@ -33,7 +34,7 @@ export const router = createBrowserRouter([
     children: [
       {
         path: '',
-        element: <Navigate to="/dashboard" replace />,
+        element: <Navigate to="/activities" replace />,
       },
       {
         path: 'dashboard',
@@ -44,14 +45,18 @@ export const router = createBrowserRouter([
         element: <Activities />,
       },
       {
+        path: 'reset/:id',
+        element: <ReEdit />
+      }
+      ,
+      {
+        path: "activities/:id",
+        element: <Details />,
+      },
+      {
         path: 'create',
         element: <Create />,
       },
-      {
-        path: ':id',
-        element: <Details />,
-      },
-
       {
         path: 'permission',
         element: <Permission />,
@@ -59,6 +64,9 @@ export const router = createBrowserRouter([
       {
         path: 'check',
         element: <Check />,
+      }, {
+        path: 'continue/-1',
+        element: <Continue />,
       }
     ],
   },

@@ -79,7 +79,6 @@ export const GetActivity = (props: IINList) => {
     let data: showAct[][] = [[]]
 
     React.useMemo(() => {
-        console.log("date", formatTime("2023-07-22T00:28:52+08:00"))
         data === undefined ? data = initialShowAct : (props.map((item) => {
             // console.log(item)
             if (item.state == "已发布") {
@@ -88,7 +87,6 @@ export const GetActivity = (props: IINList) => {
                     compareDates(currentDate, parseDateString(formatTime(item.activity_end_time))) > 0
                     //如果说现在的时间在结束时间之后
                 ) {
-                    console.log(parseDateString(formatTime(item.activity_end_time)))
                     //已结束
                     return data.push(
                         [{
@@ -246,7 +244,7 @@ export const GetActivity = (props: IINList) => {
                             activity_end_time: formatTime(item.activity_end_time),
                         },
                         Move: {
-                            Exp: "编辑活动",
+                            Exp: "重新编辑",
                             canup: false,
                             cansee: false,
                         }
@@ -292,7 +290,7 @@ export const GetActivity = (props: IINList) => {
                         activity_end_time: formatTime(item.activity_end_time),
                     },
                     Move: {
-                        Exp: "编辑活动",
+                        Exp: "继续编辑",
                         canup: false,
                         cansee: false,
                     }

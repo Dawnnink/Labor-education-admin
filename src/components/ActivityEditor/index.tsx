@@ -25,16 +25,41 @@ import { useNavigate } from 'react-router-dom'
 import { Activity } from '~/utils/types'
 import { NewActivity, network } from '~/utils/network'
 import onFinish from '~/utils/FormFinish';
+import onOrigin from '~/utils/FormOrigin';
+import { IIN } from '~/utils/hooks/getActivity';
+
 export interface ActivityEditorProps {
   initialActivity: Activity | null
   disabled?: boolean
+  isShow: boolean
 }
+export interface OldActivity {
+  name: string
+  department_id: string
+  description: string
+  poster: string
+  registerAt: [
+    registration_start_time: string,
+    registration_end_time: string,
+  ]
+  joinAt: [
+    activity_start_time: string,
+    activity_end_time: string,
+  ]
+  quota: number
+  need_audit: boolean
+  position: string;
+  icon: string
 
+}
 export const ActivityEditor = ({
   initialActivity,
+  disabled,
+  isShow,
 }: ActivityEditorProps) => {
-  const [activity, setActivity] = useState<Activity | NewActivity>(
-    initialActivity ?? {
+  const changedActivity = onOrigin(initialActivity)
+  const [activity, setActivity] = useState<OldActivity | NewActivity>(
+    changedActivity ?? {
       name: '',
       description: '',
       poster: '',
@@ -48,37 +73,9 @@ export const ActivityEditor = ({
       registration_end_time: '',
       activity_start_time: '',
       activity_end_time: '',
-      department_id: 0,
+      department_id: '',
     }
   )
-
-  const handlePosterChange = (options: any) => {
-    const { file } = options; setActivity((prevActivity) => ({
-      ...prevActivity,
-      poster: file.name ?? "",
-    }))
-  }
-  const handleIconChange = (options: any) => {
-    const { file } = options;
-    setActivity((prevActivity) => ({
-      ...prevActivity,
-      icon: file.name ?? "",
-    }))
-  }
-  const handleName = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const value = e.target.value;
-    setActivity({ ...activity, name: value })
-  }
-  const handleDes = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const value = e.target.value;
-    console.log(value)
-    setActivity({ ...activity, description: value })
-  }
-
   const { RangePicker } = DatePicker;
   const { TextArea } = Input;
 
@@ -124,8 +121,9 @@ export const ActivityEditor = ({
   //控制上传图片
   const [loading, setLoading] = useState(false);
   const [load, setLoad] = useState(false);
-  const [imageUrl, setImageUrl] = useState<string>();
-  const [iconUrl, setIconUrl] = useState<string>();
+  const [imageUrl, setImageUrl] = useState<string>(activity.poster);
+  const [iconUrl, setIconUrl] = useState<string>(activity.icon);
+
   //上传图片
   const handleChangeL: UploadProps['onChange'] = (info: UploadChangeParam<UploadFile>) => {
     if (info.file.status === 'uploading') {
@@ -195,12 +193,73 @@ export const ActivityEditor = ({
   (departments === undefined) ? OPTIONS = ['无数据'] : OPTIONS = OPTIONS.concat(departments.map((item) => item.name));
 
 
+  //本地保存数据
+  const handleLocal = () => {
+    const value = form.getFieldValue();
+    console.log(value);
+    let initialState: IIN | Activity;
+    if (value.joinAt[0] == null || value.joinAt[1] == null || value.registerAt[0] == null || value.registerAt[1] == null) {
+      initialState = {
+        name: value.name || ' ',
+        description: value.description || ' ',
+        poster: imageUrl || ' ',
+        icon: iconUrl || ' ',
+        position: value.position || ' ',
+        contact_person: value.contact_person || ' ',
+        contact_phone_number: value.contact_phone_number || ' ',
+        need_audit: value.need_audit || false,
+        quota: value.quota || 0,
+        registration_start_time: '0000-00-00 00:00:00',
+        registration_end_time: '0000-00-00 00:00:00',
+        activity_start_time: '0000-00-00 00:00:00',
+        activity_end_time: '0000-00-00 00:00:00',
+        department_id: value.department_id || 0,
+        department: value.department || " ",
+        state: "未发布",
+        id: -1,
+        enroll_number: 0,
+        participate_number: 0,
+      };
+    } else {
+      initialState = {
+        name: value.name || ' ',
+        description: value.description || ' ',
+        poster: imageUrl || ' ',
+        icon: iconUrl || ' ',
+        position: value.position || ' ',
+        contact_person: value.contact_person || ' ',
+        contact_phone_number: value.contact_phone_number || ' ',
+        need_audit: value.need_audit || false,
+        quota: value.quota || 0,
+        registration_start_time: value.registerAt[0],
+        registration_end_time: value.registerAt[1],
+        activity_start_time: value.joinAt[0],
+        activity_end_time: value.joinAt[1],
+        department_id: value.department_id || 0,
+        department: value.department || " ",
+        state: "未发布",
+        id: -1,
+        enroll_number: 0,
+        participate_number: 0,
+      }
+    }
+
+    console.log(initialState);
+    if (localStorage.getItem("activity")) {
+      if (confirm("存储库中已有一份草稿，点击确定将会覆盖此份草稿")) {
+        localStorage.setItem(`activity`, JSON.stringify(initialState)); // 将值转换为 JSON 字符串并存储在 localStorage 中
+        Navigate('/activities')
+      }
+    }
+    console.dir(JSON.parse(localStorage.getItem('activity') as string)); // 解析存储的 JSON 字符串并打印对象内容
+  }
 
   return (
     <div className='entire'>
-      {item}
+      {isShow ? item : null}
       <div className={style.form}>
         <Form
+          initialValues={activity}
           onFinish={(fieldsValue: any) => onFinish(fieldsValue, departments, imageUrl, iconUrl)}
           form={form}
           labelCol={{ span: 4 }}
@@ -209,25 +268,45 @@ export const ActivityEditor = ({
           style={{
             maxWidth: "100%",
           }}
-          requiredMark={true}
+          disabled={disabled
+          } requiredMark={true}
         >
           <Form.Item
             label='活动名称'
             name='name'
             required
             tooltip={{ title: '填写活动名称', icon: <InfoCircleOutlined /> }}
+            rules={[
+              {
+                max: 20,
+                message: "活动名称不能超过20个字符"
+              },
+              {
+                required: true,
+                message: "活动名称为必填字段"
+              }
+            ]}
           >
             <Input
-              onChange={(e) => { handleName(e) }}
+            // onChange={(e) => { handleName(e) }}
             />
           </Form.Item>
           <Form.Item
+            rules={[
+              {
+                max: 250,
+                message: "活动简介不能超过250个字符",
+              }, {
+                required: true,
+                message: "活动简介为必填字段"
+              }
+            ]}
             label="活动简介"
             required
             name="description"
           >
             <TextArea
-              onChange={(e) => { handleDes(e) }}
+              // onChange={(e) => { handleDes(e) }}
               rows={4}
               placeholder='Please enter your work goals' />
           </Form.Item>
@@ -252,17 +331,17 @@ export const ActivityEditor = ({
               >
                 <div>
                   <Upload
-                    className=' avatar-uploader'
+                    className='avatar-uploader'
                     listType="picture-card"
                     showUploadList={false}
                     beforeUpload={beforeUpload}
                     onChange={(options) => {
                       handleChangeL(options);
-                      handlePosterChange(options);
+                      // handlePosterChange(options);
                     }}
                     customRequest={handleUploadL}
                   >
-                    {imageUrl ? <img src={imageUrl} alt="" style={{ width: '100%' }} /> : uploadButton}
+                    {imageUrl ? <img src={imageUrl} alt=" " style={{ width: '100%' }} className={style.img} /> : uploadButton}
                   </Upload>
                 </div>
               </Form.Item>
@@ -278,11 +357,11 @@ export const ActivityEditor = ({
                     beforeUpload={beforeUpload}
                     onChange={(options) => {
                       handleChangeR(options);
-                      handleIconChange(options);
+                      // handleIconChange(options);
                     }}
                     customRequest={handleUploadR}
                   >
-                    {iconUrl ? <img src={iconUrl} alt="" style={{ width: '100%' }} /> : upLoadBtn}
+                    {iconUrl ? <img src={iconUrl} alt=" " style={{ width: '100%' }} className={style.img} /> : upLoadBtn}
                   </Upload>
                 </div>
 
@@ -293,6 +372,16 @@ export const ActivityEditor = ({
           {/* </Form> */}
           <Form.Item
             label='活动地点'
+            rules={[
+              {
+                required: true,
+                message: "活动地点为必填字段",
+              },
+              {
+                max: 50,
+                message: "活动地点不能超过50个字段"
+              }
+            ]}
             name='position'
             required
             tooltip={{ title: 'Tooltip with customize icon', icon: <InfoCircleOutlined /> }}
@@ -303,12 +392,23 @@ export const ActivityEditor = ({
           <Form.Item
             label='活动联系人'
             required
+
             tooltip={{ title: 'Tooltip with customize icon', icon: <InfoCircleOutlined /> }}
           >
             <div className='contact'>
               <Form.Item
                 name='contact_person'
                 wrapperCol={{ span: 15 }}
+                rules={[
+                  {
+                    required: true,
+                    message: "活动联系人为必填字段"
+                  },
+                  {
+                    max: 50,
+                    message: "活动联系人不能超过50个字段"
+                  }
+                ]}
                 style={{ display: 'inline-block', width: 'calc(50% - 8px)', margin: '0 8px' }}
               >
                 <Input
@@ -317,7 +417,17 @@ export const ActivityEditor = ({
 
                 />
               </Form.Item>
-              <Form.Item colon={false} name='contact_phone_number'>
+              <Form.Item colon={false} name='contact_phone_number'
+                rules={[
+                  {
+                    required: true,
+                    message: "联系人电话为必填字段",
+                  }, {
+                    pattern: /^(\+?0?86-?)?1[3-9]\d{9}$/,
+                    message: "请输入正确的手机号格式"
+                  }
+                ]}
+              >
                 <Input
                   placeholder='请输入联系人电话'
                   prefix={<PhoneOutlined />}
@@ -331,6 +441,12 @@ export const ActivityEditor = ({
             required
             name="department_id"
             wrapperCol={{ span: 5 }}
+            rules={[
+              {
+                required: true,
+                message: "发布部门为必填字段"
+              }
+            ]}
           >
             <Select
               placeholder='请选择'
@@ -345,10 +461,22 @@ export const ActivityEditor = ({
             required
             name="registerAt"
             wrapperCol={{ span: 8 }}
+            rules={[
+              {
+                required: true,
+                message: "报名时间为必填字段"
+              }
+            ]}
           >
             <RangePicker showTime format='YYYY-MM-DD HH:mm' />
           </Form.Item>
           <Form.Item
+            rules={[
+              {
+                required: true,
+                message: "活动时间为必填字段"
+              }
+            ]}
             label='活动时间'
             name='joinAt'
             required
@@ -359,15 +487,35 @@ export const ActivityEditor = ({
           <Form.Item
             required
             label="活动名额"
+
           >
-            <Form.Item name="quota" noStyle>
-              <InputNumber min={1} max={200} />
+            <Form.Item
+              name="quota"
+              noStyle
+              rules={[
+                {
+                  required: true,
+                  message: "活动名额为必填字段"
+                }
+              ]}
+            >
+              <InputNumber min={1} max={2000} />
             </Form.Item>
             <span className="ant-form-text" style={{ marginLeft: 8 }}>
               人
             </span>
           </Form.Item>
-          <Form.Item name="need_audit" label="报名是否需要审核" required>
+          <Form.Item
+            name="need_audit"
+            label="报名是否需要审核"
+            required
+            rules={[
+              {
+                required: true,
+                message: "报名是否需要审核为必填字段"
+              }
+            ]}
+          >
             <Radio.Group>
               <Radio value={false}>无需审核</Radio>
               <Radio value={true}>需要审核</Radio>
@@ -381,8 +529,13 @@ export const ActivityEditor = ({
               <Button type="primary" htmlType="submit">
                 提交审核
               </Button>
-              <Button>保存草稿</Button>
+              <Button
+                onClick={() => handleLocal()}
+              >
+                保存草稿
+              </Button>
             </Space>
+
           </Form.Item>
         </Form >
       </div >

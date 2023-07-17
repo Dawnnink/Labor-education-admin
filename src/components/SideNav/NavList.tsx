@@ -1,45 +1,47 @@
-import EventNoteIcon from '@mui/icons-material/EventNote'
-import DashboardIcon from '@mui/icons-material/Dashboard'
-import ManageAccountsIcon from '@mui/icons-material/ManageAccounts'
+
+import EventNoteIcon from '@mui/icons-material/EventNote';
+import DashboardIcon from '@mui/icons-material/Dashboard';
+import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import {
   List,
   ListItem,
   ListItemButton,
   ListItemContent,
   ListItemDecorator,
-} from '@mui/joy'
-import { Link, useMatch } from 'react-router-dom'
-import { ComponentType } from 'react'
+} from '@mui/joy';
+import { Link, useMatch } from 'react-router-dom';
+import { ComponentType } from 'react';
 
 export interface NavListButtonProps {
-  to: string
-  title: string
-  Icon: ComponentType
+  to: string;
+  title: string;
+  Icon: ComponentType;
+  disabled?: boolean; // 添加 disabled 属性
 }
 
-const NavListButton = ({ to, title, Icon }: NavListButtonProps) => {
-  const match = useMatch(to + '/*')
+const NavListButton = ({ to, title, Icon, disabled }: NavListButtonProps) => {
+  const match = useMatch(to + '/*');
   return (
     <ListItemButton
       selected={!!match}
       variant={match ? 'soft' : undefined}
       component={Link}
       to={to}
+      disabled={disabled} // 设置 disabled 属性
     >
       <ListItemDecorator>
         <Icon />
       </ListItemDecorator>
       <ListItemContent>{title}</ListItemContent>
     </ListItemButton>
-  )
-}
+  );
+};
 
 const links: NavListButtonProps[] = [
-  { title: '活动大厅', to: '/dashboard', Icon: DashboardIcon },
-  { title: '活动管理', to: '/activities', Icon: EventNoteIcon },
-  { title: '活动审核', to: '/check', Icon: EventNoteIcon },
-  { title: '权限管理', to: '/permission', Icon: ManageAccountsIcon },
-]
+  { title: '活动大厅', to: '/dashboard', Icon: DashboardIcon, disabled: true },
+  { title: '活动管理', to: '/activities', Icon: EventNoteIcon }, // 设置 disabled 属性为 true
+  { title: '权限管理', to: '/permission', Icon: ManageAccountsIcon, disabled: true },
+];
 
 export const NavList = () => {
   return (
@@ -55,5 +57,5 @@ export const NavList = () => {
         </ListItem>
       ))}
     </List>
-  )
-}
+  );
+};

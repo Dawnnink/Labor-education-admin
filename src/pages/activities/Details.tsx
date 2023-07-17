@@ -6,13 +6,10 @@ import { ErrorDisplay } from '~/components/ErrorDisplay'
 import { OverflowWrapper } from '~/components/OverflowWrapper'
 import { network } from '~/utils/network'
 import FileDownloadIcon from '@mui/icons-material/FileDownload'
-
-
+import onOrigin from '~/utils/FormOrigin'
 const DetailsWithParams = ({ activityId }: { activityId: number }) => {
   const { data: activity, error } = network.teacher.useActivity(activityId)
   const { data: students } = network.teacher.useActivityStudents(activityId)
-  console.log('students' + students)
-
 
   return (
     <Stack
@@ -35,7 +32,7 @@ const DetailsWithParams = ({ activityId }: { activityId: number }) => {
           导出学生列表
         </Button>
       </Stack>
-      {activity && <ActivityEditor initialActivity={activity} />}
+      {activity && <ActivityEditor initialActivity={activity} isShow={false} disabled={true} />}
     </Stack>
   )
 }
