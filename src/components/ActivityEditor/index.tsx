@@ -27,6 +27,10 @@ import { NewActivity, network } from '~/utils/network'
 import onFinish from '~/utils/FormFinish';
 import onOrigin from '~/utils/FormOrigin';
 import { IIN } from '~/utils/hooks/getActivity';
+import dayjs from 'dayjs';
+import 'dayjs/locale/zh-cn'; // 导入你所需的日期语言包
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+dayjs.extend(customParseFormat);
 
 export interface ActivityEditorProps {
   initialActivity: Activity | null
@@ -77,6 +81,10 @@ export const ActivityEditor = ({
     }
   )
   const { RangePicker } = DatePicker;
+  const defaultValue = [
+    dayjs('2022-01-01', 'YYYY-MM-DD'),
+    dayjs('2022-12-31', 'YYYY-MM-DD')
+  ];
   const { TextArea } = Input;
 
   const getBase64 = (img: RcFile, callback: (url: string) => void) => {
@@ -195,54 +203,36 @@ export const ActivityEditor = ({
 
   //本地保存数据
   const handleLocal = () => {
-    const value = form.getFieldValue();
-    console.log(value);
-    let initialState: IIN | Activity;
-    if (value.joinAt[0] == null || value.joinAt[1] == null || value.registerAt[0] == null || value.registerAt[1] == null) {
-      initialState = {
-        name: value.name || ' ',
-        description: value.description || ' ',
-        poster: imageUrl || ' ',
-        icon: iconUrl || ' ',
-        position: value.position || ' ',
-        contact_person: value.contact_person || ' ',
-        contact_phone_number: value.contact_phone_number || ' ',
-        need_audit: value.need_audit || false,
-        quota: value.quota || 0,
-        registration_start_time: '0000-00-00 00:00:00',
-        registration_end_time: '0000-00-00 00:00:00',
-        activity_start_time: '0000-00-00 00:00:00',
-        activity_end_time: '0000-00-00 00:00:00',
-        department_id: value.department_id || 0,
-        department: value.department || " ",
-        state: "未发布",
-        id: -1,
-        enroll_number: 0,
-        participate_number: 0,
-      };
-    } else {
-      initialState = {
-        name: value.name || ' ',
-        description: value.description || ' ',
-        poster: imageUrl || ' ',
-        icon: iconUrl || ' ',
-        position: value.position || ' ',
-        contact_person: value.contact_person || ' ',
-        contact_phone_number: value.contact_phone_number || ' ',
-        need_audit: value.need_audit || false,
-        quota: value.quota || 0,
-        registration_start_time: value.registerAt[0],
-        registration_end_time: value.registerAt[1],
-        activity_start_time: value.joinAt[0],
-        activity_end_time: value.joinAt[1],
-        department_id: value.department_id || 0,
-        department: value.department || " ",
-        state: "未发布",
-        id: -1,
-        enroll_number: 0,
-        participate_number: 0,
-      }
+    if (form.getFieldError('registerAt') || form.getFieldError('joinAt')) {
+      message.info('报名时间和活动时间是必填字段')
+      return
     }
+    const value = form.getFieldValue();
+    console.log(JSON.parse(localStorage.getItem('activity') as string));
+
+
+    const initialState: IIN | Activity = {
+      name: value.name || ' ',
+      description: value.description || ' ',
+      poster: imageUrl || ' ',
+      icon: iconUrl || ' ',
+      position: value.position || ' ',
+      contact_person: value.contact_person || ' ',
+      contact_phone_number: value.contact_phone_number || ' ',
+      need_audit: value.need_audit || false,
+      quota: value.quota || 0,
+      registration_start_time: value.registerAt[0],
+      registration_end_time: value.registerAt[1],
+      activity_start_time: value.joinAt[0],
+      activity_end_time: value.joinAt[1],
+      department_id: value.department_id || 0,
+      department: value.department || " ",
+      state: "未发布",
+      id: -1,
+      enroll_number: 0,
+      participate_number: 0,
+    }
+
 
     console.log(initialState);
     if (localStorage.getItem("activity")) {
@@ -251,9 +241,18 @@ export const ActivityEditor = ({
         Navigate('/activities')
       }
     }
-    console.dir(JSON.parse(localStorage.getItem('activity') as string)); // 解析存储的 JSON 字符串并打印对象内容
   }
+  const [rangeValueL, setRangeValueL] = useState<[dayjs.Dayjs?, dayjs.Dayjs?]>([undefined, undefined]);
+  const [rangeValueR, setRangeValueR] = useState<[dayjs.Dayjs?, dayjs.Dayjs?]>([undefined, undefined]);
 
+  const handleRangeChangeL = (dates: [dayjs.Dayjs?, dayjs.Dayjs?], dateStrings: [string, string]) => {
+    setRangeValueL(dates);
+    console.log(rangeValueL)
+  };
+  const handleRangeChangeR = (dates: [dayjs.Dayjs?, dayjs.Dayjs?], dateStrings: [string, string]) => {
+    setRangeValueR(dates);
+    console.log(rangeValueR)
+  };
   return (
     <div className='entire'>
       {isShow ? item : null}
@@ -468,7 +467,13 @@ export const ActivityEditor = ({
               }
             ]}
           >
-            <RangePicker showTime format='YYYY-MM-DD HH:mm' />
+            <RangePicker
+              defaultValue={[dayjs('2023/01/01 00:00', 'YYYY-MM-DD HH:mm'), dayjs('2023/01/01 00:00', 'YYYY-MM-DD HH:mm')]}
+              showTime
+              format='YYYY-MM-DD HH:mm'
+              onChange={() => handleRangeChangeL}
+            />
+
           </Form.Item>
           <Form.Item
             rules={[
@@ -482,7 +487,12 @@ export const ActivityEditor = ({
             required
             wrapperCol={{ span: 6 }}
           >
-            <RangePicker showTime format='YYYY-MM-DD HH:mm' />
+            <RangePicker
+              defaultValue={[dayjs('2023/01/01 00:00', 'YYYY-MM-DD HH:mm'), dayjs('2023/01/01 00:00', 'YYYY-MM-DD HH:mm')]}
+              showTime
+              format='YYYY-MM-DD HH:mm'
+              onChange={() => handleRangeChangeR}
+            />
           </Form.Item>
           <Form.Item
             required
