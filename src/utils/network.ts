@@ -6,7 +6,6 @@ import { ActivityStudentsProps } from '~/components/ActivityStudents'
 import fileDownload from 'js-file-download'
 import imageCompression from 'browser-image-compression'
 import { IIN } from '~/utils/hooks/getActivity'
-import React from 'react'
 export type ApiError = AxiosError<{
   code: number
   message: string
@@ -180,7 +179,7 @@ export class Service extends BaseService {
       return this.useGet<Department[]>('/teacher/department/list')
     },
     delActivities: async (params: number) => {
-      return this.axios.delete(`/teacher/activity`, { params });
+      await this.axios.delete(`/teacher/activity?id=${params}`);
     },
     useActivities: () => {
       return this.useGet<IIN[]>(`/teacher/activity/list`)

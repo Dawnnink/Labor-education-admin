@@ -138,22 +138,16 @@ export const HandleData: FC = () => {
 
 const Exp: React.FC<{ method: string, id: number }> = (props) => {
     //传进来一个字符串是编辑活动还是导出名单
-
-    const [modal, setModal] = React.useState(false);
-    const showModal = () => {
-        setModal(true);
-    };
-
-    const handleOk = () => {
-        setModal(false);
-        Navigate(`/continue/-1`)
-    };
     const Navigate = useNavigate()
-    const handleCancel = () => {
-        setModal(false);
+    const [isModal, setIsModal] = React.useState(false)
+    const handleOk = () => {
+        setIsModal(false);
+        network.teacher.downloadActivityStudentsExcel(props.id)
     };
 
-
+    const handleCancel = () => {
+        setIsModal(false);
+    };
     return (
         <>
             {(props.method == "编辑活动") &&
@@ -181,28 +175,34 @@ const Exp: React.FC<{ method: string, id: number }> = (props) => {
                 </Button >
             }
             {props.method == "导出名单" &&
-                <Button
-                    style={{
-                        width: "64px",
-                        height: "30px",
-                        padding: "0"
-                    }}
-                    type='primary'
-                    onClick={() => { network.teacher.downloadActivityStudentsExcel(props.id) }}
-                >
-                    <p style={{
-                        margin: "0px",
-                        padding: "0px",
-                        textAlign: "center",
-                        fontFamily: "Roboto",
-                        fontSize: "12px",
-                        fontStyle: "normal",
-                        fontWeight: "400",
-                        lineHeight: "24px",
-                    }}>
-                        {props.method}
-                    </p>
-                </Button>
+                <>
+                    <Button
+                        style={{
+                            width: "64px",
+                            height: "30px",
+                            padding: "0"
+                        }}
+                        type='primary'
+                        onClick={() => setIsModal(true)}
+                    >
+                        <p style={{
+                            margin: "0px",
+                            padding: "0px",
+                            textAlign: "center",
+                            fontFamily: "Roboto",
+                            fontSize: "12px",
+                            fontStyle: "normal",
+                            fontWeight: "400",
+                            lineHeight: "24px",
+                        }}>
+                            {props.method}
+                        </p>
+                    </Button>
+                    <Modal open={isModal} onOk={handleOk} onCancel={handleCancel}>
+                        是否导出名单
+                    </Modal>
+                </>
+
             }
             {
                 props.method == "继续编辑" &&
@@ -214,7 +214,6 @@ const Exp: React.FC<{ method: string, id: number }> = (props) => {
                             padding: "0"
                         }}
                         type='primary'
-                        onClick={() => showModal()}
                     >
                         <p style={{
                             margin: "0px",
@@ -229,9 +228,6 @@ const Exp: React.FC<{ method: string, id: number }> = (props) => {
                             {props.method}
                         </p>
                     </Button >
-                    <Modal open={modal} onOk={handleOk} onCancel={handleCancel}>
-                        <p>是否继续编辑</p>
-                    </Modal>
                 </>
 
             }
@@ -294,7 +290,11 @@ const Check: React.FC<{ canup: boolean, id: number }> = (props) => {
 }
 
 const Code: React.FC<{ cansee: boolean; id: number }> = (props) => {
-    const { data: num } = network.teacher.useCode(props.id);
+    let num
+    if (props.id !== -1) {
+        ({ data: num } = network.teacher.useCode(props.id)); // 注意括号的使用
+    }
+
 
     // console.log(num?.code)
     const [isOpen, setIsOpen] = React.useState(false)

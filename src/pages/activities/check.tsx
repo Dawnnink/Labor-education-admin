@@ -4,7 +4,7 @@ const Check: React.FC = () => {
 
     return (
         <div>
-            {/* <StundesTable /> */}
+            <StundesTable />
         </div>
     )
 }

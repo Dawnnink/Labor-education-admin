@@ -1,7 +1,7 @@
 export interface Activity {
   id: number
   department: string
-  department_id: number
+  department_id: number | string
   name: string
   description: string
   poster: string

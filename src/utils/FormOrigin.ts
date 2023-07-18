@@ -1,9 +1,7 @@
 import { Department } from './types';
-import { network } from '~/utils/network'
-import { Activity } from '~/utils/types'
 import dayjs from 'dayjs'
-const onOrigin = (values: any) => {
-    const { data: departments } = network.teacher.useDepartment()
+
+const onOrigin = (values: any, departments: Department[]) => {
     const newValues = {
         ...values,
     }

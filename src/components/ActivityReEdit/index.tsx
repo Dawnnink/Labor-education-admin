@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import style from './index.module.css'
 import onUpdate from '~/utils/FormUpdate';
 import {
@@ -25,8 +25,7 @@ import type { RcFile, UploadFile, UploadProps } from 'antd/es/upload/interface';
 import { useNavigate } from 'react-router-dom'
 import { Activity } from '~/utils/types'
 import { NewActivity, network } from '~/utils/network'
-import onOrigin from '~/utils/FormOrigin';
-
+import { IIN } from '~/utils/hooks/getActivity';
 export interface ActivityEditorProps {
     initialActivity: Activity | null
     disabled?: boolean
@@ -58,9 +57,8 @@ export const ActivityReEdit = ({
     isShow,
     id
 }: ActivityEditorProps) => {
-    const changedActivity = onOrigin(initialActivity)
-    const [activity, setActivity] = useState<OldActivity | NewActivity>(
-        changedActivity ?? {
+    const [activity, setActivity] = useState<Activity | NewActivity>(
+        initialActivity ?? {
             name: '',
             description: '',
             poster: '',
@@ -74,10 +72,15 @@ export const ActivityReEdit = ({
             registration_end_time: '',
             activity_start_time: '',
             activity_end_time: '',
-            department_id: '',
+            department_id: 0,
         }
     )
-
+    const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setActivity({
+            ...activity,
+            name: e.target.value
+        })
+    }
 
     const { RangePicker } = DatePicker;
     const { TextArea } = Input;
@@ -189,6 +192,46 @@ export const ActivityReEdit = ({
             </div>
         </div>
     )
+
+    const handleLocal = () => {
+        if (form.getFieldError('registerAt').length != 0 || form.getFieldError('joinAt').length != 0) {
+            message.info('报名时间和活动时间是必填字段')
+            console.log(form.getFieldError('joinAt'))
+            return
+        }
+        const value = form.getFieldValue();
+        console.log(JSON.parse(localStorage.getItem('activity') as string));
+
+        const initialState: IIN | Activity = {
+            name: value.name || ' ',
+            description: value.description || ' ',
+            poster: imageUrl || ' ',
+            icon: iconUrl || ' ',
+            position: value.position || ' ',
+            contact_person: value.contact_person || ' ',
+            contact_phone_number: value.contact_phone_number || ' ',
+            need_audit: value.need_audit || false,
+            quota: value.quota || 0,
+            registration_start_time: value.registerAt[0],
+            registration_end_time: value.registerAt[1],
+            activity_start_time: value.joinAt[0],
+            activity_end_time: value.joinAt[1],
+            department_id: value.department_id || 0,
+            department: value.department_id || " ",
+            state: "未发布",
+            id: -1,
+            enroll_number: 0,
+            participate_number: 0,
+        }
+        console.log(initialState);
+        if (localStorage.getItem("activity")) {
+            if (confirm("存储库中已有一份草稿，点击确定将会覆盖此份草稿")) {
+                localStorage.setItem(`activity`, JSON.stringify(initialState)); // 将值转换为 JSON 字符串并存储在 localStorage 中
+                Navigate('/activities')
+            }
+        }
+        localStorage.setItem(`activity`, JSON.stringify(initialState)); // 将值转换为 JSON 字符串并存储在 localStorage 中
+    }
     //selector  
     const { data: departments } = network.teacher.useDepartment()
     let OPTIONS: string[] = [];
@@ -227,7 +270,9 @@ export const ActivityReEdit = ({
                             }
                         ]}
                     >
-                        <Input />
+                        <Input
+                            onChange={(e) => { handleInput(e) }}
+                        />
                     </Form.Item>
                     <Form.Item
                         rules={[
@@ -450,9 +495,29 @@ export const ActivityReEdit = ({
                         <p className={style.tips}>点击"提交审核"后，需要<span>部门审核人</span>通过审核，学生才能看到此活动并报名</p>
                     </Form.Item>
                     <Form.Item wrapperCol={{ span: 4, offset: 4 }}>
-                        <Button type="primary" htmlType="submit">
-                            再次提交审核
-                        </Button>
+                        <Space>
+                            <Button type="primary" htmlType="submit">
+                                提交审核
+                            </Button>
+                            <Button
+                                onClick={() => handleLocal()}
+                            >
+                                保存草稿
+                            </Button>
+                            <Button
+                                danger
+                                onClick={() => {
+                                    console.log(id)
+                                    network.teacher.delActivities(id);
+                                    message.info("已删除该活动");
+                                    Navigate("/activities");
+                                }
+                                }
+                            >
+                                删除活动
+                            </Button>
+                        </Space>
+
                     </Form.Item>
                 </Form >
             </div >

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import style from './index.module.css'
 import {
   InfoCircleOutlined,
@@ -22,8 +22,8 @@ import {
 import type { UploadChangeParam } from 'antd/es/upload';
 import type { RcFile, UploadFile, UploadProps } from 'antd/es/upload/interface';
 import { useNavigate } from 'react-router-dom'
-import { Activity } from '~/utils/types'
-import { NewActivity, network } from '~/utils/network'
+import { Activity, Department } from '~/utils/types'
+import { network } from '~/utils/network'
 import onFinish from '~/utils/FormFinish';
 import onOrigin from '~/utils/FormOrigin';
 import { IIN } from '~/utils/hooks/getActivity';
@@ -39,52 +39,31 @@ export interface ActivityEditorProps {
 }
 export interface OldActivity {
   name: string
-  department_id: string
+  department_id: number
   description: string
   poster: string
   registerAt: [
-    registration_start_time: string,
-    registration_end_time: string,
+    registration_start_time: string | null,
+    registration_end_time: string | null,
   ]
   joinAt: [
-    activity_start_time: string,
-    activity_end_time: string,
+    activity_start_time: string | null,
+    activity_end_time: string | null,
   ]
   quota: number
   need_audit: boolean
   position: string;
   icon: string
-
 }
 export const ActivityEditor = ({
   initialActivity,
   disabled,
   isShow,
 }: ActivityEditorProps) => {
-  const changedActivity = onOrigin(initialActivity)
-  const [activity, setActivity] = useState<OldActivity | NewActivity>(
-    changedActivity ?? {
-      name: '',
-      description: '',
-      poster: '',
-      icon: '',
-      position: '',
-      contact_person: '',
-      contact_phone_number: '',
-      need_audit: false,
-      quota: 0,
-      registration_start_time: '',
-      registration_end_time: '',
-      activity_start_time: '',
-      activity_end_time: '',
-      department_id: '',
-    }
-  )
+  const { data: department } = network.teacher.useDepartment()
+  const changedActivity = onOrigin(initialActivity, department as Department[])
+
   const { RangePicker } = DatePicker;
-  const defaultValue = [
-    dayjs('2022-01-01', 'YYYY-MM-DD'),
-    dayjs('2022-12-31', 'YYYY-MM-DD')
-  ];
   const { TextArea } = Input;
 
   const getBase64 = (img: RcFile, callback: (url: string) => void) => {
@@ -129,8 +108,8 @@ export const ActivityEditor = ({
   //控制上传图片
   const [loading, setLoading] = useState(false);
   const [load, setLoad] = useState(false);
-  const [imageUrl, setImageUrl] = useState<string>(activity.poster);
-  const [iconUrl, setIconUrl] = useState<string>(activity.icon);
+  const [imageUrl, setImageUrl] = useState<string>(changedActivity.poster);
+  const [iconUrl, setIconUrl] = useState<string>(changedActivity.icon);
 
   //上传图片
   const handleChangeL: UploadProps['onChange'] = (info: UploadChangeParam<UploadFile>) => {
@@ -203,13 +182,13 @@ export const ActivityEditor = ({
 
   //本地保存数据
   const handleLocal = () => {
-    if (form.getFieldError('registerAt') || form.getFieldError('joinAt')) {
+    if (form.getFieldError('registerAt').length != 0 || form.getFieldError('joinAt').length != 0) {
       message.info('报名时间和活动时间是必填字段')
+      console.log(form.getFieldError('joinAt'))
       return
     }
     const value = form.getFieldValue();
     console.log(JSON.parse(localStorage.getItem('activity') as string));
-
 
     const initialState: IIN | Activity = {
       name: value.name || ' ',
@@ -226,14 +205,12 @@ export const ActivityEditor = ({
       activity_start_time: value.joinAt[0],
       activity_end_time: value.joinAt[1],
       department_id: value.department_id || 0,
-      department: value.department || " ",
+      department: value.department_id || " ",
       state: "未发布",
       id: -1,
       enroll_number: 0,
       participate_number: 0,
     }
-
-
     console.log(initialState);
     if (localStorage.getItem("activity")) {
       if (confirm("存储库中已有一份草稿，点击确定将会覆盖此份草稿")) {
@@ -241,24 +218,15 @@ export const ActivityEditor = ({
         Navigate('/activities')
       }
     }
+    localStorage.setItem(`activity`, JSON.stringify(initialState)); // 将值转换为 JSON 字符串并存储在 localStorage 中
   }
-  const [rangeValueL, setRangeValueL] = useState<[dayjs.Dayjs?, dayjs.Dayjs?]>([undefined, undefined]);
-  const [rangeValueR, setRangeValueR] = useState<[dayjs.Dayjs?, dayjs.Dayjs?]>([undefined, undefined]);
 
-  const handleRangeChangeL = (dates: [dayjs.Dayjs?, dayjs.Dayjs?], dateStrings: [string, string]) => {
-    setRangeValueL(dates);
-    console.log(rangeValueL)
-  };
-  const handleRangeChangeR = (dates: [dayjs.Dayjs?, dayjs.Dayjs?], dateStrings: [string, string]) => {
-    setRangeValueR(dates);
-    console.log(rangeValueR)
-  };
   return (
     <div className='entire'>
       {isShow ? item : null}
       <div className={style.form}>
         <Form
-          initialValues={activity}
+          initialValues={changedActivity}
           onFinish={(fieldsValue: any) => onFinish(fieldsValue, departments, imageUrl, iconUrl)}
           form={form}
           labelCol={{ span: 4 }}
@@ -340,7 +308,9 @@ export const ActivityEditor = ({
                     }}
                     customRequest={handleUploadL}
                   >
-                    {imageUrl ? <img src={imageUrl} alt=" " style={{ width: '100%' }} className={style.img} /> : uploadButton}
+                    {imageUrl != undefined && imageUrl.length > 3 ?
+                      <img src={imageUrl} alt=" " style={{ width: '100%' }} className={style.img} /> : uploadButton
+                    }
                   </Upload>
                 </div>
               </Form.Item>
@@ -360,8 +330,9 @@ export const ActivityEditor = ({
                     }}
                     customRequest={handleUploadR}
                   >
-                    {iconUrl ? <img src={iconUrl} alt=" " style={{ width: '100%' }} className={style.img} /> : upLoadBtn}
-                  </Upload>
+                    {iconUrl != undefined && iconUrl.length > 3 ?
+                      <img src={imageUrl} alt=" " style={{ width: '100%' }} className={style.img} /> : upLoadBtn
+                    }                  </Upload>
                 </div>
 
               </Form.Item>
@@ -468,10 +439,9 @@ export const ActivityEditor = ({
             ]}
           >
             <RangePicker
-              defaultValue={[dayjs('2023/01/01 00:00', 'YYYY-MM-DD HH:mm'), dayjs('2023/01/01 00:00', 'YYYY-MM-DD HH:mm')]}
+              // defaultValue={[dayjs('2023/01/01 00:00', 'YYYY-MM-DD HH:mm'), dayjs('2023/01/01 00:00', 'YYYY-MM-DD HH:mm')]}
               showTime
               format='YYYY-MM-DD HH:mm'
-              onChange={() => handleRangeChangeL}
             />
 
           </Form.Item>
@@ -488,10 +458,9 @@ export const ActivityEditor = ({
             wrapperCol={{ span: 6 }}
           >
             <RangePicker
-              defaultValue={[dayjs('2023/01/01 00:00', 'YYYY-MM-DD HH:mm'), dayjs('2023/01/01 00:00', 'YYYY-MM-DD HH:mm')]}
+              // defaultValue={[dayjs('2023/01/01 00:00', 'YYYY-MM-DD HH:mm'), dayjs('2023/01/01 00:00', 'YYYY-MM-DD HH:mm')]}
               showTime
               format='YYYY-MM-DD HH:mm'
-              onChange={() => handleRangeChangeR}
             />
           </Form.Item>
           <Form.Item
