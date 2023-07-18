@@ -1,11 +1,8 @@
 import { ActivityEditor } from '~/components/ActivityEditor'
-import { useNavigate } from 'react-router-dom'
 import { Activity } from '~/utils/types';
-import { Button, message } from 'antd'
 import { network } from '~/utils/network'
 
 const Continue = () => {
-    const Navigate = useNavigate();
     const { data: departments } = network.teacher.useDepartment()
     const activity = JSON.parse(localStorage.getItem('activity') as string) as Activity;
     const newValues = { ...activity }
