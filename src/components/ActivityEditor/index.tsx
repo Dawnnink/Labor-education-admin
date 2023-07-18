@@ -195,7 +195,7 @@ export const ActivityEditor = ({
       console.log(form.getFieldError('joinAt'))
       return
     }
-    const value = form.getFieldValue();
+    const value = form.getFieldsValue();
     console.log(JSON.parse(localStorage.getItem('activity') as string));
 
     const initialState: IIN | Activity = {

@@ -199,7 +199,7 @@ export const ActivityReEdit = ({
             console.log(form.getFieldError('joinAt'))
             return
         }
-        const value = form.getFieldValue();
+        const value = form.getFieldsValue();
         console.log(JSON.parse(localStorage.getItem('activity') as string));
 
         const initialState: IIN | Activity = {
@@ -311,8 +311,9 @@ export const ActivityReEdit = ({
                                         }}
                                         customRequest={handleUploadL}
                                     >
-                                        {imageUrl ? <img src={activity.poster || imageUrl} alt=" " style={{ width: '100%' }} className={style.img} /> : uploadButton}
-                                    </Upload>
+                                        {imageUrl != undefined && imageUrl.length > 3 ?
+                                            <img src={imageUrl} alt=" " style={{ width: '100%' }} className={style.img} /> : uploadButton
+                                        }                                    </Upload>
                                 </div>
                             </Form.Item>
                             <Form.Item
@@ -331,8 +332,9 @@ export const ActivityReEdit = ({
                                         }}
                                         customRequest={handleUploadR}
                                     >
-                                        {iconUrl ? <img src={activity.icon || iconUrl} alt=" " style={{ width: '100%' }} className={style.img} /> : upLoadBtn}
-                                    </Upload>
+                                        {iconUrl != undefined && iconUrl.length > 3 ?
+                                            <img src={imageUrl} alt=" " style={{ width: '100%' }} className={style.img} /> : upLoadBtn
+                                        }                                           </Upload>
                                 </div>
 
                             </Form.Item>
