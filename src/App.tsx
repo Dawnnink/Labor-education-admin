@@ -49,9 +49,9 @@ const App = () => {
   return (
     <MaterialCssVarsProvider
       theme={{ [MATERIAL_THEME_ID]: materialTheme }}
-      defaultMode="system"
+      defaultMode="light"
     >
-      <JoyCssVarsProvider theme={joyTheme} defaultMode="system">
+      <JoyCssVarsProvider theme={joyTheme} defaultMode="light">
         <CssBaseline />
         <RouterProvider router={router} />
       </JoyCssVarsProvider>
