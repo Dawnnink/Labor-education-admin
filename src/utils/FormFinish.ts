@@ -1,7 +1,7 @@
 import { network } from '~/utils/network'
 import { Department } from '~/utils/types'
 
-const onFinish = (fieldsValue: any, departments: Department[] | undefined, imageUrl: string | undefined, iconUrl: string | undefined) => {
+const OnFinish = (fieldsValue: any, departments: Department[] | undefined, imageUrl: string | undefined, iconUrl: string | undefined) => {
     const registerValue = fieldsValue['registerAt'];
     const joinValue = fieldsValue['joinAt'];
     const values = {
@@ -40,4 +40,4 @@ const onFinish = (fieldsValue: any, departments: Department[] | undefined, image
     network.teacher.createActivity(values);
 }
 
-export default onFinish;
+export default OnFinish;

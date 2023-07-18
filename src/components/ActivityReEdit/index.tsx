@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import style from './index.module.css'
-import onUpdate from '~/utils/FormUpdate';
+import OnUpdate from '~/utils/FormUpdate';
 import {
     InfoCircleOutlined,
     LoadingOutlined,
@@ -243,7 +243,7 @@ export const ActivityReEdit = ({
             <div className={style.form}>
                 <Form
                     initialValues={activity}
-                    onFinish={(fieldsValue: any) => onUpdate(fieldsValue, departments, imageUrl, iconUrl, id)}
+                    onFinish={(fieldsValue: any) => OnUpdate(fieldsValue, departments, imageUrl, iconUrl, id)}
                     form={form}
                     labelCol={{ span: 4 }}
                     wrapperCol={{ span: 10 }}

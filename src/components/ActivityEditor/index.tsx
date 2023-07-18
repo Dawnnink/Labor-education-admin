@@ -24,7 +24,7 @@ import type { RcFile, UploadFile, UploadProps } from 'antd/es/upload/interface';
 import { useNavigate } from 'react-router-dom'
 import { Activity, Department } from '~/utils/types'
 import { network } from '~/utils/network'
-import onFinish from '~/utils/FormFinish';
+import OnFinish from '~/utils/FormFinish';
 import onOrigin from '~/utils/FormOrigin';
 import { IIN } from '~/utils/hooks/getActivity';
 import dayjs from 'dayjs';
@@ -231,6 +231,7 @@ export const ActivityEditor = ({
       }
     }
     localStorage.setItem(`activity`, JSON.stringify(initialState)); // 将值转换为 JSON 字符串并存储在 localStorage 中
+    Navigate('/activities')
   }
 
   return (
@@ -239,7 +240,7 @@ export const ActivityEditor = ({
       <div className={style.form}>
         <Form
           initialValues={changedActivity}
-          onFinish={(fieldsValue: any) => onFinish(fieldsValue, departments, imageUrl, iconUrl)}
+          onFinish={(fieldsValue: any) => OnFinish(fieldsValue, departments, imageUrl, iconUrl)}
           form={form}
           labelCol={{ span: 4 }}
           wrapperCol={{ span: 10 }}

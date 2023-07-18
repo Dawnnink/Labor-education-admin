@@ -1,8 +1,8 @@
 import { network } from '~/utils/network'
 import { Department } from '~/utils/types'
-
-const onUpdate = (fieldsValue: any, departments: Department[] | undefined, imageUrl: string | undefined, iconUrl: string | undefined, id: number) => {
-    console.log(fieldsValue)
+import { useNavigate } from 'react-router-dom'
+const OnUpdate = (fieldsValue: any, departments: Department[] | undefined, imageUrl: string | undefined, iconUrl: string | undefined, id: number) => {
+    const Navigate = useNavigate()
     const registerValue = fieldsValue['registerAt'];
     const joinValue = fieldsValue['joinAt'];
     const values = {
@@ -42,6 +42,8 @@ const onUpdate = (fieldsValue: any, departments: Department[] | undefined, image
     values.id = id;
     console.log(JSON.stringify(values))
     network.teacher.updateActivity(values)
+
+    Navigate('/activities')
 }
 
-export default onUpdate;
+export default OnUpdate;

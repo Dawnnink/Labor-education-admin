@@ -36,32 +36,32 @@ export const router = createBrowserRouter([
         element: <Navigate to="/activities" replace />,
       },
       {
-        path: 'dashboard',
+        path: '/dashboard',
         element: <Dashboard />,
       },
       {
-        path: 'activities',
+        path: '/activities',
         element: <Activities />,
       },
       {
-        path: 'reset/:id',
+        path: '/reset/:id',
         element: <ReEdit />
       }
       ,
       {
-        path: "activities/:id",
+        path: "/activities/:id",
         element: <Details />,
       },
       {
-        path: 'create',
+        path: '/create',
         element: <Create />,
       },
       {
-        path: 'permission',
+        path: '/permission',
         element: <Permission />,
       },
       {
-        path: 'continue/-1',
+        path: '/continue/-1',
         element: <Continue />,
       }
     ],
