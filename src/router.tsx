@@ -7,7 +7,6 @@ import Dashboard from './pages/Dashboard'
 import Activities from './pages/activities/Activities'
 import Create from './pages/activities/Create'
 import Details from './pages/activities/Details'
-import Check from './pages/activities/Check'
 import Permission from './pages/Permission'
 import ReEdit from './pages/activities/ActivityReEdit'
 import Login from './pages/Login'
@@ -62,9 +61,6 @@ export const router = createBrowserRouter([
         element: <Permission />,
       },
       {
-        path: 'check',
-        element: <Check />,
-      }, {
         path: 'continue/-1',
         element: <Continue />,
       }
