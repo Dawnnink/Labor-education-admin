@@ -333,7 +333,7 @@ export const ActivityReEdit = ({
                                         customRequest={handleUploadR}
                                     >
                                         {iconUrl != undefined && iconUrl.length > 3 ?
-                                            <img src={imageUrl} alt=" " style={{ width: '100%' }} className={style.img} /> : upLoadBtn
+                                            <img src={iconUrl} alt=" " style={{ width: '100%' }} className={style.img} /> : upLoadBtn
                                         }                                           </Upload>
                                 </div>
 
