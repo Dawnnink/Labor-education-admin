@@ -297,7 +297,7 @@ export const GetActivity = (props: IINList) => {
                 }],
             )
         })) || [];
-    }, [props])
+    }, [])
     return data;
 }
 

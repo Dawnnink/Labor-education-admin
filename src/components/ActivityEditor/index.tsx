@@ -190,30 +190,34 @@ export const ActivityEditor = ({
 
   //本地保存数据
   const handleLocal = () => {
-    if (form.getFieldError('registerAt').length != 0 || form.getFieldError('joinAt').length != 0) {
+    console.log(form.getFieldValue('registerAt'))
+    console.log(form.getFieldValue('joinAt'))
+    if (form.getFieldValue('registerAt') == undefined || form.getFieldValue('joinAt') == undefined) {
       message.info('报名时间和活动时间是必填字段')
       console.log(form.getFieldError('joinAt'))
       return
     }
     const value = form.getFieldsValue();
+    console.log(value)
     console.log(JSON.parse(localStorage.getItem('activity') as string));
-
+    console.log('error')
+    console.log('error')
     const initialState: IIN | Activity = {
-      name: value.name || ' ',
-      description: value.description || ' ',
-      poster: imageUrl || ' ',
-      icon: iconUrl || ' ',
-      position: value.position || ' ',
-      contact_person: value.contact_person || ' ',
-      contact_phone_number: value.contact_phone_number || ' ',
-      need_audit: value.need_audit || false,
-      quota: value.quota || 0,
-      registration_start_time: value.registerAt[0],
-      registration_end_time: value.registerAt[1],
-      activity_start_time: value.joinAt[0],
-      activity_end_time: value.joinAt[1],
-      department_id: value.department_id || 0,
-      department: value.department_id || " ",
+      name: value.name ? value.name : ' ',
+      description: value.description != undefined ? value.description : '',
+      poster: imageUrl != undefined ? imageUrl : '',
+      icon: iconUrl != undefined ? iconUrl : '',
+      position: value.position != undefined ? value.position : '',
+      contact_person: value.contact_person != undefined ? value.contact_person : '',
+      contact_phone_number: value.contact_phone_number != undefined ? value.contact_phone_number : '',
+      need_audit: value.need_audit != undefined ? value.need_audit : false,
+      quota: value.quota != undefined ? value.quota : 0,
+      registration_start_time: value.registerAt != undefined ? value.registerAt[0] : '',
+      registration_end_time: value.registerAt != undefined ? value.registerAt[1] : '',
+      activity_start_time: value.joinAt != undefined ? value.joinAt[0] : '',
+      activity_end_time: value.joinAt != undefined ? value.joinAt[1] : '',
+      department_id: value.department_id != undefined ? value.department_id : 0,
+      department: value.department_id != undefined ? value.department_id : "",
       state: "未发布",
       id: -1,
       enroll_number: 0,

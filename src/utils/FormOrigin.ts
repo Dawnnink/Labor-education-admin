@@ -31,7 +31,6 @@ const onOrigin = (values: any, departments: Department[]) => {
         }
     }
     newValues.department_id = newValues.department || str;
-    console.log(newValues)
 
     return newValues;
 }
