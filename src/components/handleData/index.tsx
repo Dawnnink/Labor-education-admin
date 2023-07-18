@@ -143,6 +143,7 @@ const Exp: React.FC<{ method: string, id: number }> = (props) => {
     const handleOk = () => {
         setIsModal(false);
         network.teacher.downloadActivityStudentsExcel(props.id)
+        message.info("已成功导出")
     };
 
     const handleCancel = () => {
@@ -214,6 +215,7 @@ const Exp: React.FC<{ method: string, id: number }> = (props) => {
                             padding: "0"
                         }}
                         type='primary'
+                        onClick={() => Navigate('/continue/-1')}
                     >
                         <p style={{
                             margin: "0px",

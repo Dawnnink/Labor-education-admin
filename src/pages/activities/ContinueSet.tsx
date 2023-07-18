@@ -25,25 +25,10 @@ const Continue = () => {
     }
     newValues.department = newValues.department || str;
     newValues.department_id = index;
-    const handleDelete = () => {
-        localStorage.removeItem('activity')
-        message.info("已删除该活动")
-        Navigate('/activities')
-        location.reload();
-    }
+
     return (
-        <div
-            style={{
-                display: 'flex',
-                flexDirection: 'column',
-            }}
-        ><Button
-            onClick={() => handleDelete()}
-            danger
-        >
-                删除活动
-            </Button>
-            <ActivityEditor initialActivity={activity as Activity} isShow={true} />
+        <div>
+            <ActivityEditor initialActivity={activity as Activity} isShow={true} isDel={true} />
         </div>
 
     )

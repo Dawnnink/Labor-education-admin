@@ -179,7 +179,8 @@ export class Service extends BaseService {
       return this.useGet<Department[]>('/teacher/department/list')
     },
     delActivities: async (params: number) => {
-      await this.axios.delete(`/teacher/activity?id=${params}`);
+      const res = await this.axios.delete(`/teacher/activity?id=${params}`);
+      return res
     },
     useActivities: () => {
       return this.useGet<IIN[]>(`/teacher/activity/list`)

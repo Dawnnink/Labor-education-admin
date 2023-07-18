@@ -508,9 +508,17 @@ export const ActivityReEdit = ({
                                 danger
                                 onClick={() => {
                                     console.log(id)
-                                    network.teacher.delActivities(id);
-                                    message.info("已删除该活动");
-                                    Navigate("/activities");
+                                    network.teacher.delActivities(id)
+                                        .then(response => {
+                                            if (response.status === 200) {
+                                                message.info("已删除该活动");
+                                                Navigate("/activities");
+                                            }
+                                        })
+                                        .catch(error => {
+                                            message.info("删除活动失败", error)
+                                        });
+
                                 }
                                 }
                             >

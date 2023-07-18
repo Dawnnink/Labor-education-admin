@@ -36,6 +36,7 @@ export interface ActivityEditorProps {
   initialActivity: Activity | null
   disabled?: boolean
   isShow: boolean
+  isDel?: boolean
 }
 export interface OldActivity {
   name: string
@@ -59,6 +60,7 @@ export const ActivityEditor = ({
   initialActivity,
   disabled,
   isShow,
+  isDel,
 }: ActivityEditorProps) => {
   const { data: department } = network.teacher.useDepartment()
   const changedActivity = onOrigin(initialActivity, department as Department[])
@@ -151,6 +153,12 @@ export const ActivityEditor = ({
       <div style={{ marginTop: 8 }}>Upload</div>
     </div>
   );
+  const handleDelete = () => {
+    localStorage.removeItem('activity')
+    message.info("已删除该活动")
+    Navigate('/activities')
+    location.reload();
+  }
   //标题栏
   const item = (
     <div className={style.bigB}>
@@ -513,6 +521,16 @@ export const ActivityEditor = ({
               >
                 保存草稿
               </Button>
+              {
+                isDel ?
+                  <Button
+                    onClick={() => handleDelete()}
+                    danger
+                  >
+                    删除活动
+                  </Button> :
+                  null
+              }
             </Space>
 
           </Form.Item>
