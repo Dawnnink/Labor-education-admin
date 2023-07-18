@@ -162,6 +162,7 @@ export class Service extends BaseService {
     const { upload_url, download_url } = await this.signFileUploadUrl(file.name)
     console.log("postname success")
     console.log(upload_url)
+    console.log("down", download_url)
     // Global axios instance is used here.
     await axios.put(upload_url, compressedFile, {
       headers: {
