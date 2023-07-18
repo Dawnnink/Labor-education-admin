@@ -68,6 +68,11 @@ export const ActivityEditor = ({
   const { RangePicker } = DatePicker;
   const { TextArea } = Input;
 
+  const [loading, setLoading] = useState(false);
+  const [load, setLoad] = useState(false);
+  const [imageUrl, setImageUrl] = useState<string>(changedActivity.poster);
+  const [iconUrl, setIconUrl] = useState<string>(changedActivity.icon);
+
   const getBase64 = (img: RcFile, callback: (url: string) => void) => {
     const reader = new FileReader();
     reader.addEventListener('load', () => callback(reader.result as string));
@@ -99,19 +104,18 @@ export const ActivityEditor = ({
     const { file } = options;
     console.log(file);
     const url: string = await network.uploadImage(file)
-    setImageUrl(() => url);
+    console.log("poster", url);
+    setImageUrl(url);
   }
   const handleUploadR = async (options: any) => {
     const { file } = options;
     console.log(file);
     const url: string = await network.uploadImage(file)
-    setIconUrl(() => url);
+    console.log("icon", url)
+    setIconUrl(url);
   }
   //控制上传图片
-  const [loading, setLoading] = useState(false);
-  const [load, setLoad] = useState(false);
-  const [imageUrl, setImageUrl] = useState<string>(changedActivity.poster);
-  const [iconUrl, setIconUrl] = useState<string>(changedActivity.icon);
+
 
   //上传图片
   const handleChangeL: UploadProps['onChange'] = (info: UploadChangeParam<UploadFile>) => {
