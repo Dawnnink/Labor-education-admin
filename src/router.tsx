@@ -1,16 +1,16 @@
 /* eslint-disable react-refresh/only-export-components */
 import { Navigate, createBrowserRouter } from 'react-router-dom'
-import Index from './pages/Index'
-import { useStore } from './utils/store'
+import Index from '~/pages/Index'
+import { useStore } from '~/utils/store'
 
-import Dashboard from './pages/Dashboard'
-import Activities from './pages/activities/Activities'
-import Create from './pages/activities/Create'
-import Details from './pages/activities/Details'
-import Permission from './pages/Permission'
-import ReEdit from './pages/activities/ActivityReEdit'
-import Login from './pages/Login'
-import Continue from './pages/activities/ContinueSet'
+import Dashboard from '~/pages/Dashboard'
+import Activities from '~/pages/activities/Activities'
+import Create from '~/pages/activities/Create'
+import Details from '~/pages/activities/Details'
+import Permission from '~/pages/Permission'
+import ReEdit from '~/pages/activities/ActivityReEdit'
+import Login from '~/pages/Login'
+import Continue from '~/pages/activities/ContinueSet'
 
 
 const IndexLoginGuard = () => {
