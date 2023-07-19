@@ -214,21 +214,27 @@ export class Service extends BaseService {
       await this.axios.post('/teacher/activity/participate/reject', { id })
     },
     downloadActivityStudentsExcel: async (activityId: number) => {
-      const { data } = await this.axios.get(
+      const data = await this.axios.get(
         `/teacher/activity/participate/excel?id=${activityId}`,
         {
           responseType: 'blob',
         }
-      )
-      if (data.size < 6100) {
-        message.error("人数为0")
-        return;
+      ).then((res) => {
+        return res.data;
+      }).catch(() => {
+        message.error("人数为零")
+        return false;
+      })
+      console.log(data)
+      if (data) {
+        fileDownload(
+          data,
+          `活动学生列表-${activityId}-${new Date().toLocaleDateString()}`
+        )
+        message.success("已成功导出")
+
       }
-      fileDownload(
-        data,
-        `活动学生列表-${activityId}-${new Date().toLocaleDateString()}`
-      )
-      message.success("已成功导出")
+
     },
   }
 }
