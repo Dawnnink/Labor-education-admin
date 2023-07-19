@@ -290,7 +290,7 @@ export const ActivityReEdit = ({
                         rules={[
                             {
                                 max: 20,
-                                message: "活动名称不能超过20个字符"
+                                message: "活动名称不能超过20个字"
                             },
                             {
                                 required: true,
@@ -306,7 +306,7 @@ export const ActivityReEdit = ({
                         rules={[
                             {
                                 max: 250,
-                                message: "活动简介不能超过250个字符",
+                                message: "活动简介不能超过250个字",
                             }, {
                                 required: true,
                                 message: "活动简介为必填字段"
@@ -379,7 +379,7 @@ export const ActivityReEdit = ({
                             },
                             {
                                 max: 50,
-                                message: "活动地点不能超过50个字段"
+                                message: "活动地点不能超过50个字"
                             }
                         ]}
                         name='position'
@@ -406,7 +406,7 @@ export const ActivityReEdit = ({
                                     },
                                     {
                                         max: 50,
-                                        message: "活动联系人不能超过50个字段"
+                                        message: "活动联系人不能超过50个字"
                                     }
                                 ]}
                                 style={{ display: 'inline-block', width: 'calc(50% - 8px)', margin: '0 8px' }}
