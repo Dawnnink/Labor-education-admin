@@ -30,6 +30,7 @@ import dayjs from 'dayjs';
 import 'dayjs/locale/zh-cn'; // 导入你所需的日期语言包
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import OnFinish from '~/utils/FormFinish';
+import { compareDates } from '~/utils/hooks/getActivity';
 dayjs.extend(customParseFormat);
 
 export interface ActivityEditorProps {
@@ -193,21 +194,27 @@ export const ActivityEditor = ({
 
   (departments === undefined) ? OPTIONS = ['无数据'] : OPTIONS = OPTIONS.concat(departments.map((item) => item.name));
 
-
-  //本地保存数据
+  const handleDate = useCallback(() => {
+    if (form.getFieldValue('registerAt')) {
+      console.log(form.getFieldValue('registerAt')[0].$d)
+    }
+    if (form.getFieldValue('registerAt') && form.getFieldValue('joinAt')) {
+      if (compareDates(form.getFieldValue('registerAt')[1].$d, form.getFieldValue('joinAt')[0].$d) > 0) {
+        message.info("活动报名结束时间不能晚于活动开始时间")
+        form.setFieldValue('joinAt', new Date())
+      }
+    }
+  }, [])
+  // 本地保存数据
   const handleLocal = () => {
-    console.log(form.getFieldValue('registerAt'))
-    console.log(form.getFieldValue('joinAt'))
+
     if (form.getFieldValue('registerAt') == undefined || form.getFieldValue('joinAt') == undefined) {
       message.info('报名时间和活动时间是必填字段')
       console.log(form.getFieldError('joinAt'))
       return
     }
     const value = form.getFieldsValue();
-    console.log(value)
-    console.log(JSON.parse(localStorage.getItem('activity') as string));
-    console.log('error')
-    console.log('error')
+
     const initialState: IIN | Activity = {
       name: value.name ? value.name : ' ',
       description: value.description != undefined ? value.description : '',
@@ -229,8 +236,6 @@ export const ActivityEditor = ({
       enroll_number: 0,
       participate_number: 0,
     }
-    // initialState.poster ==''
-    console.log(initialState.poster);
     if (localStorage.getItem("activity")) {
       if (confirm("存储库中已有一份草稿，点击确定将会覆盖此份草稿")) {
         localStorage.setItem(`activity`, JSON.stringify(initialState)); // 将值转换为 JSON 字符串并存储在 localStorage 中
@@ -473,6 +478,7 @@ export const ActivityEditor = ({
               // defaultValue={[dayjs('2023/01/01 00:00', 'YYYY-MM-DD HH:mm'), dayjs('2023/01/01 00:00', 'YYYY-MM-DD HH:mm')]}
               showTime
               format='YYYY-MM-DD HH:mm'
+              onChange={() => handleDate()}
             />
 
           </Form.Item>
@@ -489,6 +495,7 @@ export const ActivityEditor = ({
             wrapperCol={{ span: 10 }}
           >
             <RangePicker
+              onChange={() => handleDate()}
               // defaultValue={[dayjs('2023/01/01 00:00', 'YYYY-MM-DD HH:mm'), dayjs('2023/01/01 00:00', 'YYYY-MM-DD HH:mm')]}
               showTime
               format='YYYY-MM-DD HH:mm'

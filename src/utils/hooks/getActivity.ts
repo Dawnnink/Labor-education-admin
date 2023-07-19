@@ -44,16 +44,18 @@ const initialShowAct: showAct[][] = [[
     }
 ],]
 export type IINList = IIN[]
-export const GetActivity = (props: IINList) => {
-    function compareDates(date1: Date, date2: Date): number {
-        if (date1 < date2) {
-            return -1; // date1 在 date2 之前
-        } else if (date1 > date2) {
-            return 1; // date1 在 date2 之后
-        } else {
-            return 0; // date1 和 date2 相等
-        }
+
+export function compareDates(date1: Date, date2: Date): number {
+    if (date1 < date2) {
+        return -1; // date1 在 date2 之前
+    } else if (date1 > date2) {
+        return 1; // date1 在 date2 之后
+    } else {
+        return 0; // date1 和 date2 相等
     }
+}
+export const GetActivity = (props: IINList) => {
+
 
     // 使用示例
     function parseDateString(dateString: string): Date {

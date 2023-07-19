@@ -201,7 +201,6 @@ export class Service extends BaseService {
 
     createActivity: async (activity: NewActivity) => {
       return await this.axios.post('/teacher/activity', activity)
-
     },
 
     updateActivity: async (activity: Activity) => {
@@ -222,7 +221,7 @@ export class Service extends BaseService {
         }
       )
       if (data.size < 6100) {
-        message.error("人数太少无法导出")
+        message.error("人数为0")
         return;
       }
       fileDownload(
