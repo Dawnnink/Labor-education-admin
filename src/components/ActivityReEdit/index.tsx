@@ -160,7 +160,10 @@ export const ActivityReEdit = ({
     };
     const handleDate = useCallback(() => {
         if (form.getFieldValue('registerAt')) {
-            console.log(form.getFieldValue('registerAt')[0].$d)
+            if (dayjs().isAfter(form.getFieldValue('registerAt')[0])) {
+                form.setFieldValue('registerAt', new Date())
+                message.info("活动报名开始时间不能早于目前时间")
+            }
         }
         if (form.getFieldValue('registerAt') && form.getFieldValue('joinAt')) {
             if (compareDates(form.getFieldValue('registerAt')[1].$d, form.getFieldValue('joinAt')[0].$d) > 0) {
