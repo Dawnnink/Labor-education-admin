@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
+import { compareDates } from '~/utils/hooks/getActivity';
 import style from './index.module.css'
 import OnUpdate from '~/utils/FormUpdate';
 import {
@@ -157,6 +158,17 @@ export const ActivityReEdit = ({
             });
         }
     };
+    const handleDate = useCallback(() => {
+        if (form.getFieldValue('registerAt')) {
+            console.log(form.getFieldValue('registerAt')[0].$d)
+        }
+        if (form.getFieldValue('registerAt') && form.getFieldValue('joinAt')) {
+            if (compareDates(form.getFieldValue('registerAt')[1].$d, form.getFieldValue('joinAt')[0].$d) > 0) {
+                message.info("活动报名结束时间不能晚于活动开始时间")
+                form.setFieldValue('joinAt', new Date())
+            }
+        }
+    }, [])
     //返回加载中动画
     const uploadButton = (
         <div>
@@ -200,7 +212,6 @@ export const ActivityReEdit = ({
             return
         }
         const value = form.getFieldsValue();
-        console.log(JSON.parse(localStorage.getItem('activity') as string));
 
         const initialState: IIN | Activity = {
             name: value.name || ' ',
@@ -228,9 +239,14 @@ export const ActivityReEdit = ({
             if (confirm("存储库中已有一份草稿，点击确定将会覆盖此份草稿")) {
                 localStorage.setItem(`activity`, JSON.stringify(initialState)); // 将值转换为 JSON 字符串并存储在 localStorage 中
                 Navigate('/activities')
+                message.success("保存成功")
+            } else {
+                return;
             }
         }
         localStorage.setItem(`activity`, JSON.stringify(initialState)); // 将值转换为 JSON 字符串并存储在 localStorage 中
+        Navigate('/activities')
+        message.success("保存成功")// 将值转换为 JSON 字符串并存储在 localStorage 中
     }
     //selector  
     const { data: departments } = network.teacher.useDepartment()
@@ -448,7 +464,9 @@ export const ActivityReEdit = ({
                             }
                         ]}
                     >
-                        <RangePicker showTime format='YYYY-MM-DD HH:mm' />
+                        <RangePicker
+                            onChange={() => handleDate()}
+                            showTime format='YYYY-MM-DD HH:mm' />
                     </Form.Item>
                     <Form.Item
                         rules={[
@@ -462,7 +480,9 @@ export const ActivityReEdit = ({
                         required
                         wrapperCol={{ span: 10 }}
                     >
-                        <RangePicker showTime format='YYYY-MM-DD HH:mm' />
+                        <RangePicker
+                            onChange={() => handleDate()}
+                            showTime format='YYYY-MM-DD HH:mm' />
                     </Form.Item>
                     <Form.Item
                         required

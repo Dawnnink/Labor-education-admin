@@ -1,4 +1,3 @@
-
 import EventNoteIcon from '@mui/icons-material/EventNote';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
@@ -11,23 +10,28 @@ import {
 } from '@mui/joy';
 import { Link, useMatch } from 'react-router-dom';
 import { ComponentType } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export interface NavListButtonProps {
   to: string;
   title: string;
   Icon: ComponentType;
-  disabled?: boolean; // 添加 disabled 属性
+  disabled?: boolean;
 }
 
 const NavListButton = ({ to, title, Icon, disabled }: NavListButtonProps) => {
   const match = useMatch(to + '/*');
+  const navigate = useNavigate();
+
   return (
     <ListItemButton
       selected={!!match}
       variant={match ? 'soft' : undefined}
-      component={Link}
-      to={to}
-      disabled={disabled} // 设置 disabled 属性
+      onClick={() => {
+        navigate(to);
+        location.reload();
+      }}
+      disabled={disabled}
     >
       <ListItemDecorator>
         <Icon />
@@ -39,7 +43,7 @@ const NavListButton = ({ to, title, Icon, disabled }: NavListButtonProps) => {
 
 const links: NavListButtonProps[] = [
   { title: '活动大厅', to: '/dashboard', Icon: DashboardIcon, disabled: true },
-  { title: '活动管理', to: '/activities', Icon: EventNoteIcon }, // 设置 disabled 属性为 true
+  { title: '活动管理', to: '/activities', Icon: EventNoteIcon },
   { title: '权限管理', to: '/permission', Icon: ManageAccountsIcon, disabled: true },
 ];
 
