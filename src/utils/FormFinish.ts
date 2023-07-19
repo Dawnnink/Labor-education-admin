@@ -1,7 +1,8 @@
 import { network } from '~/utils/network'
 import { Department } from '~/utils/types'
+import { message } from 'antd'
 
-const OnFinish = (fieldsValue: any, departments: Department[] | undefined, imageUrl: string | undefined, iconUrl: string | undefined) => {
+const OnFinish = (fieldsValue: any, departments: Department[] | undefined, imageUrl: string | undefined, iconUrl: string | undefined, isDraft: boolean | undefined) => {
     const registerValue = fieldsValue['registerAt'];
     const joinValue = fieldsValue['joinAt'];
     const values = {
@@ -36,8 +37,20 @@ const OnFinish = (fieldsValue: any, departments: Department[] | undefined, image
     values.department_id = index;
     imageUrl === undefined ? values.poster = ' ' : values.poster = imageUrl;
     iconUrl === undefined ? values.icon = ' ' : values.icon = iconUrl;
-    console.log(values)
-    network.teacher.createActivity(values);
-}
 
+    const flag = network.teacher.createActivity(values)
+        .then((res) => {
+            if (res.status === 200) {
+                message.success("成功提交")
+                if (isDraft) {
+                    localStorage.removeItem('activity')
+                }
+                return true;
+            }
+        }).catch(() => {
+            message.error("出错了请稍后再试")
+            return false;
+        });
+    return flag;
+}
 export default OnFinish;

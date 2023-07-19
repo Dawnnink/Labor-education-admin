@@ -1,8 +1,7 @@
+import { message } from 'antd';
 import { network } from '~/utils/network'
 import { Department } from '~/utils/types'
-import { useNavigate } from 'react-router-dom'
 const OnUpdate = (fieldsValue: any, departments: Department[] | undefined, imageUrl: string | undefined, iconUrl: string | undefined, id: number) => {
-    const Navigate = useNavigate()
     const registerValue = fieldsValue['registerAt'];
     const joinValue = fieldsValue['joinAt'];
     const values = {
@@ -40,10 +39,17 @@ const OnUpdate = (fieldsValue: any, departments: Department[] | undefined, image
     iconUrl === undefined ? values.icon = ' ' : values.icon = iconUrl;
     // console.log(values)
     values.id = id;
-    console.log(JSON.stringify(values))
-    network.teacher.updateActivity(values)
 
-    Navigate('/activities')
+    const flag = network.teacher.updateActivity(values)
+        .then((res) => {
+            if (res.status === 200) {
+                message.success('提交审核成功')
+                return true;
+            }
+        }).catch(() => {
+            message.error("请稍后再试")
+            return false;
+        })
+    return flag;
 }
-
 export default OnUpdate;

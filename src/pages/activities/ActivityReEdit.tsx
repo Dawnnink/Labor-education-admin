@@ -7,6 +7,8 @@ const Reset = () => {
     //使用正则表达式获取路径参数
     const regex = /\/(\d+)$/;
     const match = params.match(regex);
+    console.log(match)
+
     const Id = match ? match[1] : null;
     const { data: department } = network.teacher.useDepartment();
     console.log("此时的ID", Id)

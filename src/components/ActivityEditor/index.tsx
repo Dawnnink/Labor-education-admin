@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useCallback, useState, useEffect } from 'react';
 import style from './index.module.css'
 import {
   InfoCircleOutlined,
@@ -24,12 +24,12 @@ import type { RcFile, UploadFile, UploadProps } from 'antd/es/upload/interface';
 import { useNavigate } from 'react-router-dom'
 import { Activity, Department } from '~/utils/types'
 import { network } from '~/utils/network'
-import OnFinish from '~/utils/FormFinish';
 import onOrigin from '~/utils/FormOrigin';
 import { IIN } from '~/utils/hooks/getActivity';
 import dayjs from 'dayjs';
 import 'dayjs/locale/zh-cn'; // 导入你所需的日期语言包
 import customParseFormat from 'dayjs/plugin/customParseFormat';
+import OnFinish from '~/utils/FormFinish';
 dayjs.extend(customParseFormat);
 
 export interface ActivityEditorProps {
@@ -37,6 +37,7 @@ export interface ActivityEditorProps {
   disabled?: boolean
   isShow: boolean
   isDel?: boolean
+  isDraft?: boolean
 }
 export interface OldActivity {
   name: string
@@ -61,6 +62,7 @@ export const ActivityEditor = ({
   disabled,
   isShow,
   isDel,
+  isDraft,
 }: ActivityEditorProps) => {
   const { data: department } = network.teacher.useDepartment()
   const changedActivity = onOrigin(initialActivity, department as Department[])
@@ -209,7 +211,7 @@ export const ActivityEditor = ({
     const initialState: IIN | Activity = {
       name: value.name ? value.name : ' ',
       description: value.description != undefined ? value.description : '',
-      poster: imageUrl != undefined ? imageUrl : '',
+      poster: imageUrl != undefined ? imageUrl : ' ',
       icon: iconUrl != undefined ? iconUrl : '',
       position: value.position != undefined ? value.position : '',
       contact_person: value.contact_person != undefined ? value.contact_person : '',
@@ -227,15 +229,21 @@ export const ActivityEditor = ({
       enroll_number: 0,
       participate_number: 0,
     }
-    console.log(initialState);
+    // initialState.poster ==''
+    console.log(initialState.poster);
     if (localStorage.getItem("activity")) {
       if (confirm("存储库中已有一份草稿，点击确定将会覆盖此份草稿")) {
         localStorage.setItem(`activity`, JSON.stringify(initialState)); // 将值转换为 JSON 字符串并存储在 localStorage 中
         Navigate('/activities')
+        message.success("保存成功")
+      } else {
+        return;
       }
     }
     localStorage.setItem(`activity`, JSON.stringify(initialState)); // 将值转换为 JSON 字符串并存储在 localStorage 中
+    console.log(initialState);
     Navigate('/activities')
+    message.success("保存成功")
   }
 
   return (
@@ -244,7 +252,13 @@ export const ActivityEditor = ({
       <div className={style.form}>
         <Form
           initialValues={changedActivity}
-          onFinish={(fieldsValue: any) => OnFinish(fieldsValue, departments, imageUrl, iconUrl)}
+          onFinish={async (fieldsValue: any) => {
+            if (await OnFinish(fieldsValue, departments, imageUrl, iconUrl, isDraft)) {
+              Navigate('/activities')
+              location.reload()
+            }
+          }
+          }
           form={form}
           labelCol={{ span: 4 }}
           wrapperCol={{ span: 10 }}
@@ -447,7 +461,7 @@ export const ActivityEditor = ({
             label='报名时间'
             required
             name="registerAt"
-            wrapperCol={{ span: 8 }}
+            wrapperCol={{ span: 10 }}
             rules={[
               {
                 required: true,
@@ -472,7 +486,7 @@ export const ActivityEditor = ({
             label='活动时间'
             name='joinAt'
             required
-            wrapperCol={{ span: 6 }}
+            wrapperCol={{ span: 10 }}
           >
             <RangePicker
               // defaultValue={[dayjs('2023/01/01 00:00', 'YYYY-MM-DD HH:mm'), dayjs('2023/01/01 00:00', 'YYYY-MM-DD HH:mm')]}

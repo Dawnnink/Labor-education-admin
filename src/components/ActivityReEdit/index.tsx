@@ -237,13 +237,21 @@ export const ActivityReEdit = ({
     let OPTIONS: string[] = [];
 
     (departments === undefined) ? OPTIONS = ['无数据'] : OPTIONS = OPTIONS.concat(departments.map((item) => item.name));
+
+
+
     return (
         <div className='entire'>
             {isShow ? item : null}
             <div className={style.form}>
                 <Form
                     initialValues={activity}
-                    onFinish={(fieldsValue: any) => OnUpdate(fieldsValue, departments, imageUrl, iconUrl, id)}
+                    onFinish={async (fieldsValue: any) => {
+                        if (await OnUpdate(fieldsValue, departments, imageUrl, iconUrl, id)) {
+                            Navigate('./activities')
+                        }
+                    }
+                    }
                     form={form}
                     labelCol={{ span: 4 }}
                     wrapperCol={{ span: 10 }}
@@ -432,7 +440,7 @@ export const ActivityReEdit = ({
                         label='报名时间'
                         required
                         name="registerAt"
-                        wrapperCol={{ span: 8 }}
+                        wrapperCol={{ span: 10 }}
                         rules={[
                             {
                                 required: true,
@@ -452,7 +460,7 @@ export const ActivityReEdit = ({
                         label='活动时间'
                         name='joinAt'
                         required
-                        wrapperCol={{ span: 6 }}
+                        wrapperCol={{ span: 10 }}
                     >
                         <RangePicker showTime format='YYYY-MM-DD HH:mm' />
                     </Form.Item>

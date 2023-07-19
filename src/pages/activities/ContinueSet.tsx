@@ -25,7 +25,7 @@ const Continue = () => {
 
     return (
         <div>
-            <ActivityEditor initialActivity={activity as Activity} isShow={true} isDel={true} />
+            <ActivityEditor initialActivity={activity as Activity} isShow={true} isDel={true} isDraft={true} />
         </div>
 
     )

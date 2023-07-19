@@ -49,6 +49,7 @@ export const HandleData: FC = () => {
     }
     let base: showAct[][] | undefined = undefined;
     data === undefined ? null : base = GetActivity(data);
+    console.log("changeddata", base)
 
     const { columns, rows } = ChangeData(columnsData, base as showAct[][]);
 
@@ -143,7 +144,6 @@ const Exp: React.FC<{ method: string, id: number }> = (props) => {
     const handleOk = () => {
         setIsModal(false);
         network.teacher.downloadActivityStudentsExcel(props.id)
-        message.info("已成功导出")
     };
 
     const handleCancel = () => {

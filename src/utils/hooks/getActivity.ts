@@ -74,9 +74,24 @@ export const GetActivity = (props: IINList) => {
 
         return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
     }
-
+    console.log(formatDateTime("2023-07-14T02:34:49.965Z"))
     const currentDate = new Date();
     let data: showAct[][] = [[]]
+
+    function formatDateTime(dateTime: string): string {
+        const dateObj = new Date(dateTime);
+
+        const year = dateObj.getFullYear();
+        const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+        const day = String(dateObj.getDate()).padStart(2, '0');
+        const hour = String(dateObj.getHours()).padStart(2, '0');
+        const minute = String(dateObj.getMinutes()).padStart(2, '0');
+        const second = String(dateObj.getSeconds()).padStart(2, '0');
+
+        const formattedDateTime = `${year}-${month}-${day} ${hour}:${minute}:${second}`;
+
+        return formattedDateTime;
+    }
 
     React.useMemo(() => {
         data === undefined ? data = initialShowAct : (props.map((item) => {
@@ -282,12 +297,12 @@ export const GetActivity = (props: IINList) => {
                     mounts: item.enroll_number,
                     quota: item.quota,
                     registerAt: {
-                        registration_start_time: formatTime(item.registration_start_time),
-                        registration_end_time: formatTime(item.registration_end_time),
+                        registration_start_time: formatDateTime(item.registration_start_time),
+                        registration_end_time: formatDateTime(item.registration_end_time),
                     },
                     ActAt: {
-                        activity_start_time: formatTime(item.activity_start_time),
-                        activity_end_time: formatTime(item.activity_end_time),
+                        activity_start_time: formatDateTime(item.activity_start_time),
+                        activity_end_time: formatDateTime(item.activity_end_time),
                     },
                     Move: {
                         Exp: "继续编辑",

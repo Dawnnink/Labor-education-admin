@@ -6,6 +6,7 @@ import { ActivityStudentsProps } from '~/components/ActivityStudents'
 import fileDownload from 'js-file-download'
 import imageCompression from 'browser-image-compression'
 import { IIN } from '~/utils/hooks/getActivity'
+import { message } from 'antd'
 export type ApiError = AxiosError<{
   code: number
   message: string
@@ -199,12 +200,12 @@ export class Service extends BaseService {
     },
 
     createActivity: async (activity: NewActivity) => {
-      await this.axios.post('/teacher/activity', activity)
+      return await this.axios.post('/teacher/activity', activity)
 
     },
 
     updateActivity: async (activity: Activity) => {
-      await this.axios.put('/teacher/activity', activity)
+      return await this.axios.put('/teacher/activity', activity)
     },
 
     usePass: async (id: number) => {
@@ -220,10 +221,15 @@ export class Service extends BaseService {
           responseType: 'blob',
         }
       )
+      if (data.size < 6100) {
+        message.error("人数太少无法导出")
+        return;
+      }
       fileDownload(
         data,
         `活动学生列表-${activityId}-${new Date().toLocaleDateString()}`
       )
+      message.success("已成功导出")
     },
   }
 }
