@@ -66,7 +66,13 @@ export const HandleData: FC = () => {
                                         color: "#1890FF",
                                         cursor: "pointer"
                                     }}
-                                    onClick={() => Navigate(`${record?.id}`)}
+                                    onClick={() => {
+                                        if (record.id != -1) {
+                                            Navigate(`${record?.id}`)
+                                        } else {
+                                            Navigate('/continue/-1')
+                                        }
+                                    }}
                                 >{name}</p>
                             )
                         }
