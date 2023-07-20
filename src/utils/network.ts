@@ -208,10 +208,10 @@ export class Service extends BaseService {
     },
 
     usePass: async (id: number) => {
-      await this.axios.post('/teacher/activity/participate/pass', { id })
+      await this.axios.post(`/teacher/activity/participate/pass?id=${id}`)
     },
     useReject: async (id: number) => {
-      await this.axios.post('/teacher/activity/participate/reject', { id })
+      await this.axios.post(`/teacher/activity/participate/reject?id=${id}`)
     },
     downloadActivityStudentsExcel: async (activityId: number) => {
       const data = await this.axios.get(
