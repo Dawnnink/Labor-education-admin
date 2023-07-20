@@ -8,7 +8,7 @@ import {
   ListItemContent,
   ListItemDecorator,
 } from '@mui/joy';
-import { Link, useMatch } from 'react-router-dom';
+import { useMatch } from 'react-router-dom';
 import { ComponentType } from 'react';
 import { useNavigate } from 'react-router-dom';
 
