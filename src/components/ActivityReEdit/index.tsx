@@ -244,6 +244,11 @@ export const ActivityReEdit = ({
                 localStorage.setItem(`activity`, JSON.stringify(initialState)); // 将值转换为 JSON 字符串并存储在 localStorage 中
                 Navigate('/activities')
                 message.success("保存成功")
+                network.teacher.delActivities(id)
+                setTimeout(() => {
+                    location.reload()
+                }, 2000)
+                return;
             } else {
                 return;
             }
@@ -251,6 +256,10 @@ export const ActivityReEdit = ({
         localStorage.setItem(`activity`, JSON.stringify(initialState)); // 将值转换为 JSON 字符串并存储在 localStorage 中
         Navigate('/activities')
         message.success("保存成功")// 将值转换为 JSON 字符串并存储在 localStorage 中
+        network.teacher.delActivities(id)
+        setTimeout(() => {
+            location.reload()
+        }, 2000)
     }
     //selector  
     const { data: departments } = network.teacher.useDepartment()
