@@ -1,6 +1,7 @@
-import { message } from 'antd';
+import { message, Modal } from 'antd';
 import { network } from '~/utils/network'
 import { Department } from '~/utils/types'
+
 const OnUpdate = (fieldsValue: any, departments: Department[] | undefined, imageUrl: string | undefined, iconUrl: string | undefined, id: number) => {
     const registerValue = fieldsValue['registerAt'];
     const joinValue = fieldsValue['joinAt'];
@@ -43,7 +44,13 @@ const OnUpdate = (fieldsValue: any, departments: Department[] | undefined, image
     const flag = network.teacher.updateActivity(values)
         .then((res) => {
             if (res.status === 200) {
-                message.success('提交审核成功')
+                (Modal.warning({
+                    title: '已提交成功',
+                    okText: '确定',
+                    onOk: () => {
+                        location.reload();
+                    }
+                }))
                 return true;
             }
         }).catch(() => {

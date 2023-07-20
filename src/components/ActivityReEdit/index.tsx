@@ -268,7 +268,7 @@ export const ActivityReEdit = ({
                     initialValues={activity}
                     onFinish={async (fieldsValue: any) => {
                         if (await OnUpdate(fieldsValue, departments, imageUrl, iconUrl, id)) {
-                            Navigate('./activities')
+                            Navigate('/activities')
                         }
                     }
                     }
