@@ -49,7 +49,8 @@ const OnUpdate = (fieldsValue: any, departments: Department[] | undefined, image
                     okText: '确定',
                     onOk: () => {
                         location.reload();
-                    }
+                    },
+                    style: { top: "calc(50% - 58px)" }
                 }))
                 return true;
             }
