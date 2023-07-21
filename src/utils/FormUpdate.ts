@@ -1,10 +1,28 @@
 import { message, Modal } from 'antd';
 import { network } from '~/utils/network'
 import { Department } from '~/utils/types'
+import dayjs, { Dayjs } from 'dayjs'
+
+export function compare(reTime: Dayjs[], joTime: Dayjs[]): boolean {
+    if (dayjs().isAfter(reTime[0])) {
+        message.warning("请检查时间格式")
+        return false;
+    } else if (dayjs().isAfter(joTime[0])) {
+        message.warning("请检查时间格式")
+        return false;
+    } else if (reTime[1].isAfter(joTime[0])) {
+        message.warning("请检查时间格式")
+        return false;
+    }
+    return true;
+}
 
 const OnUpdate = (fieldsValue: any, departments: Department[] | undefined, imageUrl: string | undefined, iconUrl: string | undefined, id: number) => {
     const registerValue = fieldsValue['registerAt'];
     const joinValue = fieldsValue['joinAt'];
+    if (!compare(registerValue, joinValue)) {
+        return;
+    }
     const values = {
         ...fieldsValue,
         "registration_start_time":

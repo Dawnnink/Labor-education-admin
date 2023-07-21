@@ -196,20 +196,20 @@ export const ActivityEditor = ({
   const handleDate = useCallback(() => {
     if (form.getFieldValue('registerAt')) {
       if (dayjs().isAfter(form.getFieldValue('registerAt')[0])) {
-        form.setFieldValue('registerAt', new Date())
+        form.setFieldValue('registerAt', '')
         message.info("活动报名开始时间不能早于目前时间")
       }
     }
     if (form.getFieldValue('joinAt')) {
       if (dayjs().isAfter(form.getFieldValue('joinAt')[0])) {
-        form.setFieldValue('joinAt', new Date())
+        form.setFieldValue('joinAt', '')
         message.info("活动开始时间不能早于目前时间")
       }
     }
     if (form.getFieldValue('registerAt') && form.getFieldValue('joinAt')) {
       if (compareDates(form.getFieldValue('registerAt')[1].$d, form.getFieldValue('joinAt')[0].$d) > 0) {
         message.info("活动报名结束时间不能晚于活动开始时间")
-        form.setFieldValue('joinAt', new Date())
+        form.setFieldValue('joinAt', '')
       }
     }
   }, [])

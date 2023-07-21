@@ -164,14 +164,23 @@ export const ActivityReEdit = ({
     const handleDate = useCallback(() => {
         if (form.getFieldValue('registerAt')) {
             if (dayjs().isAfter(form.getFieldValue('registerAt')[0])) {
-                form.setFieldValue('registerAt', new Date())
+                form.setFieldValue('registerAt', '')
                 message.info("活动报名开始时间不能早于目前时间")
+                return false;
             }
         }
         if (form.getFieldValue('registerAt') && form.getFieldValue('joinAt')) {
             if (compareDates(form.getFieldValue('registerAt')[1].$d, form.getFieldValue('joinAt')[0].$d) > 0) {
                 message.info("活动报名结束时间不能晚于活动开始时间")
-                form.setFieldValue('joinAt', new Date())
+                form.setFieldValue('joinAt', '')
+                return false;
+            }
+        }
+        if (form.getFieldValue('registerAt') && form.getFieldValue('joinAt')) {
+            if (compareDates(form.getFieldValue('registerAt')[1].$d, form.getFieldValue('joinAt')[0].$d) > 0) {
+                message.info("活动报名结束时间不能晚于活动开始时间")
+                form.setFieldValue('joinAt', '')
+                return false;
             }
         }
     }, [])
@@ -212,10 +221,14 @@ export const ActivityReEdit = ({
     )
 
     const handleLocal = () => {
+        if (!handleDate()) {
+            message.warning("请检查报名时间的格式")
+            return;
+        }
         if (form.getFieldError('registerAt').length != 0 || form.getFieldError('joinAt').length != 0) {
             message.info('报名时间和活动时间是必填字段')
             console.log(form.getFieldError('joinAt'))
-            return
+            return;
         }
         const value = form.getFieldsValue();
 
