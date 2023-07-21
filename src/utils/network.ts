@@ -229,7 +229,7 @@ export class Service extends BaseService {
       if (data) {
         fileDownload(
           data,
-          `活动学生列表-${activityId}-${new Date().toLocaleDateString()}`
+          `活动学生列表-${activityId}-${new Date().toLocaleDateString()}.xls`
         )
         message.success("已成功导出")
 
