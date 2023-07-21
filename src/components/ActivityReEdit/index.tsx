@@ -77,6 +77,8 @@ export const ActivityReEdit = ({
             department_id: 0,
         }
     )
+    console.log(activity)
+
     const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
         setActivity({
             ...activity,

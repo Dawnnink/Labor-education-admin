@@ -10,7 +10,7 @@ export interface ActivityTableProps {
   activities: Activity[]
 }
 
-export const ActivityTable = () => {
+export const ActivityTable: React.FC = () => {
   const Navigate = useNavigate();
   return (
     <div className={style.all}>

@@ -64,7 +64,6 @@ export const GetActivity = (props: IINList) => {
         const [hours, minutes, seconds] = timePart.split(':').map(Number);
         return new Date(year, month - 1, day, hours, minutes, seconds);
     }
-
     function formatTime(timeString: string): string {
         const inputDate = new Date(timeString);
         const year = inputDate.getUTCFullYear().toString().padStart(4, '0');
@@ -91,9 +90,9 @@ export const GetActivity = (props: IINList) => {
         const second = String(dateObj.getSeconds()).padStart(2, '0');
 
         const formattedDateTime = `${year}-${month}-${day} ${hour}:${minute}:${second}`;
-
         return formattedDateTime;
     }
+
 
     React.useMemo(() => {
         data === undefined ? data = initialShowAct : (props.map((item) => {

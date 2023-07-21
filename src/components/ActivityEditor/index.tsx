@@ -67,7 +67,6 @@ export const ActivityEditor = ({
 }: ActivityEditorProps) => {
   const { data: department } = network.teacher.useDepartment()
   const changedActivity = onOrigin(initialActivity, department as Department[])
-
   const { RangePicker } = DatePicker;
   const { TextArea } = Input;
 
