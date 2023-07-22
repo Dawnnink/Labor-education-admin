@@ -207,11 +207,11 @@ export class Service extends BaseService {
       return await this.axios.put('/teacher/activity', activity)
     },
 
-    usePass: async (id: number) => {
-      await this.axios.post(`/teacher/activity/participate/pass?id=${id}`)
+    usePass: async (id: number, user: number[]) => {
+      await this.axios.post(`/teacher/activity/participate/pass?id=${id}`, user)
     },
-    useReject: async (id: number) => {
-      await this.axios.post(`/teacher/activity/participate/reject?id=${id}`)
+    useReject: async (id: number, user: number[]) => {
+      await this.axios.post(`/teacher/activity/participate/reject?id=${id}`, user)
     },
     downloadActivityStudentsExcel: async (activityId: number) => {
       const data = await this.axios.get(

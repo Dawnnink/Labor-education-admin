@@ -14,8 +14,9 @@ export interface ActivityStudentsProps {
     check_in: string // ISO 8601
     user: User
   }[]
+  id: number
 }
-export const ActivityStudents = ({ students }: ActivityStudentsProps) => {
+export const ActivityStudents = ({ students }: ActivityStudentsProps, id: number) => {
   const theme = useTheme()
   const getColor = (status: string) => {
     switch (status) {
@@ -73,11 +74,11 @@ export const ActivityStudents = ({ students }: ActivityStudentsProps) => {
               >
                 <Space>
                   <Button
-                    onClick={() => { network.teacher.usePass(student.user.id) }}
+                    onClick={() => { network.teacher.usePass(id, [student.user.id]) }}
                   >通过
                   </Button>
                   <Button
-                    onClick={() => { network.teacher.useReject(student.user.id) }}
+                    onClick={() => { network.teacher.useReject(id, [student.user.id]) }}
                   >拒绝
                   </Button>
                 </Space>

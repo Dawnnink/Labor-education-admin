@@ -7,6 +7,7 @@ import { OverflowWrapper } from '~/components/OverflowWrapper'
 import { network } from '~/utils/network'
 import FileDownloadIcon from '@mui/icons-material/FileDownload'
 import dayjs from 'dayjs'
+import { Activity } from '~/utils/types'
 const DetailsWithParams = ({ activityId }: { activityId: number }) => {
   const { data: activity, error } = network.teacher.useActivity(activityId)
   const { data: students } = network.teacher.useActivityStudents(activityId)
@@ -25,7 +26,7 @@ const DetailsWithParams = ({ activityId }: { activityId: number }) => {
           >
             <ErrorDisplay error={error} />
             <OverflowWrapper>
-              {students === undefined ? null : <ActivityStudents students={students} />}
+              {students === undefined ? null : <ActivityStudents students={students} id={activity.id} />}
             </OverflowWrapper>
             <Stack direction="row" alignItems="flex-end">
               <Button
@@ -52,7 +53,7 @@ const DetailsWithParams = ({ activityId }: { activityId: number }) => {
     >
       <ErrorDisplay error={error} />
       <OverflowWrapper>
-        {students === undefined ? null : <ActivityStudents students={students} />}
+        {students === undefined ? null : <ActivityStudents students={students} id={(activity as Activity).id} />}
       </OverflowWrapper>
       <Stack direction="row" alignItems="flex-end">
         <Button
