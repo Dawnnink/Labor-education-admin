@@ -180,8 +180,8 @@ export const ActivityEditor = ({
             setTimeout(() => location.reload(), 1000)
           }
         })
-        .catch(error => {
-          message.info("删除活动失败", error)
+        .catch(() => {
+          message.warning("删除活动失败")
         });
     } else if (Id === null) {
       localStorage.removeItem('activity')

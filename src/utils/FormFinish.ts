@@ -36,12 +36,12 @@ const OnFinish = (fieldsValue: any, departments: Department[] | undefined, image
     }
     values.department_id = index;
     imageUrl === undefined ? values.poster = ' ' : values.poster = imageUrl;
-    iconUrl === undefined ? values.icon = ' ' : values.icon = iconUrl;
+    iconUrl === undefined ? values.icon = null : values.icon = iconUrl;
 
     const flag = network.teacher.createActivity(values)
         .then((res) => {
             if (res.status === 200) {
-                message.success("成功提交")
+                alert("成功提交")
                 if (isDraft) {
                     localStorage.removeItem('activity')
                 }
