@@ -447,7 +447,7 @@ export const ActivityReEdit = ({
                                         required: true,
                                         message: "联系人电话为必填字段",
                                     }, {
-                                        pattern: /^(\+?0?86-?)?1[3-9]\d{9}$/,
+                                        pattern: /^1[3456789]\d{9}$/,
                                         message: "请输入正确的手机号格式"
                                     }
                                 ]}
@@ -558,8 +558,7 @@ export const ActivityReEdit = ({
                                 提交审核
                             </Button>
                             <Button
-                                onClick={() => handleLocal()}
-                            >
+                                onClick={() => handleLocal()}                            >
                                 保存草稿
                             </Button>
                             <Button

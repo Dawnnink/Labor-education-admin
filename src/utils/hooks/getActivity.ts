@@ -176,7 +176,7 @@ export const GetActivity = (props: IINList) => {
                                 activity_end_time: formatTime(item.activity_end_time),
                             },
                             Move: {
-                                Exp: "编辑活动",
+                                Exp: "查看活动",
                                 canup: false,
                                 cansee: false,
                             },

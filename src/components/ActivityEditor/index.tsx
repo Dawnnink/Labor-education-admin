@@ -39,6 +39,7 @@ export interface ActivityEditorProps {
   isShow: boolean
   isDel?: boolean
   isDraft?: boolean
+  beginDel?: boolean
 }
 export interface OldActivity {
   name: string
@@ -64,7 +65,9 @@ export const ActivityEditor = ({
   isShow,
   isDel,
   isDraft,
+  beginDel,
 }: ActivityEditorProps) => {
+
   const { data: department } = network.teacher.useDepartment()
   const changedActivity = onOrigin(initialActivity, department as Department[])
   const { RangePicker } = DatePicker;
@@ -160,10 +163,33 @@ export const ActivityEditor = ({
     </div>
   );
   const handleDelete = () => {
-    localStorage.removeItem('activity')
-    message.info("已删除该活动")
-    Navigate('/activities')
-    location.reload();
+    const params: string = window.location.pathname;
+
+    const regex = /\/(\d+)$/;
+    const match = params.match(regex);
+
+    const Id = match ? match[1] : null;
+    console.log(Id);
+    if (Id) {
+      //如果Id存在则为待报名
+      network.teacher.delActivities(parseInt(Id))
+        .then(response => {
+          if (response.status === 200) {
+            message.info("已删除该活动");
+            Navigate("/activities");
+            setTimeout(() => location.reload(), 1000)
+          }
+        })
+        .catch(error => {
+          message.info("删除活动失败", error)
+        });
+    } else if (Id === null) {
+      localStorage.removeItem('activity')
+      message.info("已删除该活动")
+      Navigate('/activities')
+      setTimeout(() => location.reload(), 1000)
+    }
+
   }
   //标题栏
   const item = (
@@ -248,6 +274,7 @@ export const ActivityEditor = ({
         localStorage.setItem(`activity`, JSON.stringify(initialState)); // 将值转换为 JSON 字符串并存储在 localStorage 中
         Navigate('/activities')
         message.success("保存成功")
+        return;
       } else {
         return;
       }
@@ -287,14 +314,15 @@ export const ActivityEditor = ({
             required
             tooltip={{ title: '填写活动名称', icon: <InfoCircleOutlined /> }}
             rules={[
+
+              {
+                required: true,
+                message: "活动名称为必填字段"
+              },
               {
                 max: 20,
                 message: "活动名称不能超过20个字"
               },
-              {
-                required: true,
-                message: "活动名称为必填字段"
-              }
             ]}
           >
             <Input
@@ -436,7 +464,7 @@ export const ActivityEditor = ({
                     required: true,
                     message: "联系人电话为必填字段",
                   }, {
-                    pattern: /^(\+?0?86-?)?1[3-9]\d{9}$/,
+                    pattern: /^1[3456789]\d{9}$/,
                     message: "请输入正确的手机号格式"
                   }
                 ]}
@@ -563,6 +591,7 @@ export const ActivityEditor = ({
                   <Button
                     onClick={() => handleDelete()}
                     danger
+                    disabled={!beginDel}
                   >
                     删除活动
                   </Button> :

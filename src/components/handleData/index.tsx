@@ -157,6 +157,31 @@ const Exp: React.FC<{ method: string, id: number }> = (props) => {
     };
     return (
         <>
+            {
+                props.method == '查看活动' &&
+                <Button
+                    style={{
+                        width: "64px",
+                        height: "30px",
+                        padding: "0"
+                    }}
+                    type='primary'
+                    onClick={() => Navigate(`/activities/${props.id}`)}
+                >
+                    <p style={{
+                        margin: "0px",
+                        padding: "0px",
+                        textAlign: "center",
+                        fontFamily: "Roboto",
+                        fontSize: "12px",
+                        fontStyle: "normal",
+                        fontWeight: "400",
+                        lineHeight: "24px",
+                    }}>
+                        {props.method}
+                    </p>
+                </Button >
+            }
             {(props.method == "编辑活动") &&
                 <Button
                     style={{

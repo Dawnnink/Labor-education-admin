@@ -6,11 +6,43 @@ import { ErrorDisplay } from '~/components/ErrorDisplay'
 import { OverflowWrapper } from '~/components/OverflowWrapper'
 import { network } from '~/utils/network'
 import FileDownloadIcon from '@mui/icons-material/FileDownload'
-
+import dayjs from 'dayjs'
 const DetailsWithParams = ({ activityId }: { activityId: number }) => {
   const { data: activity, error } = network.teacher.useActivity(activityId)
   const { data: students } = network.teacher.useActivityStudents(activityId)
-
+  console.log('这里是activity', activity)
+  console.log('这里是student', students);
+  if (activity) {
+    if (activity.state == '已发布') {
+      if (dayjs(activity.registration_start_time).isAfter(dayjs())) {
+        console.log('是的，现在待报名')
+        return (
+          <Stack
+            spacing={2}
+            sx={{
+              width: '100%',
+            }}
+          >
+            <ErrorDisplay error={error} />
+            <OverflowWrapper>
+              {students === undefined ? null : <ActivityStudents students={students} />}
+            </OverflowWrapper>
+            <Stack direction="row" alignItems="flex-end">
+              <Button
+                startDecorator={<FileDownloadIcon />}
+                onClick={() => {
+                  network.teacher.downloadActivityStudentsExcel(activityId)
+                }}
+              >
+                导出学生列表
+              </Button>
+            </Stack>
+            {activity && <ActivityEditor initialActivity={activity} isShow={false} disabled={true} beginDel={true} isDel={true} />}
+          </Stack>
+        )
+      }
+    }
+  }
   return (
     <Stack
       spacing={2}
