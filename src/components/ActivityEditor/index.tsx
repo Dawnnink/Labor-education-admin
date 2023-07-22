@@ -366,6 +366,12 @@ export const ActivityEditor = ({
               <Form.Item
                 name="poster"
                 style={{ display: 'inline-block', width: 'calc(50% - 8px)', margin: '0 8px' }}
+                rules={[
+                  {
+                    required: true,
+                    message: "请上传活动海报",
+                  }
+                ]}
               >
                 <div>
                   <Upload

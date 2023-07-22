@@ -23,6 +23,10 @@ const OnUpdate = (fieldsValue: any, departments: Department[] | undefined, image
     if (!compare(registerValue, joinValue)) {
         return;
     }
+    if (fieldsValue['poster'] === undefined) {
+        message.warning("请上传活动海报");
+        return;
+    }
     const values = {
         ...fieldsValue,
         "registration_start_time":

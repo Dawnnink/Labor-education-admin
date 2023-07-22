@@ -5,6 +5,12 @@ import { message } from 'antd'
 const OnFinish = (fieldsValue: any, departments: Department[] | undefined, imageUrl: string | undefined, iconUrl: string | undefined, isDraft: boolean | undefined) => {
     const registerValue = fieldsValue['registerAt'];
     const joinValue = fieldsValue['joinAt'];
+
+    //检查是否上传海报
+    if (fieldsValue['poster'] === undefined) {
+        message.warning("请上传活动海报");
+        return;
+    }
     const values = {
         ...fieldsValue,
         "registration_start_time":

@@ -89,13 +89,13 @@ export const ActivityReEdit = ({
     const { RangePicker } = DatePicker;
     const { TextArea } = Input;
 
-    const getBase64 = (img: RcFile, callback: (url: string) => void) => {
+    const getBase64 = useCallback((img: RcFile, callback: (url: string) => void) => {
         const reader = new FileReader();
         reader.addEventListener('load', () => callback(reader.result as string));
         reader.readAsDataURL(img);
-    };
+    }, []);
 
-    const beforeUpload = (file: RcFile) => {
+    const beforeUpload = useCallback((file: RcFile) => {
         const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
         if (!isJpgOrPng) {
             message.error('只能上传格式类型为JPG/PNG的图片');
@@ -105,7 +105,7 @@ export const ActivityReEdit = ({
             message.error('图片大小必须小于2MB!');
         }
         return isJpgOrPng && isLt2M;
-    };
+    }, []);
 
     // export const UponAct: FC = () => {
     //
@@ -220,7 +220,7 @@ export const ActivityReEdit = ({
         </div>
     )
 
-    const handleLocal = () => {
+    const handleLocal = useCallback(() => {
         if (!handleDate()) {
             message.warning("请检查报名时间的格式")
             return;
@@ -275,7 +275,7 @@ export const ActivityReEdit = ({
         setTimeout(() => {
             location.reload()
         }, 2000)
-    }
+    }, [])
     //selector  
     const { data: departments } = network.teacher.useDepartment()
     let OPTIONS: string[] = [];
