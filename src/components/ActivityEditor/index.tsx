@@ -320,8 +320,8 @@ export const ActivityEditor = ({
                 message: "活动名称为必填字段"
               },
               {
-                max: 20,
-                message: "活动名称不能超过20个字"
+                max: 30,
+                message: "活动名称不能超过30个字"
               },
             ]}
           >
@@ -425,8 +425,8 @@ export const ActivityEditor = ({
                 message: "活动地点为必填字段",
               },
               {
-                max: 50,
-                message: "活动地点不能超过50个字"
+                max: 20,
+                message: "活动地点不能超过20个字"
               }
             ]}
             name='position'

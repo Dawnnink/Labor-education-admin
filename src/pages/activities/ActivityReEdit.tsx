@@ -43,15 +43,7 @@ const Reset = () => {
     if (!activities) {
         return (
             <div className={style.box}>
-                <div className={style.father}>
-
-                </div>
-                <div className={style.father}>
-
-                </div>
-                <div className={style.father}>
-
-                </div>
+                Loading...
             </div >
         ) // 或者显示其他加载中的内容
     }
