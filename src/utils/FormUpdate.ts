@@ -2,16 +2,16 @@ import { message, Modal } from 'antd';
 import { network } from '~/utils/network'
 import { Department } from '~/utils/types'
 import dayjs, { Dayjs } from 'dayjs'
-
+//这边可能有个bug，就是departmentid，虽然上传的时候一定会有有个department，但是如果这个地方收到的数据department是空的的话那么就无法正常更新活动
 export function compare(reTime: Dayjs[], joTime: Dayjs[]): boolean {
     if (dayjs().isAfter(reTime[0])) {
-        message.warning("请检查时间格式")
+        message.warning("报名开始时间过晚")
         return false;
     } else if (dayjs().isAfter(joTime[0])) {
-        message.warning("请检查时间格式")
+        message.warning("活动开始时间过晚")
         return false;
     } else if (reTime[1].isAfter(joTime[0])) {
-        message.warning("请检查时间格式")
+        message.warning("活动开始时间过晚")
         return false;
     }
     return true;
@@ -56,10 +56,9 @@ const OnUpdate = (fieldsValue: any, departments: Department[] | undefined, image
             }
         }
     }
-    values.icon = ' ';
     values.department_id = index;
-    imageUrl === undefined ? values.poster = ' ' : values.poster = imageUrl;
-    iconUrl === undefined ? values.icon = ' ' : values.icon = iconUrl;
+    imageUrl === undefined ? values.poster = null : values.poster = imageUrl;
+    iconUrl === undefined ? values.icon = null : values.icon = iconUrl;
     // console.log(values)
     values.id = id;
 

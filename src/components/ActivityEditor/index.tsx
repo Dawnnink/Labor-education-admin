@@ -251,8 +251,8 @@ export const ActivityEditor = ({
     const initialState: IIN | Activity = {
       name: value.name ? value.name : ' ',
       description: value.description != undefined ? value.description : '',
-      poster: imageUrl != undefined ? imageUrl : ' ',
-      icon: iconUrl != undefined ? iconUrl : '',
+      poster: imageUrl != undefined ? imageUrl : null,
+      icon: iconUrl != undefined ? iconUrl : null,
       position: value.position != undefined ? value.position : '',
       contact_person: value.contact_person != undefined ? value.contact_person : '',
       contact_phone_number: value.contact_phone_number != undefined ? value.contact_phone_number : '',
@@ -262,8 +262,8 @@ export const ActivityEditor = ({
       registration_end_time: value.registerAt != undefined ? value.registerAt[1] : '',
       activity_start_time: value.joinAt != undefined ? value.joinAt[0] : '',
       activity_end_time: value.joinAt != undefined ? value.joinAt[1] : '',
-      department_id: value.department_id != undefined ? value.department_id : 0,
-      department: value.department_id != undefined ? value.department_id : "",
+      department_id: value.department_id != undefined ? value.department_id : undefined,
+      department: value.department_id != undefined ? value.department_id : undefined,
       state: "未发布",
       id: -1,
       enroll_number: 0,
@@ -366,12 +366,6 @@ export const ActivityEditor = ({
               <Form.Item
                 name="poster"
                 style={{ display: 'inline-block', width: 'calc(50% - 8px)', margin: '0 8px' }}
-                rules={[
-                  {
-                    required: true,
-                    message: "请上传活动海报",
-                  }
-                ]}
               >
                 <div>
                   <Upload

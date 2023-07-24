@@ -20,9 +20,9 @@ const onOrigin = (values: any, departments: Department[]) => {
 
     let len = 0
     departments === undefined ? len = 0 : len = departments.length
-    let str = " "
+    let str = ""
     if (departments === undefined) {
-        str = "无"
+        str = ""
     } else {
         for (let i = 0; i < len; i++) {
             if (departments[i].id == values?.department_id) {

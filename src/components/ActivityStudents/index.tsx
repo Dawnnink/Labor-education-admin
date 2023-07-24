@@ -44,7 +44,7 @@ export const ActivityStudents = ({ students }: ActivityStudentsProps, id: number
           <th>专业</th>
           <th>班级</th>
           <th>申请理由</th>
-          <th>报名状态</th>
+          <th>活动状态</th>
           <th>操作</th>
         </tr>
       </thead>

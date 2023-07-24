@@ -6,11 +6,7 @@ const OnFinish = (fieldsValue: any, departments: Department[] | undefined, image
     const registerValue = fieldsValue['registerAt'];
     const joinValue = fieldsValue['joinAt'];
 
-    //检查是否上传海报
-    if (fieldsValue['poster'] === undefined) {
-        message.warning("请上传活动海报");
-        return;
-    }
+
     const values = {
         ...fieldsValue,
         "registration_start_time":
@@ -27,12 +23,17 @@ const OnFinish = (fieldsValue: any, departments: Department[] | undefined, image
     delete values.joinAt;
     // const calue
     const college = values.department_id;
-    console.log(college)
+    if (college) {
+        console.log(college)
+        message.info("请填写发布部门")
+        return;
+    }
     let index = 0;
     let len = 0;
     departments === undefined ? len = 0 : len = departments.length;
     if (departments === undefined) {
-        index = 0;
+        message.warning("未获取到发布部门信息")
+        return;
     } else {
         for (let i = 0; i < len; i++) {
             if (departments[i].name == college) {
@@ -41,9 +42,9 @@ const OnFinish = (fieldsValue: any, departments: Department[] | undefined, image
         }
     }
     values.department_id = index;
-    imageUrl === undefined ? values.poster = ' ' : values.poster = imageUrl;
+    imageUrl === undefined ? values.poster = null : values.poster = imageUrl;
     iconUrl === undefined ? values.icon = null : values.icon = iconUrl;
-
+    console.log(JSON.stringify(values))
     const flag = network.teacher.createActivity(values)
         .then((res) => {
             if (res.status === 200) {
