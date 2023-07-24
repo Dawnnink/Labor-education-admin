@@ -6,7 +6,11 @@ export interface Store {
   logout: () => void
   login: (token: string) => void
 }
-
+export interface IRoot {
+  root: number | null
+  setRoot: (root: number) => void
+  removeRoot: () => void
+}
 export const useStore = create<Store>()(
   persist(
     (set) => ({
@@ -19,6 +23,23 @@ export const useStore = create<Store>()(
     }),
     {
       name: 'labor-store',
+      version: 1,
+    }
+  )
+)
+
+export const useRoot = create<IRoot>()(
+  persist(
+    (set) => ({
+      root: null,
+      setRoot: (root) => set({ root }),
+      removeRoot: () => {
+        set({ root: null })
+        location.replace('/')
+      }
+    }),
+    {
+      name: 'labor-root',
       version: 1,
     }
   )

@@ -89,6 +89,17 @@ export interface SignOssResponse {
   expire_seconds: number
 }
 
+export interface IUser {
+  id: number
+  name: string
+  uid: string
+  avatar: string
+  sex: string
+  college: string
+  phone_number: string
+  role_ids: number[]
+}
+
 export class Service extends BaseService {
   constructor(axios: AxiosInstance) {
     super(axios)
@@ -132,7 +143,6 @@ export class Service extends BaseService {
     }
     useStore.getState().login(token)
   }
-
   logout = () => {
     useStore.getState().logout()
     location.replace('/')
@@ -172,7 +182,9 @@ export class Service extends BaseService {
     })
     return download_url
   }
-
+  getRoot = async () => {
+    return await this.axios.get<IUser>('user/info')
+  }
   teacher = {
     useCode: (id: number) => {
       return this.useGet<Code>(`/teacher/activity/code?id=${id}`)

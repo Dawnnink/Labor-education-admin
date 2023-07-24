@@ -27,22 +27,24 @@ export default function Login() {
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-    ;(async () => {
-      try {
-        setSubmitting(true)
-        await network.login(credentials)
-        navigate('/', { replace: true })
-      } catch (err) {
-        if (err instanceof AxiosError) {
-          const message: string | undefined = err.response?.data.message
-          setErrorMessage(message || err.message)
-        } else if (err instanceof Error) {
-          setErrorMessage(err.message)
+      ; (async () => {
+        try {
+          setSubmitting(true)
+          await network.login(credentials)
+          const { data } = await network.getRoot();
+          console.log(data)
+          navigate('/', { replace: true })
+        } catch (err) {
+          if (err instanceof AxiosError) {
+            const message: string | undefined = err.response?.data.message
+            setErrorMessage(message || err.message)
+          } else if (err instanceof Error) {
+            setErrorMessage(err.message)
+          }
+        } finally {
+          setSubmitting(false)
         }
-      } finally {
-        setSubmitting(false)
-      }
-    })()
+      })()
   }
 
   return (
