@@ -333,7 +333,6 @@ const Code: React.FC<{ cansee: boolean; id: number }> = (props) => {
     const [isOpen, setIsOpen] = React.useState(false)
     return (
         <div>
-            {isOpen ? <SignInCode code={num?.code} /> : null}
 
             <Button
                 style={{
@@ -362,6 +361,8 @@ const Code: React.FC<{ cansee: boolean; id: number }> = (props) => {
                     查看签到码
                 </p>
             </Button>
+            {isOpen ? <SignInCode code={num?.code} /> : null}
+
         </div>
     );
 };
@@ -386,21 +387,16 @@ const SignInCode = (props: { code: string | undefined }) => {
     return (
         <div
             style={{
-                zIndex: "100",
-                position: "absolute",
-                top: "80px",
+                margin: "4px"
                 // left: "-30px",
             }}
         >
-            <Space>
-                <Input value={props.code} readOnly style={{
-                    width: "70px"
-                }} />
-                <Button type="primary" icon={<CopyOutlined />} onClick={handleCopy}>
-                    复制
-                </Button>
-            </Space>
-
+            <Input value={props.code} readOnly style={{
+                width: "70px"
+            }} />
+            <Button type="primary" icon={<CopyOutlined />} onClick={handleCopy}>
+                复制
+            </Button>
         </div >
     );
 };

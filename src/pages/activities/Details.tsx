@@ -8,13 +8,25 @@ import { network } from '~/utils/network'
 import FileDownloadIcon from '@mui/icons-material/FileDownload'
 import dayjs from 'dayjs'
 import { Activity } from '~/utils/types'
+import style from './index.module.css'
+function formatTime(timeString: string): string {
+  const inputDate = new Date(timeString);
+  const year = inputDate.getUTCFullYear().toString().padStart(4, '0');
+  const month = (inputDate.getUTCMonth() + 1).toString().padStart(2, '0');
+  const day = inputDate.getUTCDate().toString().padStart(2, '0');
+  const hours = inputDate.getUTCHours().toString().padStart(2, '0');
+  const minutes = inputDate.getUTCMinutes().toString().padStart(2, '0');
+  const seconds = inputDate.getUTCSeconds().toString().padStart(2, '0');
+
+  return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+}
 const DetailsWithParams = ({ activityId }: { activityId: number }) => {
   const { data: activity, error } = network.teacher.useActivity(activityId)
   const { data: students } = network.teacher.useActivityStudents(activityId)
   console.log('这里是activity', activity)
   console.log('这里是student', students);
   if (activity) {
-    if (activity.state == '已发布') {
+    if (activity.state == '已发布' || activity.state == '审核中') {
       if (dayjs(activity.registration_start_time).isAfter(dayjs())) {
         console.log('是的，现在待报名')
         return (
@@ -44,6 +56,14 @@ const DetailsWithParams = ({ activityId }: { activityId: number }) => {
       }
     }
   }
+  if (!activity) {
+    return (
+      <div className={style.box}>
+        Loading...
+      </div >
+    ) // 或者显示其他加载中的内容
+
+  }
   return (
     <Stack
       spacing={2}
@@ -53,7 +73,7 @@ const DetailsWithParams = ({ activityId }: { activityId: number }) => {
     >
       <ErrorDisplay error={error} />
       <OverflowWrapper>
-        {students === undefined ? null : <ActivityStudents students={students} id={(activity as Activity).id} />}
+        {students === undefined ? null : <ActivityStudents students={students} id={activity.id} />}
       </OverflowWrapper>
       <Stack direction="row" alignItems="flex-end">
         <Button

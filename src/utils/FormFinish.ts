@@ -23,7 +23,7 @@ const OnFinish = (fieldsValue: any, departments: Department[] | undefined, image
     delete values.joinAt;
     // const calue
     const college = values.department_id;
-    if (college) {
+    if (!college) {
         console.log(college)
         message.info("请填写发布部门")
         return;

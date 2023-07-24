@@ -222,7 +222,7 @@ export class Service extends BaseService {
       ).then((res) => {
         return res.data;
       }).catch(() => {
-        message.error("报名成功人数为零")
+        message.error("报名成功                                                                                                                                                                                                                                                                                                                                                                                                                                                             人数为零")
         return false;
       })
       console.log(data)
