@@ -45,7 +45,7 @@ export const ReadOnlyEditor: FC<IReadOnlyEditor> = (
                     style={{
                         maxWidth: "100%",
                     }}
-                    aria-readonly
+
                     requiredMark={true}
                 >
                     <Form.Item
@@ -55,6 +55,7 @@ export const ReadOnlyEditor: FC<IReadOnlyEditor> = (
                         tooltip={{ title: '填写活动名称', icon: <InfoCircleOutlined /> }}
                     >
                         <Input
+                            readOnly
                         // onChange={(e) => { handleName(e) }}
                         />
                     </Form.Item>
@@ -65,6 +66,7 @@ export const ReadOnlyEditor: FC<IReadOnlyEditor> = (
                         name="description"
                     >
                         <TextArea
+                            readOnly
                             // onChange={(e) => { handleDes(e) }}
                             rows={4}
                         />
@@ -76,16 +78,9 @@ export const ReadOnlyEditor: FC<IReadOnlyEditor> = (
                                 style={{ display: 'inline-block', width: 'calc(50% - 8px)', margin: '0 8px' }}
                             >
                                 <div>
-                                    <Upload
-                                        className='avatar-uploader'
-                                        listType="picture-card"
-                                        showUploadList={false}
-
-                                    >
-                                        {props.initialActivity.poster != undefined && props.initialActivity.poster.length > 3 ?
-                                            <img src={props.initialActivity.poster} alt=" " style={{ width: '100%' }} className={style.img} /> : null
-                                        }
-                                    </Upload>
+                                    {props.initialActivity.poster != undefined && props.initialActivity.poster.length > 3 ?
+                                        <img src={props.initialActivity.poster} alt=" " style={{ width: '100%' }} className={style.img} /> : null
+                                    }
                                 </div>
                             </Form.Item>
                             <Form.Item
@@ -93,17 +88,10 @@ export const ReadOnlyEditor: FC<IReadOnlyEditor> = (
                                 name='icon'
                             >
                                 <div>
-                                    <Upload
-                                        className="avatar-uploader"
-                                        listType="picture-card"
-                                        showUploadList={false}
-
-                                    >
-                                        {props.initialActivity.icon != undefined && props.initialActivity.icon.length > 3 ?
-                                            <img src={props.initialActivity.icon} alt=" " style={{ width: '100%' }} className={style.img} /> : null
-                                        }                  </Upload>
+                                    {props.initialActivity.icon != undefined && props.initialActivity.icon.length > 3 ?
+                                        <img src={props.initialActivity.icon} alt=" " style={{ width: '100%' }} className={style.img} /> : null
+                                    }
                                 </div>
-
                             </Form.Item>
                         </div>
                     </Form.Item>
@@ -116,7 +104,7 @@ export const ReadOnlyEditor: FC<IReadOnlyEditor> = (
                         required
                         tooltip={{ title: 'Tooltip with customize icon', icon: <InfoCircleOutlined /> }}
                     >
-                        <Input />
+                        <Input readOnly />
                     </Form.Item>
 
                     <Form.Item
@@ -133,7 +121,7 @@ export const ReadOnlyEditor: FC<IReadOnlyEditor> = (
                             >
                                 <Input
                                     prefix={<UserOutlined className="site-form-item-icon" />}
-
+                                    readOnly
                                 />
                             </Form.Item>
                             <Form.Item colon={false} name='contact_phone_number'
@@ -141,6 +129,7 @@ export const ReadOnlyEditor: FC<IReadOnlyEditor> = (
                             >
                                 <Input
                                     prefix={<PhoneOutlined />}
+                                    readOnly
                                 />
                             </Form.Item>
 
@@ -153,10 +142,7 @@ export const ReadOnlyEditor: FC<IReadOnlyEditor> = (
                         wrapperCol={{ span: 5 }}
 
                     >
-                        <Select
-                            placeholder='请选择'
-
-                        />
+                        <Input readOnly />
                     </Form.Item>
                     <Form.Item
                         label='报名时间'
@@ -166,9 +152,12 @@ export const ReadOnlyEditor: FC<IReadOnlyEditor> = (
 
                     >
                         <RangePicker
+                            disabled
                             showTime
                             format='YYYY-MM-DD HH:mm'
-
+                            style={{
+                                backgroundColor: "white",
+                            }}
                         />
 
                     </Form.Item>
@@ -182,6 +171,10 @@ export const ReadOnlyEditor: FC<IReadOnlyEditor> = (
                         <RangePicker
                             showTime
                             format='YYYY-MM-DD HH:mm'
+                            disabled
+                            style={{
+                                backgroundColor: "white",
+                            }}
                         />
                     </Form.Item>
                     <Form.Item
@@ -193,7 +186,7 @@ export const ReadOnlyEditor: FC<IReadOnlyEditor> = (
                             name="quota"
                             noStyle
                         >
-                            <InputNumber min={1} max={2000} />
+                            <InputNumber min={1} max={2000} readOnly />
                         </Form.Item>
                         <span className="ant-form-text" style={{ marginLeft: 8 }}>
                             人
@@ -204,9 +197,9 @@ export const ReadOnlyEditor: FC<IReadOnlyEditor> = (
                         label="报名是否需要审核"
                         required
                     >
-                        <Radio.Group>
-                            <Radio value={false}>无需审核</Radio>
-                            <Radio value={true}>需要审核</Radio>
+                        <Radio.Group >
+                            <Radio value={false} disabled>无需审核</Radio>
+                            <Radio value={true} disabled>需要审核</Radio>
                         </Radio.Group>
                     </Form.Item>
                     <Form.Item wrapperCol={{ span: 10, offset: 4 }}>
