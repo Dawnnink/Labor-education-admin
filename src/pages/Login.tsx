@@ -31,8 +31,6 @@ export default function Login() {
         try {
           setSubmitting(true)
           await network.login(credentials)
-          const { data } = await network.getRoot();
-          console.log(data)
           navigate('/', { replace: true })
         } catch (err) {
           if (err instanceof AxiosError) {

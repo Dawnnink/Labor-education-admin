@@ -1,6 +1,6 @@
 import axios, { AxiosError, AxiosInstance } from 'axios'
 import useSWR from 'swr'
-import { useStore } from './store'
+import { useStore, useRoot } from './store'
 import { Activity, Department, User } from './types'
 import { ActivityStudentsProps } from '~/components/ActivityStudents'
 import fileDownload from 'js-file-download'
@@ -182,8 +182,25 @@ export class Service extends BaseService {
     })
     return download_url
   }
-  getRoot = async () => {
-    return await this.axios.get<IUser>('user/info')
+  getRoot = async (): Promise<IUser | boolean> => {
+    const data = await this.axios.get<IUser>('user/info')
+      .then((res) => {
+        console.log('aaaaaaaaaaaaaaaaaaaaaa', res.data)
+        return res.data
+      })
+      .catch(() => {
+        message.error("当前权限不明确");
+        return false;
+      })
+    console.log('datadatadatadatadatadata', data)
+    return data;
+    // useRoot.getState().setRoot(Math.max(...data.role_ids))
+
+    //拿到权限的数据，然后返回
+  }
+  delRoot = () => {
+    useRoot.getState().removeRoot();
+    location.replace('/')
   }
   teacher = {
     useCode: (id: number) => {

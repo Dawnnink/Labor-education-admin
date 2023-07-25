@@ -11,7 +11,8 @@ import {
 import { useMatch } from 'react-router-dom';
 import { ComponentType } from 'react';
 import { useNavigate } from 'react-router-dom';
-
+import { network } from '~/utils/network';
+import { IUser } from '~/utils/network';
 export interface NavListButtonProps {
   to: string;
   title: string;
@@ -40,11 +41,21 @@ const NavListButton = ({ to, title, Icon, disabled }: NavListButtonProps) => {
     </ListItemButton>
   );
 };
-
+const data = await network.getRoot();
+if (!data) {
+  location.replace('/')
+}
+let whether = false;//决定能否进入活动审核
+if (data) {
+  console.log((data as IUser).role_ids)
+  if ((data as IUser).role_ids.includes(3)) {
+    whether = true;
+  }
+}
 const links: NavListButtonProps[] = [
   { title: '活动大厅', to: '/dashboard', Icon: DashboardIcon, disabled: true },
   { title: '活动管理', to: '/activities', Icon: EventNoteIcon },
-  { title: '活动审核', to: '/check', Icon: EventNoteIcon },
+  { title: '活动审核', to: '/check', Icon: EventNoteIcon, disabled: !whether },
   { title: '权限管理', to: '/permission', Icon: ManageAccountsIcon, disabled: true },
 ];
 
