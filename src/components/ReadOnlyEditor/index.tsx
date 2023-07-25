@@ -149,7 +149,7 @@ export const ReadOnlyEditor: FC<IReadOnlyEditor> = (
                     <Form.Item
                         label='发布部门'
                         required
-                        name="department_id"
+                        name="department"
                         wrapperCol={{ span: 5 }}
 
                     >
@@ -163,12 +163,7 @@ export const ReadOnlyEditor: FC<IReadOnlyEditor> = (
                         required
                         name="registerAt"
                         wrapperCol={{ span: 10 }}
-                        rules={[
-                            {
-                                required: true,
-                                message: "报名时间为必填字段"
-                            }
-                        ]}
+
                     >
                         <RangePicker
                             showTime
@@ -180,7 +175,7 @@ export const ReadOnlyEditor: FC<IReadOnlyEditor> = (
                     <Form.Item
 
                         label='活动时间'
-                        name='activityAt'
+                        name='joinAt'
                         required
                         wrapperCol={{ span: 10 }}
                     >
@@ -222,7 +217,7 @@ export const ReadOnlyEditor: FC<IReadOnlyEditor> = (
                             <Button
                                 type='primary'
                             >
-                                通过
+                                审核通过
                             </Button>
                             <Button
                                 danger
