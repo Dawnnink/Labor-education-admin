@@ -3,6 +3,7 @@ import { IAdActivity } from '~/pages/Check/CheckTable';
 import { Box } from '@mui/material'
 import style from './index.module.css'
 import { useNavigate } from 'react-router-dom'
+import { network } from '~/utils/network'
 import {
     InfoCircleOutlined,
     LoadingOutlined,
@@ -27,6 +28,7 @@ export interface IReadOnlyEditor {
     canPass: boolean
     canReject: boolean
     isShow: boolean
+    id: number
 }
 export const ReadOnlyEditor: FC<IReadOnlyEditor> = (
     props
@@ -42,18 +44,16 @@ export const ReadOnlyEditor: FC<IReadOnlyEditor> = (
                     className={style.span1}
                     onClick={() => Navigate("/activities")}
 
-                >活动管理</span>
+                >活动审核</span>
                 <div className={style.span2}>
                     /
                 </div>
-                <span className={style.span3}>发布活动</span>
+                <span className={style.span3}>活动详情</span>
             </div>
             <div className={style.smallB2}>
-                <div className={style.sP}>发布活动</div>
+                <div className={style.sP}>活动详情</div>
             </div>
-            <div className={style.smallB3}>
-                发布活动须知:巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉
-            </div>
+
         </div>
     )
 
@@ -233,11 +233,29 @@ export const ReadOnlyEditor: FC<IReadOnlyEditor> = (
                         <Space>
                             <Button
                                 type='primary'
+                                onClick={() => {
+                                    network.admin.usePass([props.id])
+                                        .then(() => {
+                                            message.success('审核通过')
+                                        })
+                                        .catch(() => {
+                                            message.error('网络错误')
+                                        })
+                                }}
                             >
                                 审核通过
                             </Button>
                             <Button
                                 danger
+                                onClick={() => {
+                                    network.admin.useReject([props.id])
+                                        .then(() => {
+                                            message.success('成功打回')
+                                        })
+                                        .catch(() => {
+                                            message.error('网络错误')
+                                        })
+                                }}
                             >
                                 打回
                             </Button>

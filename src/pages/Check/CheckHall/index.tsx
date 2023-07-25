@@ -32,7 +32,7 @@ export const CheckHall: FC = () => {
                 backgroundColor: 'white',
             }}
         >
-            <ReadOnlyEditor initialActivity={lastData} canPass={true} canReject={true} isShow={true} />
+            <ReadOnlyEditor initialActivity={lastData} canPass={true} canReject={true} isShow={true} id={parseInt(Id)} />
         </Box>
     )
 }
