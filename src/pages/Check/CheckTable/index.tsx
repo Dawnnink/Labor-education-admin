@@ -24,7 +24,6 @@ export interface IAdActivity {
     activity_end_time: string
 }
 export default function CheckTable() {
-
     return (
         <div></div>
     )

@@ -7,6 +7,8 @@ import fileDownload from 'js-file-download'
 import imageCompression from 'browser-image-compression'
 import { IIN } from '~/utils/hooks/getActivity'
 import { message } from 'antd'
+import { IAdActivity } from '~/pages/Check/CheckTable'
+
 export type ApiError = AxiosError<{
   code: number
   message: string
@@ -265,6 +267,20 @@ export class Service extends BaseService {
       }
 
     },
+  }
+  admin = {
+    useActivities: async () => {
+      return await this.useGet<Array<IAdActivity>>('/admin/activity/list')
+    },
+    useActivity: async (id: number) => {
+      return await this.useGet<IAdActivity>('/admin/activity/detail', { id })
+    },
+    usePass: async (id: number[]) => {
+      return await this.axios.post('/admin/activity/pass', id)
+    },
+    useReject: async (id: number[]) => {
+      return await this.axios.post('/admin/activity/reject', id)
+    }
   }
 }
 
