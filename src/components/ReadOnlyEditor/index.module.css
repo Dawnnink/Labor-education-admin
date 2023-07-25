@@ -6,3 +6,116 @@
 :global .ant-picker-input>input[disabled] {
     color: black !important
 }
+
+.bigB {
+    width: 100%;
+    min-height: 104px;
+    height: auto;
+    padding: 16px 24px;
+    margin: 0;
+
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+
+    gap: 8px;
+    background-color: #FFFFFF;
+}
+
+.smallB1 {
+
+    font-family: Roboto;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 28px;
+    white-space: nowrap;
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+
+.span1 {
+    display: block;
+    line-height: 22px;
+    color: var(--character-secondary-45, rgba(0, 0, 0, 0.45));
+    font-family: Roboto;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    height: 22px;
+    cursor: pointer;
+}
+
+.span1:hover {
+    color: black;
+}
+
+.span2 {
+    display: flex;
+    padding: 0px 8px;
+    color: var(--character-secondary-45, rgba(0, 0, 0, 0.45));
+
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+}
+
+.span3 {
+    color: var(--character-title-85, rgba(0, 0, 0, 0.85));
+    line-height: 22px;
+    font-family: Roboto;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 22px;
+}
+
+.ititle {
+    display: flex;
+    width: 808px;
+    height: 44px;
+    align-items: center;
+    gap: 16px;
+}
+
+.smallB2 {
+
+    height: 44px;
+
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.sP {
+    width: 80px;
+    height: 28px;
+
+    color: var(--character-title-85, rgba(0, 0, 0, 0.85));
+
+    font-family: Roboto;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 28px;
+}
+
+.smallB3 {
+    min-height: 22px;
+    width: 96.1%;
+    height: auto;
+
+    color: var(--character-primary-85, rgba(0, 0, 0, 0.85));
+
+    font-family: Roboto;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 22px;
+}

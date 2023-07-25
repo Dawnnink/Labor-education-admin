@@ -25,8 +25,14 @@ export const CheckHall: FC = () => {
     const newData = ReadOnlyTime(data)
     const lastData = onOrigin(newData, department as Department[])
     return (
-        <Box>
-            <ReadOnlyEditor initialActivity={lastData} canPass={true} canReject={true} />
+        <Box
+            sx={{
+                marginTop: '20px',
+                marginLeft: '24px',
+                backgroundColor: 'white',
+            }}
+        >
+            <ReadOnlyEditor initialActivity={lastData} canPass={true} canReject={true} isShow={true} />
         </Box>
     )
 }

@@ -2,6 +2,7 @@ import React, { FC } from 'react';
 import { IAdActivity } from '~/pages/Check/CheckTable';
 import { Box } from '@mui/material'
 import style from './index.module.css'
+import { useNavigate } from 'react-router-dom'
 import {
     InfoCircleOutlined,
     LoadingOutlined,
@@ -25,17 +26,40 @@ export interface IReadOnlyEditor {
     initialActivity: IAdActivity
     canPass: boolean
     canReject: boolean
+    isShow: boolean
 }
 export const ReadOnlyEditor: FC<IReadOnlyEditor> = (
     props
 ) => {
-
+    const Navigate = useNavigate();
     const { RangePicker } = DatePicker;
     const { TextArea } = Input;
 
+    const item = (
+        <div className={style.bigB}>
+            <div className={style.smallB1}>
+                <span
+                    className={style.span1}
+                    onClick={() => Navigate("/activities")}
+
+                >活动管理</span>
+                <div className={style.span2}>
+                    /
+                </div>
+                <span className={style.span3}>发布活动</span>
+            </div>
+            <div className={style.smallB2}>
+                <div className={style.sP}>发布活动</div>
+            </div>
+            <div className={style.smallB3}>
+                发布活动须知:巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉
+            </div>
+        </div>
+    )
 
     return (
         <div className='entire'>
+            {props.isShow ? item : null}
             <div className={style.form}>
                 <Form
                     initialValues={props.initialActivity}
