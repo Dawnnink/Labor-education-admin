@@ -19,13 +19,16 @@ const IndexLoginGuard = () => {
   if (!token) {
     return <Navigate to="/login" replace />
   }
+
+  return <Index />
+}
+const JudgeCheck = () => {
   const root = network.getRoot();
   if (!root) {
     return <Navigate to="/login" replace />
   }
-  return <Index />
+  return <Check />
 }
-
 export const router = createBrowserRouter([
   {
     path: 'login',
@@ -71,7 +74,7 @@ export const router = createBrowserRouter([
       },
       {
         path: '/check',
-        element: <Check />,
+        element: <JudgeCheck />,
       }
     ],
   },
