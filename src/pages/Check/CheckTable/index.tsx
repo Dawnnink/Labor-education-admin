@@ -4,6 +4,7 @@ import { Table, message } from 'antd'
 import { columnsData } from './form'
 import { network } from '~/utils/network'
 import { ChangeForm } from '~/utils/hooks/changeForm'
+import CheckChange from '~/utils/hooks/CheckChange'
 export interface IAdActivity {
     id: number
     department: string
@@ -26,21 +27,7 @@ export interface IAdActivity {
     activity_end_time: string
     name: string
 }
-export interface IChange {
-    id: number
-    name: string
-    state: string
-    quota: number
-    enroll_number: number
-    registerAt: {
-        registration_start_time: string
-        registration_end_time: string
-    }
-    activityAt: {
-        activity_start_time: string
-        activity_end_time: string
-    }
-}
+
 export interface ITableColumn {
     title: string
     dataIndex: string
@@ -51,8 +38,9 @@ export const CheckTable: FC = () => {
 
     const { data } = network.admin.useActivities();
     console.log(data);
-
-
+    let base;
+    data === undefined ? base = null : base = CheckChange(data);
+    console.log(base);
     return (
         <Box>
             {/* <Table columns={columns} dataSource={rows} /> */}
