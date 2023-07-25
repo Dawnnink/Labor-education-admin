@@ -13,6 +13,7 @@ import Login from '~/pages/Login'
 import Continue from '~/pages/activities/ContinueSet'
 import Check from '~/pages/Check'
 import { network } from './utils/network'
+import { CheckHall } from './pages/Check/CheckHall'
 
 const IndexLoginGuard = () => {
   const token = useStore((state) => state.token)
@@ -75,6 +76,10 @@ export const router = createBrowserRouter([
       {
         path: '/check',
         element: <JudgeCheck />,
+      },
+      {
+        path: '/exam/:id',
+        element: <CheckHall />
       }
     ],
   },

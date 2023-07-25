@@ -28,7 +28,7 @@ import { IAdActivity } from "~/pages/Check/CheckTable"
 export default function CheckChange(rows: IAdActivity[]) {
     const newRows: Array<IChange> = [];
     newRows.push(
-        ...rows.map((items: IAdActivity, index: number) => {
+        ...rows.map((items: IAdActivity) => {
             let status = 0;
             switch (items.state) {
                 case "审核中":

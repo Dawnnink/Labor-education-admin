@@ -61,7 +61,7 @@ export const CheckTable: FC = () => {
                                         cursor: "pointer"
                                     }}
                                     onClick={() => {
-                                        Navigate(`/checking/${record.id}`)
+                                        Navigate(`/exam/${record.id}`)
                                     }}
                                 >{name}</p>
                             )
