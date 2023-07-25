@@ -11,7 +11,7 @@ import Permission from '~/pages/Permission'
 import ReEdit from '~/pages/activities/ActivityReEdit'
 import Login from '~/pages/Login'
 import Continue from '~/pages/activities/ContinueSet'
-
+import Check from '~/pages/Check'
 
 const IndexLoginGuard = () => {
   const token = useStore((state) => state.token)
@@ -63,6 +63,10 @@ export const router = createBrowserRouter([
       {
         path: '/continue/-1',
         element: <Continue />,
+      },
+      {
+        path: '/check',
+        element: <Check />,
       }
     ],
   },
