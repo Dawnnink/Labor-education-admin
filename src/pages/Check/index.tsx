@@ -1,6 +1,6 @@
 import Stack from '@mui/material/stack'
 import { Typography, Box } from '@mui/material'
-import CheckTable from './CheckTable'
+import { CheckTable } from './CheckTable'
 
 export default function Check() {
     const title = (

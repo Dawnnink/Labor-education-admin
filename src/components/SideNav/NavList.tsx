@@ -41,25 +41,34 @@ const NavListButton = ({ to, title, Icon, disabled }: NavListButtonProps) => {
     </ListItemButton>
   );
 };
-const data = await network.getRoot();
-if (!data) {
-  location.replace('/')
-}
-let whether = false;//决定能否进入活动审核
-if (data) {
-  console.log((data as IUser).role_ids)
-  if ((data as IUser).role_ids.includes(3)) {
-    whether = true;
-  }
-}
-const links: NavListButtonProps[] = [
-  { title: '活动大厅', to: '/dashboard', Icon: DashboardIcon, disabled: true },
-  { title: '活动管理', to: '/activities', Icon: EventNoteIcon },
-  { title: '活动审核', to: '/check', Icon: EventNoteIcon, disabled: !whether },
-  { title: '权限管理', to: '/permission', Icon: ManageAccountsIcon, disabled: true },
-];
 
+import { useState, useEffect } from 'react'
 export const NavList = () => {
+  const [right, setRight] = useState<IUser | null | boolean>(null)
+  useEffect(() => {
+    const getRight = async () => {
+      try {
+        const data = await network.getRoot();
+        setRight(data);
+      }
+      catch (err) {
+        console.log(err)
+      }
+    }
+    getRight();
+  }, [])
+  let whether = false;//决定能否进入活动审核
+  if (right) {
+    if ((right as IUser).role_ids.includes(3)) {
+      whether = true;
+    }
+  }
+  const links: NavListButtonProps[] = [
+    { title: '活动大厅', to: '/dashboard', Icon: DashboardIcon, disabled: true },
+    { title: '活动管理', to: '/activities', Icon: EventNoteIcon },
+    { title: '活动审核', to: '/check', Icon: EventNoteIcon, disabled: !whether },
+    { title: '权限管理', to: '/permission', Icon: ManageAccountsIcon, disabled: true },
+  ];
   return (
     <List
       sx={{

@@ -187,14 +187,12 @@ export class Service extends BaseService {
   getRoot = async (): Promise<IUser | boolean> => {
     const data = await this.axios.get<IUser>('user/info')
       .then((res) => {
-        console.log('aaaaaaaaaaaaaaaaaaaaaa', res.data)
         return res.data
       })
       .catch(() => {
         message.error("当前权限不明确");
         return false;
       })
-    console.log('datadatadatadatadatadata', data)
     return data;
     // useRoot.getState().setRoot(Math.max(...data.role_ids))
 
@@ -269,11 +267,11 @@ export class Service extends BaseService {
     },
   }
   admin = {
-    useActivities: async () => {
-      return await this.useGet<Array<IAdActivity>>('/admin/activity/list')
+    useActivities: () => {
+      return this.useGet<Array<IAdActivity>>('/admin/activity/list')
     },
-    useActivity: async (id: number) => {
-      return await this.useGet<IAdActivity>('/admin/activity/detail', { id })
+    useActivity: (id: number) => {
+      return this.useGet<IAdActivity>('/admin/activity/detail', { id })
     },
     usePass: async (id: number[]) => {
       return await this.axios.post('/admin/activity/pass', id)

@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 import { showAct } from '~/utils/types'
+
 export function ChangeData(columnsData: string[][], rowsData: showAct[][]) {
     //columnsData的格式一般是[["name","姓名"]，["name","姓名"]，["name","姓名"]，]
     const columns = useMemo(() => {
