@@ -13,6 +13,17 @@ export interface IChange {
         activity_end_time: string
     }
 }
+function formatTime(timeString: string): string {
+    const inputDate = new Date(timeString);
+    const year = inputDate.getUTCFullYear().toString().padStart(4, '0');
+    const month = (inputDate.getUTCMonth() + 1).toString().padStart(2, '0');
+    const day = inputDate.getUTCDate().toString().padStart(2, '0');
+    const hours = inputDate.getUTCHours().toString().padStart(2, '0');
+    const minutes = inputDate.getUTCMinutes().toString().padStart(2, '0');
+    const seconds = inputDate.getUTCSeconds().toString().padStart(2, '0');
+
+    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+}
 import { IAdActivity } from "~/pages/Check/CheckTable"
 export default function CheckChange(rows: IAdActivity[]) {
     const newRows: Array<IChange> = [];
@@ -37,12 +48,12 @@ export default function CheckChange(rows: IAdActivity[]) {
                 quota: items.quota,
                 enroll_number: items.enroll_number,
                 registerAt: {
-                    registration_start_time: items.registration_start_time,
-                    registration_end_time: items.registration_end_time,
+                    registration_start_time: formatTime(items.registration_start_time),
+                    registration_end_time: formatTime(items.registration_end_time),
                 },
                 activityAt: {
-                    activity_start_time: items.activity_start_time,
-                    activity_end_time: items.activity_end_time,
+                    activity_start_time: formatTime(items.activity_start_time),
+                    activity_end_time: formatTime(items.activity_end_time),
                 },
             }
         }))

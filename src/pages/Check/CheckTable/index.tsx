@@ -60,6 +60,9 @@ export const CheckTable: FC = () => {
                                         color: "#1890FF",
                                         cursor: "pointer"
                                     }}
+                                    onClick={() => {
+                                        Navigate(`/checking/${record.id}`)
+                                    }}
                                 >{name}</p>
                             )
                         }
@@ -83,8 +86,8 @@ export const CheckTable: FC = () => {
                         render: (activityAt: { activity_start_time: string, activity_end_time: string }) => {
                             return (
                                 <div>
-                                    <p>{activityAt?.activity_start_time}</p>
-                                    <p>{activityAt?.activity_end_time}</p>
+                                    <p>{activityAt.activity_start_time}</p>
+                                    <p>{activityAt.activity_end_time}</p>
                                 </div>
                             )
                         }
