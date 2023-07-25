@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import { IAdActivity } from '~/pages/Check/CheckTable';
-export function ChangeForm(columnsData: string[][], rowsData: IAdActivity[]) {
+import { IChange } from './CheckChange';
+export function ChangeForm(columnsData: string[][], rowsData: IChange[]) {
     const columns = useMemo(() => {
         return columnsData.map((item: any) => {
             return {
@@ -12,7 +13,7 @@ export function ChangeForm(columnsData: string[][], rowsData: IAdActivity[]) {
     }, [columnsData]);
 
     const rows = useMemo(() => {
-        return rowsData.map((item: IAdActivity, index: number) => {
+        return rowsData.map((item: IChange, index: number) => {
             return {
                 key: index,
                 ...item,

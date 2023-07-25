@@ -1,7 +1,7 @@
 export interface IChange {
     id: number
     name: string
-    state: string
+    state: number
     quota: number
     enroll_number: number
     registerAt: {
@@ -18,10 +18,22 @@ export default function CheckChange(rows: IAdActivity[]) {
     const newRows: Array<IChange> = [];
     newRows.push(
         ...rows.map((items: IAdActivity, index: number) => {
+            let status = 0;
+            switch (items.state) {
+                case "审核中":
+                    status = 9
+                    break;
+                case "审核失败":
+                    status = 3
+                    break;
+                case "已发布":
+                    status = 10
+                    break;
+            }
             return {
                 id: items.id,
                 name: items.name,
-                state: items.state,
+                state: status,
                 quota: items.quota,
                 enroll_number: items.enroll_number,
                 registerAt: {
