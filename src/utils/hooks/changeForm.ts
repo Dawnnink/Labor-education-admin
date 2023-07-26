@@ -1,5 +1,4 @@
-import React, { useMemo } from 'react';
-import { IAdActivity } from '~/pages/Check/CheckTable';
+import { useMemo } from 'react';
 import { IChange } from './CheckChange';
 export function ChangeForm(columnsData: string[][], rowsData: IChange[]) {
     const columns = useMemo(() => {

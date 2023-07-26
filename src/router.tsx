@@ -26,7 +26,7 @@ const IndexLoginGuard = () => {
 const JudgeCheck = () => {
   const root = network.getRoot();
   if (!root) {
-    return <Navigate to="/login" replace />
+    return <Navigate to="/activities" replace />
   }
   return <Check />
 }

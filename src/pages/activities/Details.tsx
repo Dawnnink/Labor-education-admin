@@ -7,8 +7,9 @@ import { OverflowWrapper } from '~/components/OverflowWrapper'
 import { network } from '~/utils/network'
 import FileDownloadIcon from '@mui/icons-material/FileDownload'
 import dayjs from 'dayjs'
-import { Activity } from '~/utils/types'
 import style from './index.module.css'
+import { IParticipater } from '~/utils/types'
+import { message } from 'antd'
 function formatTime(timeString: string): string {
   const inputDate = new Date(timeString);
   const year = inputDate.getUTCFullYear().toString().padStart(4, '0');
@@ -25,10 +26,17 @@ const DetailsWithParams = ({ activityId }: { activityId: number }) => {
   const { data: students } = network.teacher.useActivityStudents(activityId)
   console.log('这里是activity', activity)
   console.log('这里是student', students);
+  const studentArray: number[] = [];
+  if (students) {
+    studentArray.push(
+      ...students.map((item: IParticipater) => {
+        return item.user.id
+      })
+    )
+  }
   if (activity) {
     if (activity.state == '已发布' || activity.state == '审核中') {
-      if (dayjs(activity.registration_start_time).isAfter(dayjs())) {
-        console.log('是的，现在待报名')
+      if (dayjs().isBefore(dayjs(formatTime(activity.registration_start_time)))) {
         return (
           <Stack
             spacing={2}
@@ -40,7 +48,7 @@ const DetailsWithParams = ({ activityId }: { activityId: number }) => {
             <OverflowWrapper>
               {students === undefined ? null : <ActivityStudents students={students} id={activity.id} />}
             </OverflowWrapper>
-            <Stack direction="row" alignItems="flex-end">
+            <Stack direction="row" justifyContent="flex-end" p={'0 20px'} alignItems='flex-end'>
               <Button
                 startDecorator={<FileDownloadIcon />}
                 onClick={() => {
@@ -64,6 +72,8 @@ const DetailsWithParams = ({ activityId }: { activityId: number }) => {
     ) // 或者显示其他加载中的内容
 
   }
+  console.log('是的，现在待报名', activity.id)
+
   return (
     <Stack
       spacing={2}
@@ -75,7 +85,21 @@ const DetailsWithParams = ({ activityId }: { activityId: number }) => {
       <OverflowWrapper>
         {students === undefined ? null : <ActivityStudents students={students} id={activity.id} />}
       </OverflowWrapper>
-      <Stack direction="row" alignItems="flex-end">
+      <Stack direction="row" justifyContent="space-between" p={'0 20px'} alignItems='flex-end'>
+        <Button
+          onClick={() => {
+            network.teacher.usePass(activity.id, studentArray)
+              .then(() => {
+                message.success('一键通过成功')
+                setTimeout(() => location.reload(), 1000)
+              })
+              .catch(() => {
+                message.error('网络故障')
+              })
+          }}
+        >
+          全部通过
+        </Button>
         <Button
           startDecorator={<FileDownloadIcon />}
           onClick={() => {
@@ -86,7 +110,7 @@ const DetailsWithParams = ({ activityId }: { activityId: number }) => {
         </Button>
       </Stack>
       {activity && <ActivityEditor initialActivity={activity} isShow={false} disabled={true} />}
-    </Stack>
+    </Stack >
   )
 }
 

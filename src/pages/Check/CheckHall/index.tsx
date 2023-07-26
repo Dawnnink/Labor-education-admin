@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import { FC } from 'react'
 import { ReadOnlyEditor } from '~/components/ReadOnlyEditor'
 import { network } from '~/utils/network'
 import onOrigin from '~/utils/FormOrigin'

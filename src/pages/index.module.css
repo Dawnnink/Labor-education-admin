@@ -5,3 +5,11 @@
 :global .css-2mtc3r-JoyContainer-root {
     max-width: 100% !important;
 }
+
+:global .ant-input[disabled] {
+    color: black
+}
+
+:global .ant-select-selector {
+    color: black !important;
+}

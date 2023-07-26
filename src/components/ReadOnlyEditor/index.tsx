@@ -1,13 +1,10 @@
-import React, { FC } from 'react';
+import { FC } from 'react';
 import { IAdActivity } from '~/pages/Check/CheckTable';
-import { Box } from '@mui/material'
 import style from './index.module.css'
 import { useNavigate } from 'react-router-dom'
 import { network } from '~/utils/network'
 import {
     InfoCircleOutlined,
-    LoadingOutlined,
-    PlusOutlined,
     UserOutlined,
     PhoneOutlined,
 } from '@ant-design/icons';
@@ -19,9 +16,7 @@ import {
     Input,
     Form,
     DatePicker,
-    Upload,
     message,
-    Select,
 } from 'antd';
 export interface IReadOnlyEditor {
     initialActivity: IAdActivity
@@ -101,7 +96,12 @@ export const ReadOnlyEditor: FC<IReadOnlyEditor> = (
                                 name="poster"
                                 style={{ display: 'inline-block', width: 'calc(50% - 8px)', margin: '0 8px' }}
                             >
-                                <div>
+                                <div
+                                    style={{
+                                        width: '104px',
+                                        height: '104px'
+                                    }}
+                                >
                                     {props.initialActivity.poster != undefined && props.initialActivity.poster.length > 3 ?
                                         <img src={props.initialActivity.poster} alt=" " style={{ width: '100%' }} className={style.img} /> : null
                                     }
@@ -111,7 +111,12 @@ export const ReadOnlyEditor: FC<IReadOnlyEditor> = (
                                 label="上传图标"  // 指定绑定的值为 'fileList'
                                 name='icon'
                             >
-                                <div>
+                                <div
+                                    style={{
+                                        width: '104px',
+                                        height: '104px'
+                                    }}
+                                >
                                     {props.initialActivity.icon != undefined && props.initialActivity.icon.length > 3 ?
                                         <img src={props.initialActivity.icon} alt=" " style={{ width: '100%' }} className={style.img} /> : null
                                     }
@@ -237,6 +242,7 @@ export const ReadOnlyEditor: FC<IReadOnlyEditor> = (
                                     network.admin.usePass([props.id])
                                         .then(() => {
                                             message.success('审核通过')
+                                            Navigate('/check', { replace: true })
                                         })
                                         .catch(() => {
                                             message.error('网络错误')
@@ -251,6 +257,7 @@ export const ReadOnlyEditor: FC<IReadOnlyEditor> = (
                                     network.admin.useReject([props.id])
                                         .then(() => {
                                             message.success('成功打回')
+                                            Navigate('/check', { replace: true })
                                         })
                                         .catch(() => {
                                             message.error('网络错误')

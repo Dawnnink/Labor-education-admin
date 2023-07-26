@@ -5,6 +5,7 @@ import { User } from '~/utils/types'
 import { StatusDot } from '../StatusDot'
 import { Space, Button } from 'antd'
 import { network } from '~/utils/network'
+import { message } from 'antd'
 export interface ActivityStudentsProps {
   students: {
     participate_time: string // ISO 8601
@@ -16,7 +17,7 @@ export interface ActivityStudentsProps {
   }[]
   id: number
 }
-export const ActivityStudents = ({ students }: ActivityStudentsProps, id: number) => {
+export const ActivityStudents = ({ students, id }: ActivityStudentsProps) => {
   const theme = useTheme()
   const getColor = (status: string) => {
     switch (status) {
@@ -74,11 +75,29 @@ export const ActivityStudents = ({ students }: ActivityStudentsProps, id: number
               >
                 <Space>
                   <Button
-                    onClick={() => { network.teacher.usePass(id, [student.user.id]) }}
+                    onClick={() => {
+                      network.teacher.usePass(id, [student.user.id])
+                        .then(() => {
+                          message.success('通过成功')
+                          setTimeout(() => location.reload(), 1000)
+                        })
+                        .catch(() => {
+                          message.error('网络故障')
+                        })
+                    }}
                   >通过
                   </Button>
                   <Button
-                    onClick={() => { network.teacher.useReject(id, [student.user.id]) }}
+                    onClick={() => {
+                      network.teacher.useReject(id, [student.user.id])
+                        .then(() => {
+                          message.success('通过成功')
+                          setTimeout(() => location.reload(), 1000)
+                        })
+                        .catch(() => {
+                          message.error('网络故障')
+                        })
+                    }}
                   >拒绝
                   </Button>
                 </Space>

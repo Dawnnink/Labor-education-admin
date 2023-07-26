@@ -369,7 +369,6 @@ const Code: React.FC<{ cansee: boolean; id: number }> = (props) => {
 
 //下面是点击签到码浮现出的组件
 import { CopyOutlined } from '@ant-design/icons';
-import { Space } from 'antd';
 const SignInCode = (props: { code: string | undefined }) => {
     const handleCopy = () => {
         // 复制签到码的逻辑

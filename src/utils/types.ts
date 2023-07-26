@@ -1,3 +1,4 @@
+
 export interface Activity {
   id: number
   department: string
@@ -57,4 +58,13 @@ export interface showAct {
     canup: boolean;
     cansee: boolean;
   }
+}
+
+export interface IParticipater {
+  // activity: Activity;
+  check_in: null | string;
+  // participate_person: string;
+  participate_time: string;
+  state: string;
+  user: User
 }
