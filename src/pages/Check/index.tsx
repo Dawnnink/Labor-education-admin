@@ -1,5 +1,4 @@
-import Stack from '@mui/material/stack'
-import { Typography, Box } from '@mui/material'
+import { Typography, Box, Stack } from '@mui/material'
 import { CheckTable } from './CheckTable'
 
 export default function Check() {
