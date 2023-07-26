@@ -21,6 +21,7 @@ import {
     Upload,
     message,
     Select,
+    Modal
 } from 'antd';
 import type { UploadChangeParam } from 'antd/es/upload';
 import type { RcFile, UploadFile, UploadProps } from 'antd/es/upload/interface';
@@ -59,6 +60,16 @@ export const ActivityReEdit = ({
     isShow,
     id
 }: ActivityEditorProps) => {
+    const [openModal, setOpenModal] = useState(true);
+    const handleOk = () => {
+
+        setOpenModal(false);
+    }
+    const handleCancel = () => {
+
+        setOpenModal(false);
+    }
+
     const [activity, setActivity] = useState<Activity | NewActivity>(
         initialActivity ?? {
             name: '',
@@ -75,6 +86,7 @@ export const ActivityReEdit = ({
             activity_start_time: '',
             activity_end_time: '',
             department_id: 0,
+            reason: '',
         }
     )
     console.log(activity)
@@ -233,6 +245,7 @@ export const ActivityReEdit = ({
         const value = form.getFieldsValue();
 
         const initialState: IIN | Activity = {
+            reason: '',
             name: value.name || ' ',
             description: value.description || ' ',
             poster: imageUrl || ' ',
@@ -286,6 +299,9 @@ export const ActivityReEdit = ({
 
     return (
         <div className='entire'>
+            <Modal open={openModal} onOk={handleOk} onCancel={handleCancel}>
+                <p>{activity.reason}</p>
+            </Modal>
             {isShow ? item : null}
             <div className={style.form}>
                 <Form

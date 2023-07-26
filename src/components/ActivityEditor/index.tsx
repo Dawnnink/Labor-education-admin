@@ -271,6 +271,7 @@ export const ActivityEditor = ({
     const value = form.getFieldsValue();
 
     const initialState: IIN | Activity = {
+      reason: '',
       name: value.name ? value.name : ' ',
       description: value.description != undefined ? value.description : '',
       poster: imageUrl != undefined ? imageUrl : null,

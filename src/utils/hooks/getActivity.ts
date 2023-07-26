@@ -20,6 +20,7 @@ export interface IIN {
     registration_end_time: string,
     activity_start_time: string,
     activity_end_time: string,
+    reason: string
 }
 const initialShowAct: showAct[][] = [[
     {

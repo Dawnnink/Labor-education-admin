@@ -29,6 +29,7 @@ export interface IAdActivity {
     activity_start_time: string
     activity_end_time: string
     name: string
+    reason: string
 }
 
 export interface ITableColumn {

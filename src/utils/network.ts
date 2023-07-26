@@ -80,6 +80,7 @@ export type NewActivity = Pick<
   | 'registration_end_time'
   | 'activity_start_time'
   | 'activity_end_time'
+  | 'reason'
 >
 
 export interface SignOssRequest {
@@ -276,8 +277,9 @@ export class Service extends BaseService {
     usePass: async (id: number[]) => {
       return await this.axios.post('/admin/activity/pass', id)
     },
-    useReject: async (id: number[]) => {
-      return await this.axios.post('/admin/activity/reject', id)
+    useReject: async (id: number, reason: string) => {
+      console.log({ id, reason })
+      return await this.axios.post('/admin/activity/reject', { id, reason })
     }
   }
 }

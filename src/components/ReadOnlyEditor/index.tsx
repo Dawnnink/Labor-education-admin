@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import { IAdActivity } from '~/pages/Check/CheckTable';
 import style from './index.module.css'
 import { useNavigate } from 'react-router-dom'
@@ -17,6 +17,7 @@ import {
     Form,
     DatePicker,
     message,
+    Modal
 } from 'antd';
 export interface IReadOnlyEditor {
     initialActivity: IAdActivity
@@ -29,6 +30,9 @@ export const ReadOnlyEditor: FC<IReadOnlyEditor> = (
     props
 ) => {
     const Navigate = useNavigate();
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [reason, setReason] = useState<string>('');
+
     const { RangePicker } = DatePicker;
     const { TextArea } = Input;
 
@@ -52,6 +56,33 @@ export const ReadOnlyEditor: FC<IReadOnlyEditor> = (
         </div>
     )
 
+    const showModal = () => {
+        setIsModalOpen(true);
+    };
+
+    const handleOk = () => {
+        if (!reason) {
+            message.warning("请输入打回原因")
+            return;
+        }
+        network.admin.useReject(props.id, reason)
+            .then(() => {
+                message.success('成功打回')
+                Navigate('/check', { replace: true })
+            })
+            .catch(() => {
+                message.error("网络故障")
+            })
+        setIsModalOpen(false);
+    };
+
+    const handleCancel = () => {
+        setIsModalOpen(false);
+    };
+
+    const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setReason(e.target.value);
+    }
     return (
         <div className='entire'>
             {props.isShow ? item : null}
@@ -231,9 +262,6 @@ export const ReadOnlyEditor: FC<IReadOnlyEditor> = (
                             <Radio value={true} disabled>需要审核</Radio>
                         </Radio.Group>
                     </Form.Item>
-                    <Form.Item wrapperCol={{ span: 10, offset: 4 }}>
-                        <p className={style.tips}>点击"提交审核"后，需要<span>部门审核人</span>通过审核，学生才能看到此活动并报名</p>
-                    </Form.Item>
                     <Form.Item wrapperCol={{ span: 4, offset: 4 }}>
                         <Space>
                             <Button
@@ -253,16 +281,7 @@ export const ReadOnlyEditor: FC<IReadOnlyEditor> = (
                             </Button>
                             <Button
                                 danger
-                                onClick={() => {
-                                    network.admin.useReject([props.id])
-                                        .then(() => {
-                                            message.success('成功打回')
-                                            Navigate('/check', { replace: true })
-                                        })
-                                        .catch(() => {
-                                            message.error('网络错误')
-                                        })
-                                }}
+                                onClick={showModal}
                             >
                                 打回
                             </Button>
@@ -270,6 +289,10 @@ export const ReadOnlyEditor: FC<IReadOnlyEditor> = (
                     </Form.Item>
                 </Form >
             </div >
+            <Modal open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
+                <p>请输入打回理由</p>
+                <Input onChange={handleInput} max={30} />
+            </Modal>
         </div >
     )
-}
+}  
