@@ -387,8 +387,8 @@ const SignInCode = (props: { code: string | undefined }) => {
     return (
         <div
             style={{
-                margin: "4px"
-                // left: "-30px",
+                zIndex: 1000,
+                position: 'absolute',
             }}
         >
             <Input value={props.code} readOnly style={{

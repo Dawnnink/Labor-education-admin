@@ -42,7 +42,7 @@ export const ReadOnlyEditor: FC<IReadOnlyEditor> = (
             <div className={style.smallB1}>
                 <span
                     className={style.span1}
-                    onClick={() => Navigate("/activities")}
+                    onClick={() => Navigate("/check")}
 
                 >活动审核</span>
                 <div className={style.span2}>
