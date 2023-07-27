@@ -67,8 +67,10 @@ export const HandleData: FC = () => {
                                         cursor: "pointer"
                                     }}
                                     onClick={() => {
-                                        if (record.id != -1) {
+                                        if (record.id != -1 && record.state != 3) {
                                             Navigate(`${record?.id}`)
+                                        } else if (record.state == 3) {
+                                            Navigate(`/reset/${record.id}`)
                                         } else {
                                             Navigate('/continue/-1')
                                         }

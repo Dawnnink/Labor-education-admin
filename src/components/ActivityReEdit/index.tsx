@@ -300,7 +300,12 @@ export const ActivityReEdit = ({
     return (
         <div className='entire'>
             <Modal open={openModal} onOk={handleOk} onCancel={handleCancel}>
-                <p>{activity.reason}</p>
+                <h3>打回理由</h3>
+                {activity.reason ?
+                    <p>{activity.reason}</p>
+                    :
+                    <p>没有</p>
+                }
             </Modal>
             {isShow ? item : null}
             <div className={style.form}>
