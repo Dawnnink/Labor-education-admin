@@ -9,7 +9,7 @@ import FileDownloadIcon from '@mui/icons-material/FileDownload'
 import dayjs from 'dayjs'
 import style from './index.module.css'
 import { IParticipater } from '~/utils/types'
-import { message } from 'antd'
+import { message, Space } from 'antd'
 function formatTime(timeString: string): string {
   const inputDate = new Date(timeString);
   const year = inputDate.getUTCFullYear().toString().padStart(4, '0');
@@ -25,13 +25,18 @@ const DetailsWithParams = ({ activityId }: { activityId: number }) => {
   const { data: activity, error } = network.teacher.useActivity(activityId)
   const { data: students } = network.teacher.useActivityStudents(activityId)
   const studentArray: number[] = [];
+  let AllPassed = false;//设定一个变量，假设学生列表中有人未通过，则设为true，则显示一键通过按钮
   if (students) {
     studentArray.push(
       ...students.map((item: IParticipater) => {
+        if (item.state == '报名审核中') {
+          AllPassed = true;
+        }
         return item.user.id
       })
     )
   }
+  console.log(students);
   if (activity) {
     if (activity.state == '已发布' || activity.state == '审核中') {
       if (dayjs().isBefore(dayjs(formatTime(activity.registration_start_time)))) {
@@ -82,29 +87,34 @@ const DetailsWithParams = ({ activityId }: { activityId: number }) => {
       <OverflowWrapper>
         {students === undefined ? null : <ActivityStudents students={students} id={activity.id} />}
       </OverflowWrapper>
-      <Stack direction="row" justifyContent="space-between" p={'0 20px'} alignItems='flex-end'>
-        <Button
-          onClick={() => {
-            network.teacher.usePass(activity.id, studentArray)
-              .then(() => {
-                message.success('一键通过成功')
-                setTimeout(() => location.reload(), 1000)
-              })
-              .catch(() => {
-                message.error('网络故障')
-              })
-          }}
-        >
-          全部通过
-        </Button>
-        <Button
-          startDecorator={<FileDownloadIcon />}
-          onClick={() => {
-            network.teacher.downloadActivityStudentsExcel(activityId)
-          }}
-        >
-          导出学生列表
-        </Button>
+      <Stack direction="row" justifyContent="flex-end" p={'0 20px'} alignItems='flex-end'>
+        <Space>
+          {AllPassed &&
+            <Button
+              onClick={() => {
+                network.teacher.usePass(activity.id, studentArray)
+                  .then(() => {
+                    message.success('一键通过成功')
+                    setTimeout(() => location.reload(), 1000)
+                  })
+                  .catch(() => {
+                    message.error('网络故障')
+                  })
+              }}
+            >
+              全部通过
+            </Button>
+          }
+          <Button
+            startDecorator={<FileDownloadIcon />}
+            onClick={() => {
+              network.teacher.downloadActivityStudentsExcel(activityId)
+            }}
+          >
+            导出学生列表
+          </Button>
+        </Space>
+
       </Stack>
       {activity && <ActivityEditor initialActivity={activity} isShow={false} disabled={true} />}
     </Stack >
