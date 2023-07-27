@@ -91,7 +91,7 @@ export const ActivityStudents = ({ students, id }: ActivityStudentsProps) => {
                     onClick={() => {
                       network.teacher.useReject(id, [student.user.id])
                         .then(() => {
-                          message.success('通过成功')
+                          message.success('拒绝成功')
                           setTimeout(() => location.reload(), 1000)
                         })
                         .catch(() => {
