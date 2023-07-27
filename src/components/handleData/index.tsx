@@ -9,6 +9,7 @@ import { network } from '~/utils/network';
 import { GetActivity } from '~/utils/hooks/getActivity'
 import { showAct } from '~/utils/types'
 import { useNavigate } from 'react-router-dom'
+import { ITableColumn } from '~/pages/Check/CheckTable';
 
 export interface showRow {
     id: number;
@@ -33,6 +34,7 @@ export interface showRow {
 export const HandleData: FC = () => {
     const Navigate = useNavigate();
     const { data } = network.teacher.useActivities();
+
     let flag = 0
     if (localStorage.getItem('activity') && data != undefined) {
         for (let i = 0; i < data.length; i++) {
@@ -50,10 +52,10 @@ export const HandleData: FC = () => {
     data === undefined ? null : base = GetActivity(data);
 
     const { columns, rows } = ChangeData(columnsData, base as showAct[][]);
-
+    console.log(columns)
     const columnsRender = useMemo(() => {
         if (base) {
-            return columns.map((item: any, index: number) => {
+            return columns.map((item: ITableColumn, index: number) => {
                 if (index == 0) {
                     return {
                         ...item,
@@ -133,7 +135,7 @@ export const HandleData: FC = () => {
             return []
         }
 
-    }, [columns])
+    }, [Navigate, base, columns])
     return (
         <div>
             <Table columns={columnsRender} dataSource={rows} />
