@@ -43,7 +43,6 @@ const OnUpdate = (fieldsValue: any, departments: Department[] | undefined, image
     delete values.joinAt;
     // const calue
     const college = values.department_id;
-    console.log(college)
     let index = 0;
     let len = 0;
     departments === undefined ? len = 0 : len = departments.length;

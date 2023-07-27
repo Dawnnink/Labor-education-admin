@@ -89,7 +89,6 @@ export const ActivityReEdit = ({
             reason: '',
         }
     )
-    console.log(activity)
 
     const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
         setActivity({
@@ -130,13 +129,11 @@ export const ActivityReEdit = ({
 
     const handleUploadL = async (options: any) => {
         const { file } = options;
-        console.log(file);
         const url: string = await network.uploadImage(file)
         setImageUrl(() => url);
     }
     const handleUploadR = async (options: any) => {
         const { file } = options;
-        console.log(file);
         const url: string = await network.uploadImage(file)
         setIconUrl(() => url);
     }
@@ -239,7 +236,6 @@ export const ActivityReEdit = ({
         }
         if (form.getFieldError('registerAt').length != 0 || form.getFieldError('joinAt').length != 0) {
             message.info('报名时间和活动时间是必填字段')
-            console.log(form.getFieldError('joinAt'))
             return;
         }
         const value = form.getFieldsValue();
@@ -266,7 +262,6 @@ export const ActivityReEdit = ({
             enroll_number: 0,
             participate_number: 0,
         }
-        console.log(initialState);
         if (localStorage.getItem("activity")) {
             if (confirm("存储库中已有一份草稿，点击确定将会覆盖此份草稿")) {
                 localStorage.setItem(`activity`, JSON.stringify(initialState)); // 将值转换为 JSON 字符串并存储在 localStorage 中
@@ -585,7 +580,6 @@ export const ActivityReEdit = ({
                             <Button
                                 danger
                                 onClick={() => {
-                                    console.log(id)
                                     network.teacher.delActivities(id)
                                         .then(response => {
                                             if (response.status === 200) {

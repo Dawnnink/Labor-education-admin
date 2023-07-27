@@ -25,9 +25,7 @@ const Reset = () => {
     const Id = match ? match[1] : null;
     const { data: department } = network.teacher.useDepartment();
     const { data: activities } = network.teacher.useActivity(parseInt(Id as string));
-    console.log(activities)
     const newActivity = onOrigin(activities, department as Department[]);
-    console.log(newActivity)
 
     //加载中
     if (newActivity && activities) {

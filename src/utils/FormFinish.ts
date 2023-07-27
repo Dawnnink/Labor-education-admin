@@ -24,7 +24,6 @@ const OnFinish = (fieldsValue: any, departments: Department[] | undefined, image
     // const calue
     const college = values.department_id;
     if (!college) {
-        console.log(college)
         message.info("请填写发布部门")
         return;
     }
@@ -44,7 +43,6 @@ const OnFinish = (fieldsValue: any, departments: Department[] | undefined, image
     values.department_id = index;
     imageUrl === undefined ? values.poster = null : values.poster = imageUrl;
     iconUrl === undefined ? values.icon = null : values.icon = iconUrl;
-    console.log(JSON.stringify(values))
     const flag = network.teacher.createActivity(values)
         .then((res) => {
             if (res.status === 200) {

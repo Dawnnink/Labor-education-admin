@@ -43,10 +43,7 @@ export const CheckTable: FC = () => {
     const { data } = network.admin.useActivities();
     let base: IChange[] = [];
     data === undefined ? null : base = CheckChange(data);
-    console.log(base);
     const { columns, rows } = ChangeForm(columnsData, base);
-    console.log('columns', columns);
-    console.log('rows', rows);
 
     const columnsRender = useMemo(() => {
         if (base) {

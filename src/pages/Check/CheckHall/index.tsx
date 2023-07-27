@@ -17,7 +17,6 @@ export const CheckHall: FC = () => {
     }
     const { data } = network.admin.useActivity(parseInt(Id as string))
     const { data: department } = network.teacher.useDepartment()
-    console.log('afsfasfsfs', data)
     if (!data) {
         return <>Loading...
         </>

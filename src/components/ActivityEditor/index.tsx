@@ -129,16 +129,12 @@ export const ActivityEditor = ({
 
   const handleUploadL = async (options: any) => {
     const { file } = options;
-    console.log(file);
     const url: string = await network.uploadImage(file)
-    console.log("poster", url);
     setImageUrl(url);
   }
   const handleUploadR = async (options: any) => {
     const { file } = options;
-    console.log(file);
     const url: string = await network.uploadImage(file)
-    console.log("icon", url)
     setIconUrl(url);
   }
   //控制上传图片
@@ -191,7 +187,6 @@ export const ActivityEditor = ({
     const match = params.match(regex);
 
     const Id = match ? match[1] : null;
-    console.log(Id);
     if (Id) {
       //如果Id存在则为待报名
       network.teacher.delActivities(parseInt(Id))
@@ -265,7 +260,6 @@ export const ActivityEditor = ({
   const handleLocal = () => {
     if (form.getFieldValue('registerAt') == undefined || form.getFieldValue('joinAt') == undefined) {
       message.info('报名时间和活动时间是必填字段')
-      console.log(form.getFieldError('joinAt'))
       return
     }
     const value = form.getFieldsValue();
@@ -303,7 +297,6 @@ export const ActivityEditor = ({
       }
     }
     localStorage.setItem(`activity`, JSON.stringify(initialState)); // 将值转换为 JSON 字符串并存储在 localStorage 中
-    console.log(initialState);
     Navigate('/activities')
     message.success("保存成功")
   }

@@ -24,8 +24,6 @@ function formatTime(timeString: string): string {
 const DetailsWithParams = ({ activityId }: { activityId: number }) => {
   const { data: activity, error } = network.teacher.useActivity(activityId)
   const { data: students } = network.teacher.useActivityStudents(activityId)
-  console.log('这里是activity', activity)
-  console.log('这里是student', students);
   const studentArray: number[] = [];
   if (students) {
     studentArray.push(
@@ -72,7 +70,6 @@ const DetailsWithParams = ({ activityId }: { activityId: number }) => {
     ) // 或者显示其他加载中的内容
 
   }
-  console.log('是的，现在待报名', activity.id)
 
   return (
     <Stack

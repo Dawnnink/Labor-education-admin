@@ -119,7 +119,6 @@ export class Service extends BaseService {
       if (token) {
         config.headers.Authorization = `passport ${token}`
       }
-      console.log(token)
       return config
     })
 
@@ -174,9 +173,6 @@ export class Service extends BaseService {
       useWebWorker: true,
     })
     const { upload_url, download_url } = await this.signFileUploadUrl(file.name)
-    console.log("postname success")
-    console.log(upload_url)
-    console.log("down", download_url)
     // Global axios instance is used here.
     await axios.put(upload_url, compressedFile, {
       headers: {
@@ -255,7 +251,6 @@ export class Service extends BaseService {
         message.error("报名成功人数为零")
         return false;
       })
-      console.log(data)
       if (data) {
         fileDownload(
           data,
@@ -278,7 +273,6 @@ export class Service extends BaseService {
       return await this.axios.post('/admin/activity/pass', id)
     },
     useReject: async (id: number, reason: string) => {
-      console.log({ id, reason })
       return await this.axios.post('/admin/activity/reject', { id, reason })
     }
   }

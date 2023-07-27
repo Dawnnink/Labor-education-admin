@@ -76,7 +76,6 @@ export const GetActivity = (props: IINList) => {
 
         return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
     }
-    console.log(formatDateTime("2023-07-14T02:34:49.965Z"))
     const currentDate = new Date();
     let data: showAct[][] = [[]]
 

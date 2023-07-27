@@ -10,7 +10,6 @@ const Continue = () => {
     departments === undefined ? len = 0 : len = departments.length
     let str = ""
     let index = 0;
-    console.log(str)
     if (departments === undefined) {
         message.warning("暂未获取发布部门信息，请稍后再试")
         return;

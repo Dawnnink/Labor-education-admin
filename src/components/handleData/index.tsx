@@ -33,7 +33,6 @@ export interface showRow {
 export const HandleData: FC = () => {
     const Navigate = useNavigate();
     const { data } = network.teacher.useActivities();
-    console.log("data", data)
     let flag = 0
     if (localStorage.getItem('activity') && data != undefined) {
         for (let i = 0; i < data.length; i++) {
@@ -49,7 +48,6 @@ export const HandleData: FC = () => {
     }
     let base: showAct[][] | undefined = undefined;
     data === undefined ? null : base = GetActivity(data);
-    console.log("changeddata", base)
 
     const { columns, rows } = ChangeData(columnsData, base as showAct[][]);
 
@@ -331,7 +329,6 @@ const Code: React.FC<{ cansee: boolean; id: number }> = (props) => {
     }
 
 
-    // console.log(num?.code)
     const [isOpen, setIsOpen] = React.useState(false)
     return (
         <div>
