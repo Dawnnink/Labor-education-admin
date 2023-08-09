@@ -1,7 +1,7 @@
 import { Button, Stack } from '@mui/joy'
 import { useParams } from 'react-router-dom'
 import { ActivityEditor } from '~/components/ActivityEditor'
-import { ActivityStudents } from '~/components/ActivityStudents'
+import { ActivityStudents } from '~/components/ActivityNewStudents'
 import { ErrorDisplay } from '~/components/ErrorDisplay'
 import { OverflowWrapper } from '~/components/OverflowWrapper'
 import { network } from '~/utils/network'

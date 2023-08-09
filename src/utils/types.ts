@@ -30,7 +30,7 @@ export interface User {
   avatar: string
   college: string
   sex: '男' | '女'
-  class?: string
+  classname: string
   phone_number: string
 }
 
