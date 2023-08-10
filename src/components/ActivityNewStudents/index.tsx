@@ -5,6 +5,7 @@ import {
     Table,
     TableBody,
     TableCell,
+    TableSortLabel,
     TableContainer,
     TableHead,
     TablePagination,
@@ -138,12 +139,65 @@ const headCells: readonly HeadCell[] = [
 ]
 
 interface EnhancedTableProps {
-    numSelected: number;
-    onRequestSort: (event: React.MouseEvent<unknown>, property: keyof Data) => void;
-    onSelectAllClick: (event: React.ChangeEvent<HTMLInputElement>) => void;
-    order: Order;
-    orderBy: string;
-    rowCount: number;
+    numSelected: number;//表示选中的项目数量
+    onRequestSort: (event: React.MouseEvent<unknown>, property: keyof FormData) => void;//当用户请求进行排序就用这个事件处理函数
+    onSelectAllClick: (event: React.ChangeEvent<HTMLInputElement>) => void;//表示data对象的键之一
+    order: Order;//表示排序顺序‘asc’ 和上面那个，自己去看，我定义了的
+    orderBy: string;//表示当前排序的字段，类型为字符串
+    rowCount: number;//表示数据行数
+}
+function EnhancedTableHwas(props: EnhancedTableProps) {
+    const { onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } = props;
+    const createSortHandler = (
+        property: keyof FormData
+    ) => (
+        event: React.MouseEvent<unknown>
+    ) => {
+            onRequestSort(event, property);
+        }
+
+    return (
+        <TableHead>
+            <TableRow>
+                <TableCell padding='checkbox'>
+                    <Checkbox
+                        color='primary'
+                        indeterminate={numSelected > 0 && numSelected < rowCount}
+                        checked={rowCount > 0 && numSelected === rowCount}
+                        onChange={onSelectAllClick}
+                        inputProps={{
+                            'aria-label': 'select all'
+                        }}
+                    />
+                </TableCell>
+                {
+                    headCells.map((headCell) => (
+                        <TableCell
+                            key={headCell.id}
+                            align={headCell.numeric ? 'right' : 'left'}
+                            padding={headCell.disablePadding ? 'none' : 'normal'}
+                            sortDirection={orderBy === headCell.id ? order : false}
+                        >
+                            <TableSortLabel
+                                active={orderBy === headCell.id}
+                                direction={orderBy === headCell.id ? order : 'asc'}
+                                onClick={createSortHandler(headCell.id)}
+                            >
+                                {headCell.label}
+                                {orderBy === headCell.id ?
+                                    (
+                                        <Box>
+                                            {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
+                                        </Box>
+                                    ) : null
+                                }
+                            </TableSortLabel>
+                        </TableCell>
+                    ))
+                }
+            </TableRow>
+        </TableHead>
+    )
 }
 export const ActivityStudents = ({ students, id }: ActivityStudentsProps) => {
     //mui的table组件的转化表格第一行的数据，将其作为缓存函数
