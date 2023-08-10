@@ -146,7 +146,7 @@ interface EnhancedTableProps {
     orderBy: string;//表示当前排序的字段，类型为字符串
     rowCount: number;//表示数据行数
 }
-function EnhancedTableHwas(props: EnhancedTableProps) {
+function EnhancedTableHead(props: EnhancedTableProps) {
     const { onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } = props;
     const createSortHandler = (
         property: keyof FormData
@@ -384,9 +384,99 @@ export const ActivityStudents = ({ students, id }: ActivityStudentsProps) => {
             );
         }, [order, orderBy, page, rowsPerPage])
     console.log(students, id)
-    return (
-        <Box sx={ }>
 
+
+    return (
+        <Box sx={{ width: '100%' }}>
+            <Paper sx={{ width: '100%', mb: 2 }}>
+                {/* 工具栏 */}
+                <EnhancedTableToolbar numSelected={selected.length} />
+                <TableContainer>
+                    <Table
+                        sx={{ minWidth: 750 }}
+                        aria-labelledby='tableTitle'
+                        size={dense ? 'small' : 'medium'}
+                    >
+                        <EnhancedTableHead
+                            numSelected={selected.length}
+                            order={order}
+                            orderBy={orderBy}
+                            onSelectAllClick={handleSelectAllClick}
+                            onRequestSort={handleRequestSort}
+                            rowCount={rows.length}
+                        />
+                        <TableBody>
+                            {
+                                visibleRows.map((row, index) => {
+                                    const isItemSelected = isSelected(row.name);
+                                    const labelId = `enhanced-table-checkbox-${index}`
+                                    return (
+                                        <TableRow
+                                            hover
+                                            onClick={(event) => handleClick(event, row.name)}
+                                            role='checkbox'
+                                            aria-checked={isItemSelected}
+                                            tabIndex={-1}
+                                            key={row.name}
+                                            selected={isItemSelected}
+                                            sx={{ cursor: 'pointer' }}
+                                        >
+                                            <TableCell padding='checkbox'>
+                                                <Checkbox
+                                                    color='primary'
+                                                    checked={isItemSelected}
+                                                    inputProps={{
+                                                        'aria-labelledby': labelId
+                                                    }}
+                                                />
+                                            </TableCell>
+                                            <TableCell
+                                                component="th"
+                                                id={labelId}
+                                                scope='row'
+                                                padding='none'
+                                            >
+                                                {row.name}
+                                            </TableCell>
+                                            <TableCell align='right'>{row.name}</TableCell>
+                                            <TableCell align='right'>{row.uid}</TableCell>
+                                            <TableCell align='right'>{row.college}</TableCell>
+                                            <TableCell align='right'>{row.classname}</TableCell>
+                                            <TableCell align='right'>{row.participate_reason}</TableCell>
+                                            <TableCell align='right'>{row.state}</TableCell>
+                                        </TableRow>
+                                    )
+                                })
+                            }
+                            {emptyRows > 0
+                                &&
+                                (
+                                    <TableRow
+                                        style={{
+                                            height: (dense ? 33 : 53) * emptyRows,
+                                        }}>
+                                        <TableCell colSpan={6} />
+                                    </TableRow>
+                                )
+                            }
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+
+                <TablePagination
+                    rowsPerPageOptions={[5, 10, 25]}
+                    component="div"
+                    count={rows.length}
+                    rowsPerPage={rowsPerPage}
+                    page={page}
+                    onPageChange={handleChangePage}
+                    onRowsPerPageChange={handleChangeRowsPerPage}
+                />
+            </Paper>
+            <FormControlLabel
+                control={<Switch checked={dense} onChange={handleChangeDense} />}
+                label='紧凑排序'
+            />
         </Box>
     )
 }
