@@ -3,3 +3,15 @@
     top: 50%;
     left: 50%;
 }
+
+:global .MuiTablePagination-selectLabel {
+    display: none;
+}
+
+:global .css-20ijvv-MuiInputBase-root-MuiTablePagination-select {
+    display: none !important;
+}
+
+:global .css-levciy-MuiTablePagination-displayedRows {
+    display: none !important;
+}

@@ -16,8 +16,7 @@ import {
     Checkbox,
     IconButton,
     Tooltip,
-    FormControlLabel,
-    Switch,//用于开启密集填充
+    Stack
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import FilterListIcon from '@mui/icons-material/FilterList';
@@ -87,31 +86,31 @@ const headCells: readonly HeadCell[] = [
     },
     {
         id: 'uid',
-        numeric: true,
+        numeric: false,
         disablePadding: false,
         label: '学号',
     },
     {
         id: 'college',
-        numeric: true,
+        numeric: false,
         disablePadding: false,
         label: '学院',
     },
     {
         id: 'classname',
-        numeric: true,
+        numeric: false,
         disablePadding: false,
         label: '专业班级',
     },
     {
         id: 'participate_reason',
-        numeric: true,
+        numeric: false,
         disablePadding: false,
         label: '申请理由',
     },
     {
         id: 'state',
-        numeric: true,
+        numeric: false,
         disablePadding: false,
         label: '活动状态',
     },
@@ -165,7 +164,7 @@ function EnhancedTableHead(props: EnhancedTableProps) {
                                 {headCell.label}
                                 {orderBy === headCell.id ?
                                     (
-                                        <Box>
+                                        <Box component='span' sx={{ visuallyHidden }}>
                                             {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
                                         </Box>
                                     ) : null
@@ -220,7 +219,7 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
                             id="tableTitle"
                             component="div"
                         >
-                            Nutrition
+                            学生名单
                         </Typography>
                     )
             }
@@ -252,8 +251,7 @@ export const ActivityStudents = ({ students, id }: ActivityStudentsProps) => {
     const [orderBy, setOrderBy] = useState<keyof FormData>('name')
     const [selected, setSelected] = useState<readonly string[]>([])
     const [page, setPage] = useState(0)
-    const [dense, setDense] = useState(false)
-    const [rowsPerPage, setRowsPerPage] = useState(5)
+    const [rowsPerPage, setRowsPerPage] = useState(7)
 
     const handleRequestSort = (
         event: React.MouseEvent<unknown>,
@@ -311,12 +309,6 @@ export const ActivityStudents = ({ students, id }: ActivityStudentsProps) => {
         setPage(0)
     }
 
-    const handleChangeDense = (
-        event: React.ChangeEvent<HTMLInputElement>,
-    ) => {
-        setDense(event.target.checked)
-    }
-
     const isSelected = (name: string) => selected.indexOf(name) !== -1;
 
 
@@ -345,7 +337,7 @@ export const ActivityStudents = ({ students, id }: ActivityStudentsProps) => {
                 item.user.name,
                 item.user.uid,
                 item.user.college,
-                item.user.classname,
+                item.user.class,
                 item.participate_reason,
                 item.state
             )
@@ -374,7 +366,6 @@ export const ActivityStudents = ({ students, id }: ActivityStudentsProps) => {
                     <Table
                         sx={{ minWidth: 750 }}
                         aria-labelledby='tableTitle'
-                        size={dense ? 'small' : 'medium'}
                     >
                         <EnhancedTableHead
                             numSelected={selected.length}
@@ -417,12 +408,11 @@ export const ActivityStudents = ({ students, id }: ActivityStudentsProps) => {
                                             >
                                                 {row.name}
                                             </TableCell>
-                                            <TableCell align='right'>{row.name}</TableCell>
-                                            <TableCell align='right'>{row.uid}</TableCell>
-                                            <TableCell align='right'>{row.college}</TableCell>
-                                            <TableCell align='right'>{row.classname}</TableCell>
-                                            <TableCell align='right'>{row.participate_reason}</TableCell>
-                                            <TableCell align='right'>{row.state}</TableCell>
+                                            <TableCell align='left'>{row.uid}</TableCell>
+                                            <TableCell align='left'>{row.college}</TableCell>
+                                            <TableCell align='left'>{row.classname}</TableCell>
+                                            <TableCell align='left'>{row.participate_reason}</TableCell>
+                                            <TableCell align='left'>{row.state}</TableCell>
                                         </TableRow>
                                     )
                                 })
@@ -430,10 +420,7 @@ export const ActivityStudents = ({ students, id }: ActivityStudentsProps) => {
                             {emptyRows > 0
                                 &&
                                 (
-                                    <TableRow
-                                        style={{
-                                            height: (dense ? 33 : 53) * emptyRows,
-                                        }}>
+                                    <TableRow>
                                         <TableCell colSpan={6} />
                                     </TableRow>
                                 )
@@ -441,21 +428,28 @@ export const ActivityStudents = ({ students, id }: ActivityStudentsProps) => {
                         </TableBody>
                     </Table>
                 </TableContainer>
+                <Stack
+                    direction='row'
+                    justifyContent='flex-end'
+                    alignItems='center'
+                    spacing={2}
+                    sx={{
+                        mr: 2
+                    }}
+                >
+                    <TablePagination
+                        component='div'
+                        count={rows.length}
+                        rowsPerPage={rowsPerPage}
+                        page={page}
+                        onPageChange={handleChangePage}
+                        onRowsPerPageChange={handleChangeRowsPerPage}
+                    />
+                    <Box>{page + 1} / {Math.floor(rows.length / rowsPerPage + 1)}</Box>
+                </Stack>
 
-                <TablePagination
-                    rowsPerPageOptions={[5, 10, 25]}
-                    component="div"
-                    count={rows.length}
-                    rowsPerPage={rowsPerPage}
-                    page={page}
-                    onPageChange={handleChangePage}
-                    onRowsPerPageChange={handleChangeRowsPerPage}
-                />
             </Paper>
-            <FormControlLabel
-                control={<Switch checked={dense} onChange={handleChangeDense} />}
-                label='紧凑排序'
-            />
+
         </Box>
     )
 }
