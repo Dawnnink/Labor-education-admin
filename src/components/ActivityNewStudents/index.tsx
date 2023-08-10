@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { alpha } from '@mui/material/styles';
 import {
     Box,
@@ -268,6 +268,70 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
 }
 
 export const ActivityStudents = ({ students, id }: ActivityStudentsProps) => {
+    //state定义
+    const [order, setOrder] = useState<Order>('asc')
+    const [orderBy, setOrderBy] = useState<keyof FormData>('name')
+    const [selected, setSelected] = useState<readonly string[]>([])
+    const [page, setPage] = useState(0)
+    const [dense, setDense] = useState(false)
+    const [rowsPerPage, setRowsPerPage] = useState(5)
+
+    const handleRequestSort = (
+        event: React.MouseEvent<unknown>,
+        property: keyof FormData,
+    ) => {
+        const isAsc = orderBy === property && order === 'asc';
+        setOrder(isAsc ? 'desc' : 'asc')
+        setOrderBy(property)
+    }
+
+    const handleSelectAllClick = (
+        event: React.ChangeEvent<HTMLInputElement>,
+    ) => {
+        if (event.target.checked) {
+            const newSelected = rows.map((n) => n.name)
+            setSelected(newSelected);
+            return;
+        }
+        setSelected([]);
+    }
+
+    const handleClick = (
+        event: React.MouseEvent<unknown>,
+        name: string,
+    ) => {
+        const selectedIndex = selected.indexOf(name);
+        let newSelected: readonly string[] = [];
+
+        if (selectedIndex === -1) {
+            newSelected = newSelected.concat(selected, name);
+        } else if (selectedIndex === 0) {
+            newSelected = newSelected.concat(selected.slice(1));
+        } else if (selectedIndex === selected.length - 1) {
+            newSelected = newSelected.concat(selected.slice(0, -1));
+        } else if (selectedIndex > 0) {
+            newSelected = newSelected.concat(
+                selected.slice(0, selectedIndex),
+                selected.slice(selectedIndex + 1),
+            )
+        }
+        setSelected(newSelected);
+    }
+
+    const handleChangePage = (
+        event: unknown,
+        newPage: number
+    ) => {
+        setPage(newPage);
+    }
+
+    const handleChangeRowsPerPage = (
+        event: React.ChangeEvent<HTMLInputElement>
+    ) => {
+        setRowsPerPage(parseInt(event.target.value, 10))
+        setPage(0)
+    }
+
     //mui的table组件的转化表格第一行的数据，将其作为缓存函数
     const createFormData = useCallback((
         name: string,
