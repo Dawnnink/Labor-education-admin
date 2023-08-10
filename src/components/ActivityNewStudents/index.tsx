@@ -1,6 +1,7 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import { alpha } from '@mui/material/styles';
 import {
+    Stack,
     Box,
     Table,
     TableBody,
@@ -16,7 +17,6 @@ import {
     Checkbox,
     IconButton,
     Tooltip,
-    Stack
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import FilterListIcon from '@mui/icons-material/FilterList';
@@ -116,16 +116,45 @@ const headCells: readonly HeadCell[] = [
     },
 ]
 
-interface EnhancedTableProps {
-    numSelected: number;//表示选中的项目数量
-    onRequestSort: (event: React.MouseEvent<unknown>, property: keyof FormData) => void;//当用户请求进行排序就用这个事件处理函数
+interface EnhancedTableTitleBarProps {
     onSelectAllClick: (event: React.ChangeEvent<HTMLInputElement>) => void;//表示data对象的键之一
+    rowCount: number;//表示数据行数
+    numSelected: number;//表示选中的项目数量
+
+}
+
+function EnhancedTableTitleBar(props: EnhancedTableTitleBarProps) {
+    const { onSelectAllClick, numSelected, rowCount } = props;
+    return (
+        <Stack
+            sx={{ width: '100%' }}
+            direction='row'
+            justifyContent='flex-start'
+            alignItems='center'
+        >
+            <Checkbox
+                color='primary'
+                indeterminate={numSelected > 0 && numSelected < rowCount}
+                checked={rowCount > 0 && numSelected === rowCount}
+                onChange={onSelectAllClick}
+                inputProps={{
+                    'aria-label': 'select all'
+                }}
+            />
+            <Typography>
+                全选
+            </Typography>
+        </Stack>
+
+    )
+}
+interface EnhancedTableProps {
+    onRequestSort: (event: React.MouseEvent<unknown>, property: keyof FormData) => void;//当用户请求进行排序就用这个事件处理函数
     order: Order;//表示排序顺序‘asc’ 和上面那个，自己去看，我定义了的
     orderBy: string;//表示当前排序的字段，类型为字符串
-    rowCount: number;//表示数据行数
 }
 function EnhancedTableHead(props: EnhancedTableProps) {
-    const { onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } = props;
+    const { order, orderBy, onRequestSort } = props;
     const createSortHandler = (
         property: keyof FormData
     ) => (
@@ -137,17 +166,7 @@ function EnhancedTableHead(props: EnhancedTableProps) {
     return (
         <TableHead>
             <TableRow>
-                <TableCell padding='checkbox'>
-                    <Checkbox
-                        color='primary'
-                        indeterminate={numSelected > 0 && numSelected < rowCount}
-                        checked={rowCount > 0 && numSelected === rowCount}
-                        onChange={onSelectAllClick}
-                        inputProps={{
-                            'aria-label': 'select all'
-                        }}
-                    />
-                </TableCell>
+                <TableCell></TableCell>
                 {
                     headCells.map((headCell) => (
                         <TableCell
@@ -363,17 +382,20 @@ export const ActivityStudents = ({ students, id }: ActivityStudentsProps) => {
                 {/* 工具栏 */}
                 <EnhancedTableToolbar numSelected={selected.length} />
                 <TableContainer>
+                    <EnhancedTableTitleBar
+                        numSelected={selected.length}
+                        rowCount={rows.length}
+                        onSelectAllClick={handleSelectAllClick}
+
+                    />
                     <Table
                         sx={{ minWidth: 750 }}
                         aria-labelledby='tableTitle'
                     >
                         <EnhancedTableHead
-                            numSelected={selected.length}
                             order={order}
                             orderBy={orderBy}
-                            onSelectAllClick={handleSelectAllClick}
                             onRequestSort={handleRequestSort}
-                            rowCount={rows.length}
                         />
                         <TableBody>
                             {
@@ -428,26 +450,16 @@ export const ActivityStudents = ({ students, id }: ActivityStudentsProps) => {
                         </TableBody>
                     </Table>
                 </TableContainer>
-                <Stack
-                    direction='row'
-                    justifyContent='flex-end'
-                    alignItems='center'
-                    spacing={2}
-                    sx={{
-                        mr: 2
-                    }}
-                >
-                    <TablePagination
-                        component='div'
-                        count={rows.length}
-                        rowsPerPage={rowsPerPage}
-                        page={page}
-                        onPageChange={handleChangePage}
-                        onRowsPerPageChange={handleChangeRowsPerPage}
-                    />
-                    <Box>{page + 1} / {Math.floor(rows.length / rowsPerPage + 1)}</Box>
-                </Stack>
 
+                <TablePagination
+                    component='div'
+                    count={rows.length}
+                    rowsPerPage={rowsPerPage}
+                    page={page}
+                    onPageChange={handleChangePage}
+                    onRowsPerPageChange={handleChangeRowsPerPage}
+                />
+                <Box>{page + 1}/{rows.length / rowsPerPage + 1}</Box>
             </Paper>
 
         </Box>
