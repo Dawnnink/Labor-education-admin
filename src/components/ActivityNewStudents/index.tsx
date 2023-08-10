@@ -332,6 +332,15 @@ export const ActivityStudents = ({ students, id }: ActivityStudentsProps) => {
         setPage(0)
     }
 
+    const handleChangeDense = (
+        event: React.ChangeEvent<HTMLInputElement>,
+    ) => {
+        setDense(event.target.checked)
+    }
+
+    const isSelected = (name: string) => selected.indexOf(name) !== -1;
+
+
     //mui的table组件的转化表格第一行的数据，将其作为缓存函数
     const createFormData = useCallback((
         name: string,
@@ -364,9 +373,19 @@ export const ActivityStudents = ({ students, id }: ActivityStudentsProps) => {
         })
     }, []);
 
+    const emptyRows =
+        page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+
+    const visibleRows = useMemo(
+        () => {
+            return stableSort(rows, getComparator(order, orderBy)).slice(
+                page * rowsPerPage,
+                page * rowsPerPage + rowsPerPage,
+            );
+        }, [order, orderBy, page, rowsPerPage])
     console.log(students, id)
     return (
-        <Box>
+        <Box sx={ }>
 
         </Box>
     )
