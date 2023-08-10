@@ -24,28 +24,7 @@ import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
 
 import { ActivityStudentsProps } from '../ActivityStudents';
-// interface ActivityStudentsProps {
-//     students: {
-//       participate_time: string // ISO 8601
-//       participate_reason: string
-//       comment: string
-//       state: '报名成功' | '报名失败' | '报名审核中'
-//       check_in: string // ISO 8601
-//       user: User
-//     }[]
-//     id: number
-//   }
 
-// export interface User {
-//     id: number
-//     name: string
-//     uid: string
-//     avatar: string
-//     college: string
-//     sex: '男' | '女'
-//     class?: string
-//     phone_number: string
-//   }
 interface FormData {
     name: string
     uid: string
@@ -104,37 +83,37 @@ const headCells: readonly HeadCell[] = [
         id: 'name',
         numeric: false,
         disablePadding: true,
-        label: 'name'
+        label: '姓名'
     },
     {
         id: 'uid',
         numeric: true,
         disablePadding: false,
-        label: 'Protein (g)',
+        label: '学号',
     },
     {
         id: 'college',
         numeric: true,
         disablePadding: false,
-        label: 'Protein (g)',
+        label: '学院',
     },
     {
         id: 'classname',
         numeric: true,
         disablePadding: false,
-        label: 'Protein (g)',
+        label: '专业班级',
     },
     {
         id: 'participate_reason',
         numeric: true,
         disablePadding: false,
-        label: 'Protein (g)',
+        label: '申请理由',
     },
     {
         id: 'state',
         numeric: true,
         disablePadding: false,
-        label: 'Protein (g)',
+        label: '活动状态',
     },
 ]
 
