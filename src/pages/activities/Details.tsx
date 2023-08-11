@@ -10,17 +10,6 @@ import dayjs from 'dayjs'
 import style from './index.module.css'
 import { IParticipater } from '~/utils/types'
 import { message, Space } from 'antd'
-import {
-  Menu,
-  Button as Btn,
-  MenuItem,
-  Divider,
-  MenuList,
-  Grow,
-  ClickAwayListener,
-  Popper
-} from '@mui/material';
-import { useRef, useState } from 'react';
 
 
 
@@ -36,8 +25,6 @@ function formatTime(timeString: string): string {
   return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 }
 const DetailsWithParams = ({ activityId }: { activityId: number }) => {
-  const [openPopper, setOpenPopper] = useState(false);
-  const anchorRef = useRef<HTMLButtonElement>(null);
 
 
 
@@ -54,23 +41,6 @@ const DetailsWithParams = ({ activityId }: { activityId: number }) => {
         return item.user.id
       })
     )
-  }
-
-  const handleToggle = () => {
-    setOpenPopper((prevOpenPopper) => !prevOpenPopper)
-  }
-
-  const handleClose = (
-    event: Event | React.SyntheticEvent
-  ) => {
-    if (
-      anchorRef.current
-      &&
-      anchorRef.current.contains(event.target as HTMLElement)
-    ) {
-      return;
-    }
-    setOpenPopper(false)
   }
 
   if (activity) {
