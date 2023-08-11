@@ -55,58 +55,49 @@ const Menu = () => {
 
     return (
         <Stack direction="row" spacing={2}>
-            <Paper>
-                <MenuList>
-                    <MenuItem>Profile</MenuItem>
-                    <MenuItem>My account</MenuItem>
-                    <MenuItem>Logout</MenuItem>
-                </MenuList>
-            </Paper>
-            <div>
-                <Button
-                    ref={anchorRef}
-                    id="composition-button"
-                    aria-controls={openPopper ? 'composition-menu' : undefined}
-                    aria-expanded={openPopper ? 'true' : undefined}
-                    aria-haspopup="true"
-                    onClick={handleToggle}
-                >
-                    Dashboard
-                </Button>
-                <Popper
-                    open={openPopper}
-                    anchorEl={anchorRef.current}
-                    role={undefined}
-                    placement="bottom-start"
-                    transition
-                    disablePortal
-                >
-                    {({ TransitionProps, placement }) => (
-                        <Grow
-                            {...TransitionProps}
-                            style={{
-                                transformOrigin:
-                                    placement === 'bottom-start' ? 'left top' : 'left bottom',
-                            }}
-                        >
-                            <Paper>
-                                <ClickAwayListener onClickAway={handleClose}>
-                                    <MenuList
-                                        autoFocusItem={openPopper}
-                                        id="composition-menu"
-                                        aria-labelledby="composition-button"
-                                        onKeyDown={handleListKeyDown}
-                                    >
-                                        <MenuItem onClick={handleClose}>Profile</MenuItem>
-                                        <MenuItem onClick={handleClose}>My account</MenuItem>
-                                        <MenuItem onClick={handleClose}>Logout</MenuItem>
-                                    </MenuList>
-                                </ClickAwayListener>
-                            </Paper>
-                        </Grow>
-                    )}
-                </Popper>
-            </div>
+            <Button
+                ref={anchorRef}
+                id="composition-button"
+                aria-controls={openPopper ? 'composition-menu' : undefined}
+                aria-expanded={openPopper ? 'true' : undefined}
+                aria-haspopup="true"
+                onClick={handleToggle}
+            >
+                Dashboard
+            </Button>
+            <Popper
+                open={openPopper}
+                anchorEl={anchorRef.current}
+                role={undefined}
+                placement="bottom-start"
+                transition
+                disablePortal
+            >
+                {({ TransitionProps, placement }) => (
+                    <Grow
+                        {...TransitionProps}
+                        style={{
+                            transformOrigin:
+                                placement === 'bottom-start' ? 'left top' : 'left bottom',
+                        }}
+                    >
+                        <Paper>
+                            <ClickAwayListener onClickAway={handleClose}>
+                                <MenuList
+                                    autoFocusItem={openPopper}
+                                    id="composition-menu"
+                                    aria-labelledby="composition-button"
+                                    onKeyDown={handleListKeyDown}
+                                >
+                                    <MenuItem onClick={handleClose}>Profile</MenuItem>
+                                    <MenuItem onClick={handleClose}>My account</MenuItem>
+                                    <MenuItem onClick={handleClose}>Logout</MenuItem>
+                                </MenuList>
+                            </ClickAwayListener>
+                        </Paper>
+                    </Grow>
+                )}
+            </Popper>
         </Stack>
     )
 }

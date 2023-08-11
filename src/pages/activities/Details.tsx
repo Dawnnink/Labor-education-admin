@@ -10,7 +10,7 @@ import dayjs from 'dayjs'
 import style from './index.module.css'
 import { IParticipater } from '~/utils/types'
 import { message, Space } from 'antd'
-
+import Menu from '~/components/Menu'
 
 
 function formatTime(timeString: string): string {
@@ -120,6 +120,7 @@ const DetailsWithParams = ({ activityId }: { activityId: number }) => {
           >
             导出学生列表
           </Button>
+          <Menu />
         </Space>
 
       </Stack>
