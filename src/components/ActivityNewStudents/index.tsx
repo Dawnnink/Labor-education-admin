@@ -137,7 +137,7 @@ function EnhancedTableHead(props: EnhancedTableProps) {
     return (
         <TableHead>
             <TableRow>
-                <TableCell>
+                <TableCell padding='checkbox'>
                     <Checkbox
                         color='primary'
                         indeterminate={numSelected > 0 && numSelected < rowCount}
