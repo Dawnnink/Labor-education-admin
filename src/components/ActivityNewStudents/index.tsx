@@ -116,45 +116,16 @@ const headCells: readonly HeadCell[] = [
     },
 ]
 
-interface EnhancedTableTitleBarProps {
-    onSelectAllClick: (event: React.ChangeEvent<HTMLInputElement>) => void;//表示data对象的键之一
-    rowCount: number;//表示数据行数
-    numSelected: number;//表示选中的项目数量
-
-}
-
-function EnhancedTableTitleBar(props: EnhancedTableTitleBarProps) {
-    const { onSelectAllClick, numSelected, rowCount } = props;
-    return (
-        <Stack
-            sx={{ width: '100%' }}
-            direction='row'
-            justifyContent='flex-start'
-            alignItems='center'
-        >
-            <Checkbox
-                color='primary'
-                indeterminate={numSelected > 0 && numSelected < rowCount}
-                checked={rowCount > 0 && numSelected === rowCount}
-                onChange={onSelectAllClick}
-                inputProps={{
-                    'aria-label': 'select all'
-                }}
-            />
-            <Typography>
-                全选
-            </Typography>
-        </Stack>
-
-    )
-}
 interface EnhancedTableProps {
     onRequestSort: (event: React.MouseEvent<unknown>, property: keyof FormData) => void;//当用户请求进行排序就用这个事件处理函数
     order: Order;//表示排序顺序‘asc’ 和上面那个，自己去看，我定义了的
     orderBy: string;//表示当前排序的字段，类型为字符串
+    onSelectAllClick: (event: React.ChangeEvent<HTMLInputElement>) => void;//表示data对象的键之一
+    rowCount: number;//表示数据行数
+    numSelected: number;//表示选中的项目数量
 }
 function EnhancedTableHead(props: EnhancedTableProps) {
-    const { order, orderBy, onRequestSort } = props;
+    const { order, orderBy, onRequestSort, onSelectAllClick, numSelected, rowCount } = props;
     const createSortHandler = (
         property: keyof FormData
     ) => (
@@ -166,7 +137,17 @@ function EnhancedTableHead(props: EnhancedTableProps) {
     return (
         <TableHead>
             <TableRow>
-                <TableCell></TableCell>
+                <TableCell>
+                    <Checkbox
+                        color='primary'
+                        indeterminate={numSelected > 0 && numSelected < rowCount}
+                        checked={rowCount > 0 && numSelected === rowCount}
+                        onChange={onSelectAllClick}
+                        inputProps={{
+                            'aria-label': 'select all'
+                        }}
+                    />
+                </TableCell>
                 {
                     headCells.map((headCell) => (
                         <TableCell
@@ -382,17 +363,14 @@ export const ActivityStudents = ({ students, id }: ActivityStudentsProps) => {
                 {/* 工具栏 */}
                 <EnhancedTableToolbar numSelected={selected.length} />
                 <TableContainer>
-                    <EnhancedTableTitleBar
-                        numSelected={selected.length}
-                        rowCount={rows.length}
-                        onSelectAllClick={handleSelectAllClick}
-
-                    />
                     <Table
                         sx={{ minWidth: 750 }}
                         aria-labelledby='tableTitle'
                     >
                         <EnhancedTableHead
+                            numSelected={selected.length}
+                            rowCount={rows.length}
+                            onSelectAllClick={handleSelectAllClick}
                             order={order}
                             orderBy={orderBy}
                             onRequestSort={handleRequestSort}
@@ -450,16 +428,21 @@ export const ActivityStudents = ({ students, id }: ActivityStudentsProps) => {
                         </TableBody>
                     </Table>
                 </TableContainer>
-
-                <TablePagination
-                    component='div'
-                    count={rows.length}
-                    rowsPerPage={rowsPerPage}
-                    page={page}
-                    onPageChange={handleChangePage}
-                    onRowsPerPageChange={handleChangeRowsPerPage}
-                />
-                <Box>{page + 1}/{rows.length / rowsPerPage + 1}</Box>
+                <Stack
+                    direction='row'
+                    alignItems='center'
+                    justifyContent='flex-end'
+                >
+                    <TablePagination
+                        component='div'
+                        count={rows.length}
+                        rowsPerPage={rowsPerPage}
+                        page={page}
+                        onPageChange={handleChangePage}
+                        onRowsPerPageChange={handleChangeRowsPerPage}
+                    />
+                    <Box sx={{ mr: 3 }}>{page + 1} / {Math.floor(rows.length / rowsPerPage + 1)}</Box>
+                </Stack>
             </Paper>
 
         </Box>
