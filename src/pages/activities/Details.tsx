@@ -10,6 +10,20 @@ import dayjs from 'dayjs'
 import style from './index.module.css'
 import { IParticipater } from '~/utils/types'
 import { message, Space } from 'antd'
+import {
+  Menu,
+  Button as Btn,
+  MenuItem,
+  Divider,
+  MenuList,
+  Grow,
+  ClickAwayListener,
+  Popper
+} from '@mui/material';
+import { useRef, useState } from 'react';
+
+
+
 function formatTime(timeString: string): string {
   const inputDate = new Date(timeString);
   const year = inputDate.getUTCFullYear().toString().padStart(4, '0');
@@ -22,6 +36,11 @@ function formatTime(timeString: string): string {
   return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 }
 const DetailsWithParams = ({ activityId }: { activityId: number }) => {
+  const [openPopper, setOpenPopper] = useState(false);
+  const anchorRef = useRef<HTMLButtonElement>(null);
+
+
+
   const { data: activity, error } = network.teacher.useActivity(activityId)
   const { data: students } = network.teacher.useActivityStudents(activityId)
   const studentArray: number[] = [];
@@ -36,7 +55,24 @@ const DetailsWithParams = ({ activityId }: { activityId: number }) => {
       })
     )
   }
-  console.log(students);
+
+  const handleToggle = () => {
+    setOpenPopper((prevOpenPopper) => !prevOpenPopper)
+  }
+
+  const handleClose = (
+    event: Event | React.SyntheticEvent
+  ) => {
+    if (
+      anchorRef.current
+      &&
+      anchorRef.current.contains(event.target as HTMLElement)
+    ) {
+      return;
+    }
+    setOpenPopper(false)
+  }
+
   if (activity) {
     if (activity.state == '已发布' || activity.state == '审核中') {
       if (dayjs().isBefore(dayjs(formatTime(activity.registration_start_time)))) {
@@ -44,7 +80,7 @@ const DetailsWithParams = ({ activityId }: { activityId: number }) => {
           <Stack
             spacing={2}
             sx={{
-              width: '100%',
+              width: '91%',
             }}
           >
             <ErrorDisplay error={error} />
@@ -80,7 +116,8 @@ const DetailsWithParams = ({ activityId }: { activityId: number }) => {
     <Stack
       spacing={2}
       sx={{
-        width: '100%',
+        width: '91%',
+        m: '0 auto'
       }}
     >
       <ErrorDisplay error={error} />
