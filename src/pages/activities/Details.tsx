@@ -12,6 +12,7 @@ import { IParticipater } from '~/utils/types'
 import { message, Space } from 'antd'
 import Menu from '~/components/Menu'
 import { useEffect, useState } from 'react';
+import { Box } from '@mui/material'
 
 function formatTime(timeString: string): string {
   const inputDate = new Date(timeString);
@@ -95,13 +96,34 @@ const DetailsWithParams = ({ activityId }: { activityId: number }) => {
         m: '0 auto'
       }}
     >
-      <ErrorDisplay error={error} />
-      <OverflowWrapper>
-        {students === undefined ? null : <ActivityStudents students={students} id={activity.id} />}
-      </OverflowWrapper>
-      <Stack direction="row" justifyContent="flex-end" p={'0 20px'} alignItems='flex-end'>
-        <Space>
-          {AllPassed &&
+      <Box>
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            width: '100%',
+            backgroundColor: 'white',
+          }}
+        >
+          <Menu handleKind={handleKind} now={now} />
+          <Button
+            startDecorator={<FileDownloadIcon />}
+            onClick={() => {
+              network.teacher.downloadActivityStudentsExcel(activityId)
+            }}
+          >
+            导出学生列表
+          </Button>
+        </Box>
+        <ErrorDisplay error={error} />
+        <OverflowWrapper>
+          {students === undefined ? null : <ActivityStudents students={students} id={activity.id} />}
+        </OverflowWrapper>
+      </Box>
+
+      {/* <Stack direction="row" justifyContent="flex-end" p={'0 20px'} alignItems='flex-end'>
+        {AllPassed &&
             <Button
               onClick={() => {
                 network.teacher.usePass(activity.id, studentArray)
@@ -117,18 +139,7 @@ const DetailsWithParams = ({ activityId }: { activityId: number }) => {
               全部通过
             </Button>
           }
-          <Button
-            startDecorator={<FileDownloadIcon />}
-            onClick={() => {
-              network.teacher.downloadActivityStudentsExcel(activityId)
-            }}
-          >
-            导出学生列表
-          </Button>
-          <Menu handleKind={handleKind} now={now} />
-        </Space>
-
-      </Stack>
+      </Stack> */}
       {activity && <ActivityEditor initialActivity={activity} isShow={false} disabled={true} />}
     </Stack >
   )

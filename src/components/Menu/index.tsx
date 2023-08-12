@@ -86,7 +86,7 @@ const Menu = (props: MenuProps) => {
                     justifyContent: 'space-between',
                     alignItems: 'center',
                     color: '#A99D9C',
-                    border: isClicked ? '1px solid #1677FF' : '1px solid grey'
+                    border: isClicked ? '1px solid #1677FF' : '1px solid grey',
                 }}
             >
                 {now}
@@ -126,7 +126,7 @@ const Menu = (props: MenuProps) => {
                                     aria-labelledby="composition-button"
                                     onKeyDown={handleListKeyDown}
                                     sx={{
-                                        width: '210px'
+                                        width: '210px',
                                     }}
                                 >
                                     <MenuItem onClick={handleClose}>全部</MenuItem>
