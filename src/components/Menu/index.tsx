@@ -1,25 +1,31 @@
-
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import {
-
     Paper,
     Button,
     MenuItem,
-    Divider,
     MenuList,
     Grow,
     ClickAwayListener,
     Popper,
-    Stack
+    Stack,
+    Box
 } from '@mui/material';
 import { useEffect, useRef, useState } from 'react';
 
+interface MenuProps {
+    handleKind: (e: string) => void;
+    now: string;
+}
 
-const Menu = () => {
+const Menu = (props: MenuProps) => {
+    const { handleKind, now } = props;//解构
     const [openPopper, setOpenPopper] = useState(false);
     const anchorRef = useRef<HTMLButtonElement>(null);
+    const [isClicked, setIsClicked] = useState(false);//判断Menu是否被点击
 
     const handleToggle = () => {
         setOpenPopper((prevOpenPopper) => !prevOpenPopper)
+        setIsClicked((prevIsClicked) => !prevIsClicked)
     }
 
     const handleClose = (
@@ -30,18 +36,30 @@ const Menu = () => {
             &&
             anchorRef.current.contains(event.target as HTMLElement)
         ) {
+            console.log(anchorRef.current)
             return;
         }
         setOpenPopper(false)
+        if ((event.target as HTMLElement).textContent) {
+            if (
+                ['全部', '已签退', '待签退', '待审核'].includes(((event.target as HTMLElement).textContent) as string)
+            ) {
+                handleKind((event.target as HTMLElement).textContent as string);
+            }
+        }
+        setIsClicked(false);
+
     }
 
     const handleListKeyDown = (event: React.KeyboardEvent) => {
         if (event.key === 'Tab') {
             event.preventDefault();
             setOpenPopper(false);
+            setIsClicked(false);
         }
         else if (event.key === 'Escape') {
             setOpenPopper(false);
+            setIsClicked(false);
         }
     }
 
@@ -62,8 +80,27 @@ const Menu = () => {
                 aria-expanded={openPopper ? 'true' : undefined}
                 aria-haspopup="true"
                 onClick={handleToggle}
+                sx={{
+                    width: '210px',
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    color: '#A99D9C',
+                    border: isClicked ? '1px solid #1677FF' : '1px solid grey'
+                }}
             >
-                Dashboard
+                {now}
+                <Box
+                    sx={{
+                        transform: isClicked ? 'rotate(-180deg)' : null,
+                        transition: 'all 1s',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                    }}
+                >
+                    <ExpandMoreIcon />
+                </Box>
             </Button>
             <Popper
                 open={openPopper}
@@ -88,10 +125,14 @@ const Menu = () => {
                                     id="composition-menu"
                                     aria-labelledby="composition-button"
                                     onKeyDown={handleListKeyDown}
+                                    sx={{
+                                        width: '210px'
+                                    }}
                                 >
-                                    <MenuItem onClick={handleClose}>Profile</MenuItem>
-                                    <MenuItem onClick={handleClose}>My account</MenuItem>
-                                    <MenuItem onClick={handleClose}>Logout</MenuItem>
+                                    <MenuItem onClick={handleClose}>全部</MenuItem>
+                                    <MenuItem onClick={handleClose}>待审核</MenuItem>
+                                    <MenuItem onClick={handleClose}>待签退</MenuItem>
+                                    <MenuItem onClick={handleClose}>已签退</MenuItem>
                                 </MenuList>
                             </ClickAwayListener>
                         </Paper>

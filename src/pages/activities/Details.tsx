@@ -11,7 +11,7 @@ import style from './index.module.css'
 import { IParticipater } from '~/utils/types'
 import { message, Space } from 'antd'
 import Menu from '~/components/Menu'
-
+import { useEffect, useState } from 'react';
 
 function formatTime(timeString: string): string {
   const inputDate = new Date(timeString);
@@ -26,10 +26,15 @@ function formatTime(timeString: string): string {
 }
 const DetailsWithParams = ({ activityId }: { activityId: number }) => {
 
-
+  const [now, setNow] = useState<string>('全部');//读取菜单的值
 
   const { data: activity, error } = network.teacher.useActivity(activityId)
   const { data: students } = network.teacher.useActivityStudents(activityId)
+
+  const handleKind = (e: string) => {
+    setNow(e);
+  }//把这个函数传入子组件，可以通过这个函数更改now的值
+
   const studentArray: number[] = [];
   let AllPassed = false;//设定一个变量，假设学生列表中有人未通过，则设为true，则显示一键通过按钮
   if (students) {
@@ -120,7 +125,7 @@ const DetailsWithParams = ({ activityId }: { activityId: number }) => {
           >
             导出学生列表
           </Button>
-          <Menu />
+          <Menu handleKind={handleKind} now={now} />
         </Space>
 
       </Stack>
