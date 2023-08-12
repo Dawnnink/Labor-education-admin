@@ -12,7 +12,7 @@ import { IParticipater } from '~/utils/types'
 import { message, Space } from 'antd'
 import Menu from '~/components/Menu'
 import { useEffect, useState } from 'react';
-import { Box } from '@mui/material'
+import { Box, Typography } from '@mui/material'
 
 function formatTime(timeString: string): string {
   const inputDate = new Date(timeString);
@@ -70,7 +70,7 @@ const DetailsWithParams = ({ activityId }: { activityId: number }) => {
                   network.teacher.downloadActivityStudentsExcel(activityId)
                 }}
               >
-                导出学生列表
+                导出学生名单
               </Button>
             </Stack>
             {activity && <ActivityEditor initialActivity={activity} isShow={false} disabled={true} beginDel={true} isDel={true} />}
@@ -99,6 +99,14 @@ const DetailsWithParams = ({ activityId }: { activityId: number }) => {
       <Box>
         <Box
           sx={{
+            backgroundColor: 'white',
+            p: '16px'
+          }}
+        >
+          <Typography variant='h6'>学生名单</Typography>
+        </Box>
+        <Box
+          sx={{
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
@@ -112,8 +120,9 @@ const DetailsWithParams = ({ activityId }: { activityId: number }) => {
             onClick={() => {
               network.teacher.downloadActivityStudentsExcel(activityId)
             }}
+            sx={{ mr: 3 }}
           >
-            导出学生列表
+            导出学生名单
           </Button>
         </Box>
         <ErrorDisplay error={error} />

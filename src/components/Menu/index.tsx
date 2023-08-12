@@ -70,9 +70,13 @@ const Menu = (props: MenuProps) => {
         }
         prevOpen.current = openPopper;
     }, [open])
-
+    const prop = {
+        sx: {
+            zIndex: '10000'
+        }
+    }
     return (
-        <Stack direction="row" spacing={2}>
+        <Stack direction="row" spacing={2} sx={{ pl: 3 }}>
             <Button
                 ref={anchorRef}
                 id="composition-button"
@@ -109,6 +113,7 @@ const Menu = (props: MenuProps) => {
                 placement="bottom-start"
                 transition
                 disablePortal
+                {...prop}
             >
                 {({ TransitionProps, placement }) => (
                     <Grow
@@ -117,6 +122,7 @@ const Menu = (props: MenuProps) => {
                             transformOrigin:
                                 placement === 'bottom-start' ? 'left top' : 'left bottom',
                         }}
+
                     >
                         <Paper>
                             <ClickAwayListener onClickAway={handleClose}>
@@ -128,6 +134,7 @@ const Menu = (props: MenuProps) => {
                                     sx={{
                                         width: '210px',
                                     }}
+
                                 >
                                     <MenuItem onClick={handleClose}>全部</MenuItem>
                                     <MenuItem onClick={handleClose}>待审核</MenuItem>
