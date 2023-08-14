@@ -149,6 +149,7 @@ const DetailsWithParams = ({ activityId }: { activityId: number }) => {
             </Button>
           }
       </Stack> */}
+
       {activity && <ActivityEditor initialActivity={activity} isShow={false} disabled={true} />}
     </Stack >
   )

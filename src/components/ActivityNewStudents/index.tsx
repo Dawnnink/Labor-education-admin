@@ -26,6 +26,12 @@ import { visuallyHidden } from '@mui/utils';
 
 import { ActivityStudentsProps } from '../ActivityStudents';
 
+import CheckBoxIcon from '@mui/icons-material/CheckBox';
+import CancelIcon from '@mui/icons-material/Cancel';
+import { Button as Btn } from '@mui/material'
+import { Space } from 'antd'
+
+
 interface FormData {
     name: string
     uid: string
@@ -33,6 +39,7 @@ interface FormData {
     classname: string
     participate_reason: string
     state: '报名成功' | '报名失败' | '报名审核中'
+    isOperate: boolean//1是通过，2是打回
 }
 
 type Order = 'asc' | 'desc';
@@ -52,8 +59,8 @@ function getComparator<Key extends keyof any>(
     order: Order,
     orderBy: Key,
 ): (
-    a: { [key in Key]: number | string },
-    b: { [key in Key]: number | string },
+    a: { [key in Key]: number | string | boolean },
+    b: { [key in Key]: number | string | boolean },
 ) => number {
     return order === 'desc'
         ? (a, b) => descendingComparator(a, b, orderBy)
@@ -116,6 +123,12 @@ const headCells: readonly HeadCell[] = [
         disablePadding: false,
         label: '活动状态',
     },
+    {
+        id: 'isOperate',
+        numeric: false,
+        disablePadding: false,
+        label: '操作'
+    }
 ]
 
 interface EnhancedTableProps {
@@ -219,7 +232,7 @@ export const ActivityStudents = ({ students, id }: ActivityStudentsProps) => {
     const [selected, setSelected] = useState<readonly string[]>([])
     const [page, setPage] = useState(0)
     const [rowsPerPage, setRowsPerPage] = useState(7)
-
+    let isOperate = false;
     const handleRequestSort = (
         event: React.MouseEvent<unknown>,
         property: keyof FormData,
@@ -287,6 +300,7 @@ export const ActivityStudents = ({ students, id }: ActivityStudentsProps) => {
         classname: string,
         participate_reason: string,
         state: '报名成功' | '报名失败' | '报名审核中',
+        isOperate: boolean
     ): FormData => {
         return {
             name,
@@ -295,18 +309,23 @@ export const ActivityStudents = ({ students, id }: ActivityStudentsProps) => {
             classname,
             participate_reason,
             state,
+            isOperate
         };
     }, [])
     //将拿来的数据搞一下
     const rows = useMemo(() => {
         return students.map((item) => {
+            if (item.state === '报名审核中') {
+                isOperate = true;
+            }
             return createFormData(
                 item.user.name,
                 item.user.uid,
                 item.user.college,
                 item.user.class,
                 item.participate_reason,
-                item.state
+                item.state,
+                isOperate
             )
         })
     }, []);
@@ -380,6 +399,31 @@ export const ActivityStudents = ({ students, id }: ActivityStudentsProps) => {
                                             <TableCell align='left'>{row.classname}</TableCell>
                                             <TableCell align='left'>{row.participate_reason}</TableCell>
                                             <TableCell align='left'>{row.state}</TableCell>
+                                            {row.isOperate ?
+                                                <TableCell align='left'>
+                                                    <Box>
+                                                        <Space>
+                                                            <Btn
+                                                                variant='outlined'
+                                                                startIcon={<CheckBoxIcon />}
+                                                                color='success'
+                                                            >
+                                                                通过
+                                                            </Btn>
+                                                            <Btn
+                                                                variant='outlined'
+                                                                startIcon={<CancelIcon />}
+                                                                color='error'
+                                                            >
+                                                                打回
+                                                            </Btn>
+                                                        </Space>
+
+                                                    </Box>
+                                                </TableCell>
+                                                :
+                                                null
+                                            }
                                         </TableRow>
                                     )
                                 })

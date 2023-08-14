@@ -16,6 +16,7 @@ export interface ActivityStudentsProps {
     user: User
   }[]
   id: number
+
 }
 export const ActivityStudents = ({ students, id }: ActivityStudentsProps) => {
   const theme = useTheme()
@@ -61,7 +62,7 @@ export const ActivityStudents = ({ students, id }: ActivityStudentsProps) => {
             </td>
             <td>{student.user.uid}</td>
             <td>{student.user.college}</td>
-            <td>{student.user.classname}</td>
+            <td>{student.user.class}</td>
             <td>
               <ExpandableText text={student.participate_reason} />
             </td>
