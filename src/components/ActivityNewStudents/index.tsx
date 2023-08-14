@@ -399,14 +399,23 @@ export const ActivityStudents = ({ students, id }: ActivityStudentsProps) => {
                                             <TableCell align='left'>{row.classname}</TableCell>
                                             <TableCell align='left'>{row.participate_reason}</TableCell>
                                             <TableCell align='left'>{row.state}</TableCell>
-                                            {row.isOperate ?
+                                            {!row.isOperate ?
                                                 <TableCell align='left'>
-                                                    <Box>
+                                                    <Box
+                                                        sx={{
+                                                            zIndex: 10000
+                                                        }}
+                                                    >
                                                         <Space>
                                                             <Btn
+
                                                                 variant='outlined'
                                                                 startIcon={<CheckBoxIcon />}
                                                                 color='success'
+                                                                onClick={(event: React.MouseEvent) => {
+                                                                    event.stopPropagation();//防止点击穿透
+                                                                    console.log('yes')
+                                                                }}
                                                             >
                                                                 通过
                                                             </Btn>
