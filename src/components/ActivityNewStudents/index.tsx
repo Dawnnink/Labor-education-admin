@@ -171,20 +171,20 @@ function EnhancedTableHead(props: EnhancedTableProps) {
                             padding={headCell.disablePadding ? 'none' : 'normal'}
                             sortDirection={orderBy === headCell.id ? order : false}
                         >
-                            <TableSortLabel
-                                active={orderBy === headCell.id}
-                                direction={orderBy === headCell.id ? order : 'asc'}
-                                onClick={createSortHandler(headCell.id)}
-                            >
-                                {headCell.label}
-                                {/* {orderBy === headCell.id ?
-                                    (
-                                        <Box component='span' sx={{ visuallyHidden }}>
-                                            {order === 'desc' ? '正序' : '倒序'}
-                                        </Box>
-                                    ) : null
-                                } */}
-                            </TableSortLabel>
+                            {
+                                headCell.id === 'isOperate' ?
+                                    <Box>
+                                        {headCell.label}
+                                    </Box>
+                                    :
+                                    <TableSortLabel
+                                        active={orderBy === headCell.id}
+                                        direction={orderBy === headCell.id ? order : 'asc'}
+                                        onClick={createSortHandler(headCell.id)}
+                                    >
+                                        {headCell.label}
+                                    </TableSortLabel>
+                            }
                         </TableCell>
                     ))
                 }
@@ -423,6 +423,10 @@ export const ActivityStudents = ({ students, id }: ActivityStudentsProps) => {
                                                                 variant='outlined'
                                                                 startIcon={<CancelIcon />}
                                                                 color='error'
+                                                                onClick={(event: React.MouseEvent) => {
+                                                                    event.stopPropagation();//防止点击穿透
+                                                                    console.log('no')
+                                                                }}
                                                             >
                                                                 打回
                                                             </Btn>
