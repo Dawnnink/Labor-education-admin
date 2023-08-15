@@ -52,6 +52,7 @@ const DetailsWithParams = ({ activityId }: { activityId: number }) => {
   const filterData = useMemo(() => {
     //在每次menu的值改变的时候触发
     if (now === '待审核') {
+      console.log('待审核')
       return students?.filter((item) => {
         if (item.state === '报名审核中') {
           return true;
@@ -60,6 +61,7 @@ const DetailsWithParams = ({ activityId }: { activityId: number }) => {
       })
     }
     if (now === '待签退') {
+      console.log('待签退')
       return students?.filter((item) => {
         if (item.state === '报名成功' && item.check_in) {
           return true;
@@ -69,6 +71,7 @@ const DetailsWithParams = ({ activityId }: { activityId: number }) => {
       })
     }
     if (now === '已签退') {
+      console.log('已签退')
       return students?.filter((item) => {
         if (item.state === '报名成功' && item.check_out) {
           return true;
@@ -77,9 +80,11 @@ const DetailsWithParams = ({ activityId }: { activityId: number }) => {
         }
       })
     }
-
-  }, [now])
-
+    if (now === '全部') {
+      return students
+    }
+  }, [now, students])
+  console.log('filterData', filterData)
   if (activity) {
     if (activity.state == '已发布' || activity.state == '审核中') {
       if (dayjs().isBefore(dayjs(formatTime(activity.registration_start_time)))) {
@@ -92,7 +97,7 @@ const DetailsWithParams = ({ activityId }: { activityId: number }) => {
           >
             <ErrorDisplay error={error} />
             <OverflowWrapper>
-              {filterData === undefined ? null : <ActivityStudents students={filterData} id={activity.id} activity={activity} />}
+              {filterData === undefined ? null : <ActivityStudents key={filterData.length} students={filterData} id={activity.id} activity={activity} />}
             </OverflowWrapper>
             <Stack direction="row" justifyContent="flex-end" p={'0 20px'} alignItems='flex-end'>
               <Button
@@ -158,7 +163,7 @@ const DetailsWithParams = ({ activityId }: { activityId: number }) => {
         </Box>
         <ErrorDisplay error={error} />
         <OverflowWrapper>
-          {filterData === undefined ? null : <ActivityStudents students={filterData} id={activity.id} activity={activity} />}
+          {filterData === undefined ? null : <ActivityStudents key={filterData.length} students={filterData} id={activity.id} activity={activity} />}
         </OverflowWrapper>
       </Box>
 

@@ -367,7 +367,6 @@ export const ActivityStudents = ({ students, id, activity }: ActivityStudentsPro
         }, [order, orderBy, page, rowsPerPage])
     console.log(students, id)
 
-
     return (
         <Box sx={{ width: '100%' }}>
             <Paper sx={{ width: '100%', mb: 2 }}>
