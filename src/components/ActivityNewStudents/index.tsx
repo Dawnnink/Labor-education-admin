@@ -30,7 +30,7 @@ import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import CancelIcon from '@mui/icons-material/Cancel';
 import { Button as Btn } from '@mui/material'
 import { Space } from 'antd'
-
+import dayjs from 'dayjs'
 
 interface FormData {
     name: string
@@ -38,7 +38,7 @@ interface FormData {
     college: string
     classname: string
     participate_reason: string
-    state: '报名成功' | '报名失败' | '报名审核中'
+    state: string
     isOperate: boolean//1是通过，2是打回
 }
 
@@ -225,7 +225,7 @@ function EnhancedTableToolbar() {
     )
 }
 
-export const ActivityStudents = ({ students, id }: ActivityStudentsProps) => {
+export const ActivityStudents = ({ students, id, activity }: ActivityStudentsProps) => {
     //state定义
     const [order, setOrder] = useState<Order>('asc')
     const [orderBy, setOrderBy] = useState<keyof FormData>('name')
@@ -299,7 +299,7 @@ export const ActivityStudents = ({ students, id }: ActivityStudentsProps) => {
         college: string,
         classname: string,
         participate_reason: string,
-        state: '报名成功' | '报名失败' | '报名审核中',
+        state: string,
         isOperate: boolean
     ): FormData => {
         return {
@@ -315,8 +315,33 @@ export const ActivityStudents = ({ students, id }: ActivityStudentsProps) => {
     //将拿来的数据搞一下
     const rows = useMemo(() => {
         return students.map((item) => {
+            //如果正在审核中，则显示操作按钮，可以打回或者通过
             if (item.state === '报名审核中') {
                 isOperate = true;
+            }
+            //判断状态,首先判断是否开始活动
+            const date = dayjs();//获取现在的时间
+            let State = '等待审核中';//设置一个状态值作为最后return值/
+            //已知item.state只会为审核成功审核失败，报名审核中
+            if (date.isBefore(dayjs(activity.activity_start_time))) {
+                //如果现在在活动开始之前
+                if (item.state === '报名审核中') {
+                    State = '等待审核中'
+                }
+                else {
+                    State = item.state
+                }
+            }
+            //如果现在在活动开始之后
+            if (date.isAfter(dayjs(activity.activity_start_time))) {
+                if (!item.check_in) {
+                    //还没有进行签到
+                    State = '未签到'
+                } else if (item.check_in && !item.check_out) {
+                    State = '待签退'
+                } else if (item.check_out && item.check_out) {
+                    State = '已签退'
+                }
             }
             return createFormData(
                 item.user.name,
@@ -324,7 +349,7 @@ export const ActivityStudents = ({ students, id }: ActivityStudentsProps) => {
                 item.user.college,
                 item.user.class,
                 item.participate_reason,
-                item.state,
+                State,
                 isOperate
             )
         })

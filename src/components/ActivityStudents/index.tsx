@@ -6,6 +6,7 @@ import { StatusDot } from '../StatusDot'
 import { Space, Button } from 'antd'
 import { network } from '~/utils/network'
 import { message } from 'antd'
+import { Activity } from '~/utils/types'
 export interface ActivityStudentsProps {
   students: {
     participate_time: string // ISO 8601
@@ -19,7 +20,7 @@ export interface ActivityStudentsProps {
     reject_reason: string//打回原因
   }[]
   id: number
-
+  activity: Activity
 }
 export const ActivityStudents = ({ students, id }: ActivityStudentsProps) => {
   const theme = useTheme()

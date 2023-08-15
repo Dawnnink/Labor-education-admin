@@ -35,7 +35,7 @@ const DetailsWithParams = ({ activityId }: { activityId: number }) => {
   const handleKind = (e: string) => {
     setNow(e);
   }//把这个函数传入子组件，可以通过这个函数更改now的值
-
+  console.log(activity)
   const studentArray: number[] = [];
   let AllPassed = false;//设定一个变量，假设学生列表中有人未通过，则设为true，则显示一键通过按钮
   if (students) {
@@ -61,7 +61,7 @@ const DetailsWithParams = ({ activityId }: { activityId: number }) => {
           >
             <ErrorDisplay error={error} />
             <OverflowWrapper>
-              {students === undefined ? null : <ActivityStudents students={students} id={activity.id} />}
+              {students === undefined ? null : <ActivityStudents students={students} id={activity.id} activity={activity} />}
             </OverflowWrapper>
             <Stack direction="row" justifyContent="flex-end" p={'0 20px'} alignItems='flex-end'>
               <Button
@@ -127,7 +127,7 @@ const DetailsWithParams = ({ activityId }: { activityId: number }) => {
         </Box>
         <ErrorDisplay error={error} />
         <OverflowWrapper>
-          {students === undefined ? null : <ActivityStudents students={students} id={activity.id} />}
+          {students === undefined ? null : <ActivityStudents students={students} id={activity.id} activity={activity} />}
         </OverflowWrapper>
       </Box>
 
