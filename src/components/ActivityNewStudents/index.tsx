@@ -231,7 +231,7 @@ export const ActivityStudents = ({ students, id }: ActivityStudentsProps) => {
     const [orderBy, setOrderBy] = useState<keyof FormData>('name')
     const [selected, setSelected] = useState<readonly string[]>([])
     const [page, setPage] = useState(0)
-    const [rowsPerPage, setRowsPerPage] = useState(7)
+    const [rowsPerPage, setRowsPerPage] = useState(10)
     let isOperate = false;
     const handleRequestSort = (
         event: React.MouseEvent<unknown>,
@@ -399,7 +399,7 @@ export const ActivityStudents = ({ students, id }: ActivityStudentsProps) => {
                                             <TableCell align='left'>{row.classname}</TableCell>
                                             <TableCell align='left'>{row.participate_reason}</TableCell>
                                             <TableCell align='left'>{row.state}</TableCell>
-                                            {!row.isOperate ?
+                                            {row.isOperate ?
                                                 <TableCell align='left'>
                                                     <Box
                                                         sx={{

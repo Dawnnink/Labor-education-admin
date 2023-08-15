@@ -13,7 +13,10 @@ export interface ActivityStudentsProps {
     comment: string
     state: '报名成功' | '报名失败' | '报名审核中'
     check_in: string // ISO 8601
+    check_out: string//签退
+    notified: boolean | null //null不用通知，true已确认通知 false未确认通知
     user: User
+    reject_reason: string//打回原因
   }[]
   id: number
 
