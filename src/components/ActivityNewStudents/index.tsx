@@ -302,6 +302,10 @@ export const ActivityStudents = ({ students, id, activity }: ActivityStudentsPro
     const [page, setPage] = useState(0)
     const [rowsPerPage, setRowsPerPage] = useState(10)
     let isOperate = false;
+    const [activity_id, setAcitvityId] = useSendState(state => [
+        state.activity_id,
+        state.setState('activity_id')
+    ])
     const handleRequestSort = (
         event: React.MouseEvent<unknown>,
         property: keyof FormData,
@@ -456,6 +460,11 @@ export const ActivityStudents = ({ students, id, activity }: ActivityStudentsPro
             }
         }
     }, [filterStudents])
+
+    useEffect(() => {
+        //在组件最初渲染的时候将activity_id加入状态存储库
+        setAcitvityId(id)
+    }, [])
     console.log('theretherethere', filterStudents)
 
     return (

@@ -17,6 +17,7 @@ interface SendState {
         reject_reason: string; //打回原因
     }[];
     reason: string//存放错误的原因
+    activity_id: number;//活动的id
     sendPass: (value: any) => void;
     sendReject: (value: any) => void;
     sendBack: (value: any) => void; //签退
@@ -24,10 +25,14 @@ interface SendState {
         key: T
     ) => (value: SendState[T]) => void;
 }
-
+interface RejectUsers {
+    reason: string;
+    user_id: number;
+}
 export const useSendState = create<SendState>((set, get) => ({
     students: [],
     reason: '暂无原因',
+    activity_id: 0,
     sendPass: () => {
         const { students } = get();//获取当前的选中学生数据
         Modal.confirm({
@@ -41,11 +46,22 @@ export const useSendState = create<SendState>((set, get) => ({
         })
     },
     sendReject: () => {
-        const { students } = get();//获取当前的选中学生数据
+        const { students, reason, activity_id } = get();//获取当前的选中学生数据
+        const ids = students.map(it => it.user.id);
+        const users: Array<RejectUsers> = [];
+        ids.map((item) => {
+            users.push({
+                reason: reason,
+                user_id: item,
+            })
+        })
         Modal.confirm({
             title: '确认打回审核',
             onOk: async () => {
                 console.log('ok')
+                console.log(activity_id);
+                console.log(users)
+                network.teacher.useReject(activity_id, users)//2个参数，users是个数组
             },
             onCancel: () => {
                 console.log('nocancel');
