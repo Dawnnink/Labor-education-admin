@@ -25,12 +25,16 @@ import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
 
 import { ActivityStudentsProps } from '../ActivityStudents';
+import { User } from '~/utils/types';
 
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import CancelIcon from '@mui/icons-material/Cancel';
 import { Button as Btn } from '@mui/material'
 import { Space } from 'antd'
 import dayjs from 'dayjs'
+
+import { useSendState } from '~/store/send';
+import { useEffect } from 'react'
 
 interface FormData {
     name: string
@@ -193,12 +197,34 @@ function EnhancedTableHead(props: EnhancedTableProps) {
     )
 }
 
-// interface EnhancedTableToolbarProps {
+interface EnhancedTableToolbarProps {
+    students: {
+        participate_time: string // ISO 8601
+        participate_reason: string
+        comment: string
+        state: '报名成功' | '报名失败' | '报名审核中'
+        check_in: string // ISO 8601
+        check_out: string//签退
+        notified: boolean | null //null不用通知，true已确认通知 false未确认通知
+        user: User
+        reject_reason: string//打回原因
+    }[]
+}
 
-// }
-
-function EnhancedTableToolbar() {
-
+function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
+    const [students, sendPass, sendReject, sendBack] = useSendState(state => [
+        state.students,
+        state.sendPass,
+        state.sendReject,
+        state.sendBack
+    ])
+    const [setStudents] = useSendState(state => [
+        state.setState('students')
+    ])
+    useEffect(() => {
+        //组件挂载的时候首先将传入的students设为状态中使用
+        setStudents(props.students)
+    })
     return (
         <Toolbar
             sx={{
@@ -215,7 +241,9 @@ function EnhancedTableToolbar() {
                     mr: 4
                 }}
             >
-                <Button>拒绝审核</Button>
+                <Button
+                    onClick={sendReject}
+                >拒绝审核</Button>
                 <Divider orientation='vertical' flexItem />
                 <Button>通过审核</Button>
                 <Divider orientation='vertical' flexItem />
@@ -357,7 +385,7 @@ export const ActivityStudents = ({ students, id, activity }: ActivityStudentsPro
 
     const emptyRows =
         page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
-
+    //可以看到的表格的数据
     const visibleRows = useMemo(
         () => {
             return stableSort(rows, getComparator(order, orderBy)).slice(
@@ -366,12 +394,20 @@ export const ActivityStudents = ({ students, id, activity }: ActivityStudentsPro
             );
         }, [order, orderBy, page, rowsPerPage])
     console.log(students, id)
+    //对选中的人的数据进行一个筛选，传给tableTool用来对选中的学生的信息进行操作
+    const filterStudents = useMemo(() => {
+        return students.filter((item) => {
+            return selected.includes(item.user.name)
+        })
+    }, [selected, students])
+
+    console.log('theretherethere', filterStudents)
 
     return (
         <Box sx={{ width: '100%' }}>
             <Paper sx={{ width: '100%', mb: 2 }}>
                 {/* 工具栏 */}
-                <EnhancedTableToolbar />
+                <EnhancedTableToolbar students={filterStudents} />
                 <TableContainer>
                     <Table
                         sx={{ minWidth: 750 }}

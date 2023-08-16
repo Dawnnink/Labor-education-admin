@@ -24,13 +24,14 @@ interface SendState {
     ) => (value: SendState[T]) => void;
 }
 
-export const useSendState = create<SendState>((set) => ({
+export const useSendState = create<SendState>((set, get) => ({
     students: [],
     sendPass: (value) => {
         console.log('yes');
     },
     sendReject: (value) => {
         console.log('no');
+        console.log(get().students)
     },
     sendBack: (value) => {
         console.log('back');
