@@ -34,11 +34,13 @@ export const useSendState = create<SendState>((set, get) => ({
     reason: '暂无原因',
     activity_id: 0,
     sendPass: () => {
-        const { students } = get();//获取当前的选中学生数据
+        const { students, activity_id } = get();//获取当前的选中学生数据
+        const ids = students.map(it => it.user.id);
         Modal.confirm({
             title: '确认通过审核？',
             onOk: async () => {
                 console.log('ok')
+                network.teacher.usePass(activity_id, ids)
             },
             onCancel: () => {
                 console.log('cancel');
@@ -48,6 +50,7 @@ export const useSendState = create<SendState>((set, get) => ({
     sendReject: () => {
         const { students, reason, activity_id } = get();//获取当前的选中学生数据
         const ids = students.map(it => it.user.id);
+        const whoWrong: { name: string }[] = [];//如果有错误的，用于存放错误的人的姓名{name:string}
         const users: Array<RejectUsers> = [];
         ids.map((item) => {
             users.push({
@@ -61,7 +64,17 @@ export const useSendState = create<SendState>((set, get) => ({
                 console.log('ok')
                 console.log(activity_id);
                 console.log(users)
-                network.teacher.useReject(activity_id, users)//2个参数，users是个数组
+                const res = await network.teacher.useReject(activity_id, users)//2个参数，users是个数组
+                if (res.length > 0) {
+                    students.map(item => {
+                        if (res.includes(item.user.id)) {
+                            whoWrong.push({
+                                name: item.user.name
+                            })
+                        }
+                    })
+                    message.error(`${whoWrong.map(item => item.name)}不符合打回条件，请确认`)
+                }
             },
             onCancel: () => {
                 console.log('nocancel');

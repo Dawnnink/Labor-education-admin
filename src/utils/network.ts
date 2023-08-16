@@ -234,13 +234,24 @@ export class Service extends BaseService {
     },
 
     usePass: async (id: number, user: number[]) => {
-      await this.axios.post(`/teacher/activity/participate/pass?id=${id}`, user)
+      return await this.axios.post(`/teacher/activity/participate/pass?id=${id}`, user)
+        .then((res) => {
+          return res.data
+        }).catch(() => {
+          message.error('网络故障')
+        })
     },
-    useReject: async (reason: string, id: number, user: number[]) => {
-      await this.axios.post(`/teacher/activity/participate/reject`, {
-        user_id: user,
+    useReject: async (id: number, users: {
+      reason: string,
+      user_id: number,
+    }[]) => {
+      return await this.axios.post(`/teacher/activity/participate/reject`, {
         activity_id: id,
-        reason: reason
+        users: users,
+      }).then((res) => {
+        return res.data
+      }).catch(() => {
+        message.error('网络故障')
       })
     },
     downloadActivityStudentsExcel: async (activityId: number) => {

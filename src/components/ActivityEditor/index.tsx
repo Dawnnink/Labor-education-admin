@@ -541,6 +541,9 @@ export const ActivityEditor = ({
             name='joinAt'
             required
             wrapperCol={{ span: 10 }}
+            style={{
+              marginBottom: '0'
+            }}
           >
             <RangePicker
               onChange={() => handleDate()}
@@ -549,17 +552,18 @@ export const ActivityEditor = ({
               format='YYYY-MM-DD HH:mm'
             />
           </Form.Item>
-          <Form.Item wrapperCol={{ span: 10, offset: 4 }}>
+          <Form.Item wrapperCol={{ span: 10, offset: 4 }} style={{ height: '20px', marginBottom: '10px' }}>
             <span className={style.tips}>
               <Space>
                 <InfoCircleOutlined />
-                <p>将于活动开始前24小时提醒学生</p>
+                <p style={{ margin: '0' }}>将于活动开始前24小时提醒学生</p>
               </Space>
             </span>
           </Form.Item>
           <Form.Item
             required
             label="活动名额"
+
           >
             <Form.Item
               name="quota"
@@ -570,6 +574,7 @@ export const ActivityEditor = ({
                   message: "活动名额为必填字段"
                 }
               ]}
+
             >
               <InputNumber min={1} max={2000} />
             </Form.Item>

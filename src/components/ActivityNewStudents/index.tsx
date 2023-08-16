@@ -233,8 +233,8 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
         //这些学生都是已经被选中了的
     }, [])
     const handleOk = () => {
-        console.log(reason)
-        if (!reason) {
+        console.log('sdsssd' + reason)
+        if (reason === '暂无原因') {
             message.info('请输入打回原因')
             return;
         }
@@ -267,7 +267,7 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
                     onClick={() => {
                         setShowModal(true);
                     }}
-                // disabled={props.canOperate}
+                    disabled={props.canOperate}
                 >拒绝审核</Button>
                 <Divider orientation='vertical' flexItem />
                 <Button
