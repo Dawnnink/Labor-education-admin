@@ -212,8 +212,7 @@ interface EnhancedTableToolbarProps {
 }
 
 function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
-    const [students, sendPass, sendReject, sendBack] = useSendState(state => [
-        state.students,
+    const [sendPass, sendReject, sendBack] = useSendState(state => [
         state.sendPass,
         state.sendReject,
         state.sendBack
@@ -245,9 +244,13 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
                     onClick={sendReject}
                 >拒绝审核</Button>
                 <Divider orientation='vertical' flexItem />
-                <Button>通过审核</Button>
+                <Button
+                    onClick={sendPass}
+                >通过审核</Button>
                 <Divider orientation='vertical' flexItem />
-                <Button>签退</Button>
+                <Button
+                    onClick={sendBack}
+                >签退</Button>
             </Stack>
         </Toolbar>
     )

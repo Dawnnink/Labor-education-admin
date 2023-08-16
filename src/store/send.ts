@@ -1,6 +1,5 @@
 import { create } from 'zustand';
 import { produce } from 'immer'
-import { combine } from 'zustand/middleware'
 import { Modal, message } from 'antd'
 import { User } from '~/utils/types';
 
@@ -26,15 +25,24 @@ interface SendState {
 
 export const useSendState = create<SendState>((set, get) => ({
     students: [],
-    sendPass: (value) => {
-        console.log('yes');
+    sendPass: () => {
+        const { students } = get();//获取当前的选中学生数据
+        Modal.confirm({
+            title: '确认通过审核？',
+            onOk: async () => {
+                console.log('ok')
+            },
+            onCancel: () => {
+                console.log('cancel');
+            },
+        })
     },
     sendReject: (value) => {
-        console.log('no');
-        console.log(get().students)
+        const { students } = get();//获取当前的选中学生数据
+
     },
     sendBack: (value) => {
-        console.log('back');
+        const { students } = get();//获取当前的选中学生数据
     },
     setState: (key) => (value) => {
         set(

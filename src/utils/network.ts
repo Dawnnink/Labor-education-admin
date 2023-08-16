@@ -236,8 +236,12 @@ export class Service extends BaseService {
     usePass: async (id: number, user: number[]) => {
       await this.axios.post(`/teacher/activity/participate/pass?id=${id}`, user)
     },
-    useReject: async (id: number, user: number[]) => {
-      await this.axios.post(`/teacher/activity/participate/reject?id=${id}`, user)
+    useReject: async (reason: string, id: number, user: number[]) => {
+      await this.axios.post(`/teacher/activity/participate/reject`, {
+        user_id: user,
+        activity_id: id,
+        reason: reason
+      })
     },
     downloadActivityStudentsExcel: async (activityId: number) => {
       const data = await this.axios.get(
