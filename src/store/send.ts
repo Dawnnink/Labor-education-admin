@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { produce } from 'immer'
 import { Modal, message } from 'antd'
 import { User } from '~/utils/types';
+import { network } from '../utils/network'
 
 interface SendState {
     students: {
@@ -15,6 +16,7 @@ interface SendState {
         user: User;
         reject_reason: string; //打回原因
     }[];
+    reason: string//存放错误的原因
     sendPass: (value: any) => void;
     sendReject: (value: any) => void;
     sendBack: (value: any) => void; //签退
@@ -25,6 +27,7 @@ interface SendState {
 
 export const useSendState = create<SendState>((set, get) => ({
     students: [],
+    reason: '暂无原因',
     sendPass: () => {
         const { students } = get();//获取当前的选中学生数据
         Modal.confirm({
@@ -37,12 +40,30 @@ export const useSendState = create<SendState>((set, get) => ({
             },
         })
     },
-    sendReject: (value) => {
+    sendReject: () => {
         const { students } = get();//获取当前的选中学生数据
+        Modal.confirm({
+            title: '确认打回审核',
+            onOk: async () => {
+                console.log('ok')
+            },
+            onCancel: () => {
+                console.log('nocancel');
 
+            }
+        })
     },
     sendBack: (value) => {
         const { students } = get();//获取当前的选中学生数据
+        Modal.confirm({
+            title: '确认一键签退',
+            onOk: async () => {
+                console.log('ok')
+            },
+            onCancel: () => {
+                console.log('nocancel');
+            }
+        })
     },
     setState: (key) => (value) => {
         set(

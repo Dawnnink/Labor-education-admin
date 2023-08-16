@@ -35,6 +35,7 @@ import dayjs from 'dayjs'
 
 import { useSendState } from '~/store/send';
 import { useEffect } from 'react'
+import { Modal, Input, message } from 'antd'
 
 interface FormData {
     name: string
@@ -209,21 +210,37 @@ interface EnhancedTableToolbarProps {
         user: User
         reject_reason: string//打回原因
     }[]
+    canOperate: boolean
 }
 
 function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
-    const [sendPass, sendReject, sendBack] = useSendState(state => [
+    const [showModal, setShowModal] = useState(false);//控制打回审核输入原因的Modal.
+    const [students, reason, sendPass, sendReject, sendBack] = useSendState(state => [
+        state.students,
+        state.reason,
         state.sendPass,
         state.sendReject,
         state.sendBack
     ])
-    const [setStudents] = useSendState(state => [
-        state.setState('students')
+    const [setStudents, setReason] = useSendState(state => [
+        state.setState('students'),
+        state.setState('reason'),
     ])
     useEffect(() => {
         //组件挂载的时候首先将传入的students设为状态中使用
         setStudents(props.students)
-    })
+        //这些学生都是已经被选中了的
+    }, [])
+    const handleOk = () => {
+        console.log(reason)
+        setShowModal(false);
+    }
+    const handleCancel = () => {
+        setShowModal(false);
+    }
+    const handlePut = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setReason(e.target.value)
+    }
     return (
         <Toolbar
             sx={{
@@ -241,23 +258,37 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
                 }}
             >
                 <Button
-                    onClick={sendReject}
+                    onClick={() => {
+                        setShowModal(true);
+                    }}
+                    disabled={props.canOperate}
                 >拒绝审核</Button>
                 <Divider orientation='vertical' flexItem />
                 <Button
                     onClick={sendPass}
+                    disabled={props.canOperate}
                 >通过审核</Button>
                 <Divider orientation='vertical' flexItem />
                 <Button
                     onClick={sendBack}
+                    disabled={props.canOperate}
                 >签退</Button>
             </Stack>
+            <Modal
+                title="请输入打回理由"
+                open={showModal}
+                onOk={handleOk}
+                onCancel={handleCancel}
+            >
+                <Input onChange={handlePut} max={30} />
+            </Modal>
         </Toolbar>
     )
 }
 
 export const ActivityStudents = ({ students, id, activity }: ActivityStudentsProps) => {
     //state定义
+    const [canOperate, setCanOperate] = useState(true);//控制能否进行操作，假设没有选中学生则无法进行操作
     const [order, setOrder] = useState<Order>('asc')
     const [orderBy, setOrderBy] = useState<keyof FormData>('name')
     const [selected, setSelected] = useState<readonly string[]>([])
@@ -403,14 +434,18 @@ export const ActivityStudents = ({ students, id, activity }: ActivityStudentsPro
             return selected.includes(item.user.name)
         })
     }, [selected, students])
-
+    useEffect(() => {
+        if (filterStudents.length > 0) {
+            setCanOperate(false);
+        }
+    }, [filterStudents])
     console.log('theretherethere', filterStudents)
 
     return (
         <Box sx={{ width: '100%' }}>
             <Paper sx={{ width: '100%', mb: 2 }}>
                 {/* 工具栏 */}
-                <EnhancedTableToolbar students={filterStudents} />
+                <EnhancedTableToolbar students={filterStudents} canOperate={canOperate} />
                 <TableContainer>
                     <Table
                         sx={{ minWidth: 750 }}

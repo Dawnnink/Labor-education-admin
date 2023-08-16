@@ -94,16 +94,16 @@ export const ActivityStudents = ({ students, id }: ActivityStudentsProps) => {
                   >通过
                   </Button>
                   <Button
-                    onClick={() => {
-                      network.teacher.useReject(id, [student.user.id])
-                        .then(() => {
-                          message.success('拒绝成功')
-                          setTimeout(() => location.reload(), 1000)
-                        })
-                        .catch(() => {
-                          message.error('网络故障')
-                        })
-                    }}
+                  // onClick={() => {
+                  //   network.teacher.useReject(id, [student.user.id])
+                  //     .then(() => {
+                  //       message.success('拒绝成功')
+                  //       setTimeout(() => location.reload(), 1000)
+                  //     })
+                  //     .catch(() => {
+                  //       message.error('网络故障')
+                  //     })
+                  // }}
                   >拒绝
                   </Button>
                 </Space>
