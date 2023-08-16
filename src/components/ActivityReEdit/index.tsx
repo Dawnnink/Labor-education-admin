@@ -326,7 +326,7 @@ export const ActivityReEdit = ({
                         label='活动名称'
                         name='name'
                         required
-                        tooltip={{ title: '填写活动名称', icon: <InfoCircleOutlined /> }}
+                        // tooltip={{ title: '填写活动名称', icon: <InfoCircleOutlined /> }}
                         rules={[
                             {
                                 max: 30,
@@ -424,7 +424,6 @@ export const ActivityReEdit = ({
                         ]}
                         name='position'
                         required
-                        tooltip={{ title: 'Tooltip with customize icon', icon: <InfoCircleOutlined /> }}
                     >
                         <Input placeholder=' Please describe your customer service, internal customers directly ...' />
                     </Form.Item>
@@ -432,8 +431,6 @@ export const ActivityReEdit = ({
                     <Form.Item
                         label='活动联系人'
                         required
-
-                        tooltip={{ title: 'Tooltip with customize icon', icon: <InfoCircleOutlined /> }}
                     >
                         <div className='contact'>
                             <Form.Item

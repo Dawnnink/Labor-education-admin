@@ -328,7 +328,7 @@ export const ActivityEditor = ({
             label='活动名称'
             name='name'
             required
-            tooltip={{ title: '填写活动名称', icon: <InfoCircleOutlined /> }}
+            // tooltip={{ title: '填写活动名称', icon: <InfoCircleOutlined /> }}
             rules={[
 
               {
@@ -441,7 +441,6 @@ export const ActivityEditor = ({
             ]}
             name='position'
             required
-            tooltip={{ title: 'Tooltip with customize icon', icon: <InfoCircleOutlined /> }}
           >
             <Input placeholder=' Please describe your customer service, internal customers directly ...' />
           </Form.Item>
@@ -449,8 +448,6 @@ export const ActivityEditor = ({
           <Form.Item
             label='活动联系人'
             required
-
-            tooltip={{ title: 'Tooltip with customize icon', icon: <InfoCircleOutlined /> }}
           >
             <div className='contact'>
               <Form.Item
@@ -552,10 +549,17 @@ export const ActivityEditor = ({
               format='YYYY-MM-DD HH:mm'
             />
           </Form.Item>
+          <Form.Item wrapperCol={{ span: 10, offset: 4 }}>
+            <span className={style.tips}>
+              <Space>
+                <InfoCircleOutlined />
+                <p>将于活动开始前24小时提醒学生</p>
+              </Space>
+            </span>
+          </Form.Item>
           <Form.Item
             required
             label="活动名额"
-
           >
             <Form.Item
               name="quota"

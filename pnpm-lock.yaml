@@ -38,6 +38,9 @@ dependencies:
   dayjs:
     specifier: ^1.11.9
     version: registry.npmmirror.com/dayjs@1.11.9
+  immer:
+    specifier: ^10.0.2
+    version: registry.npmmirror.com/immer@10.0.2
   js-file-download:
     specifier: ^0.4.12
     version: registry.npmmirror.com/js-file-download@0.4.12
@@ -61,7 +64,7 @@ dependencies:
     version: registry.npmmirror.com/swr@2.2.0(react@18.2.0)
   zustand:
     specifier: ^4.3.9
-    version: registry.npmmirror.com/zustand@4.3.9(react@18.2.0)
+    version: registry.npmmirror.com/zustand@4.3.9(immer@10.0.2)(react@18.2.0)
 
 devDependencies:
   '@types/node':
@@ -2892,6 +2895,12 @@ packages:
     engines: {node: '>= 4'}
     dev: true
 
+  registry.npmmirror.com/immer@10.0.2:
+    resolution: {integrity: sha512-Rx3CqeqQ19sxUtYV9CU911Vhy8/721wRFnJv3REVGWUmoAcIwzifTsdmJte/MV+0/XpM35LZdQMBGkRIoLPwQA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/immer/-/immer-10.0.2.tgz}
+    name: immer
+    version: 10.0.2
+    dev: false
+
   registry.npmmirror.com/import-fresh@3.3.0:
     resolution: {integrity: sha512-veYYhQa+D1QBKznvhUHxb8faxlrwUnxseDAbAp457E0wLNio2bOSKnjYDhMj+YiAq61xrMGhQk9iXVk5FzgQMw==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/import-fresh/-/import-fresh-3.3.0.tgz}
     name: import-fresh
@@ -4854,7 +4863,7 @@ packages:
     engines: {node: '>=10'}
     dev: true
 
-  registry.npmmirror.com/zustand@4.3.9(react@18.2.0):
+  registry.npmmirror.com/zustand@4.3.9(immer@10.0.2)(react@18.2.0):
     resolution: {integrity: sha512-Tat5r8jOMG1Vcsj8uldMyqYKC5IZvQif8zetmLHs9WoZlntTHmIoNM8TpLRY31ExncuUvUOXehd0kvahkuHjDw==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/zustand/-/zustand-4.3.9.tgz}
     id: registry.npmmirror.com/zustand/4.3.9
     name: zustand
@@ -4869,6 +4878,7 @@ packages:
       react:
         optional: true
     dependencies:
+      immer: registry.npmmirror.com/immer@10.0.2
       react: registry.npmmirror.com/react@18.2.0
       use-sync-external-store: registry.npmmirror.com/use-sync-external-store@1.2.0(react@18.2.0)
     dev: false

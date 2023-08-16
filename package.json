@@ -21,6 +21,7 @@
     "axios": "^1.4.0",
     "browser-image-compression": "^2.0.2",
     "dayjs": "^1.11.9",
+    "immer": "^10.0.2",
     "js-file-download": "^0.4.12",
     "moment": "^2.29.4",
     "postcss-preset-env": "^9.0.0",
