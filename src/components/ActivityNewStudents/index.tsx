@@ -211,6 +211,7 @@ interface EnhancedTableToolbarProps {
         reject_reason: string//打回原因
     }[]
     canOperate: boolean
+    canBack: boolean
 }
 
 function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
@@ -233,7 +234,12 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
     }, [])
     const handleOk = () => {
         console.log(reason)
+        if (!reason) {
+            message.info('请输入打回原因')
+            return;
+        }
         setShowModal(false);
+        setTimeout(sendReject, 500)
     }
     const handleCancel = () => {
         setShowModal(false);
@@ -261,7 +267,7 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
                     onClick={() => {
                         setShowModal(true);
                     }}
-                    disabled={props.canOperate}
+                // disabled={props.canOperate}
                 >拒绝审核</Button>
                 <Divider orientation='vertical' flexItem />
                 <Button
@@ -271,7 +277,7 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
                 <Divider orientation='vertical' flexItem />
                 <Button
                     onClick={sendBack}
-                    disabled={props.canOperate}
+                    disabled={props.canBack}
                 >签退</Button>
             </Stack>
             <Modal
@@ -289,6 +295,7 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
 export const ActivityStudents = ({ students, id, activity }: ActivityStudentsProps) => {
     //state定义
     const [canOperate, setCanOperate] = useState(true);//控制能否进行操作，假设没有选中学生则无法进行操作
+    const [canBack, setCanBack] = useState(true);//控制能否进行签退
     const [order, setOrder] = useState<Order>('asc')
     const [orderBy, setOrderBy] = useState<keyof FormData>('name')
     const [selected, setSelected] = useState<readonly string[]>([])
@@ -436,7 +443,17 @@ export const ActivityStudents = ({ students, id, activity }: ActivityStudentsPro
     }, [selected, students])
     useEffect(() => {
         if (filterStudents.length > 0) {
-            setCanOperate(false);
+            //如果选中的学生大于0
+            if (dayjs().isAfter(dayjs(activity.registration_start_time)) && dayjs().isBefore(dayjs(activity.activity_end_time))) {
+                //如果是在报名开始时间和活动结结束时间 范围内
+                //这个时间范围内是可以操控进行报名通过和报名打回的
+                setCanOperate(false);
+            }
+            if (dayjs().isAfter(dayjs(activity.activity_start_time)) && dayjs().isBefore(dayjs(activity.activity_end_time))) {
+                //如果是在活动开始时间到活动结束时间的范围内
+                //这个时间范围内是可以进行操控是否进行签退的
+                setCanBack(false);
+            }
         }
     }, [filterStudents])
     console.log('theretherethere', filterStudents)
@@ -445,7 +462,7 @@ export const ActivityStudents = ({ students, id, activity }: ActivityStudentsPro
         <Box sx={{ width: '100%' }}>
             <Paper sx={{ width: '100%', mb: 2 }}>
                 {/* 工具栏 */}
-                <EnhancedTableToolbar students={filterStudents} canOperate={canOperate} />
+                <EnhancedTableToolbar students={filterStudents} canOperate={canOperate} canBack={canBack} />
                 <TableContainer>
                     <Table
                         sx={{ minWidth: 750 }}
