@@ -18,9 +18,9 @@ interface SendState {
     }[];
     reason: string//存放错误的原因
     activity_id: number;//活动的id
-    sendPass: (value: any) => void;
-    sendReject: (value: any) => void;
-    sendBack: (value: any) => void; //签退
+    sendPass: () => void;
+    sendReject: () => void;
+    sendBack: () => void; //签退
     setState: <T extends keyof SendState>(
         key: T
     ) => (value: SendState[T]) => void;
@@ -82,12 +82,27 @@ export const useSendState = create<SendState>((set, get) => ({
             }
         })
     },
-    sendBack: (value) => {
-        const { students } = get();//获取当前的选中学生数据
+    sendBack: () => {
+        const { students, activity_id } = get();//获取当前的选中学生数据
+        const user_ids = students.map((item) => {
+            return item.user.id;
+        })
+        const whoWrong: { name: string }[] = [];//如果有错误的，用于存放错误的人的姓名{name:string}
         Modal.confirm({
             title: '确认一键签退',
             onOk: async () => {
                 console.log('ok')
+                const res = await network.teacher.useSignOut(activity_id, user_ids)
+                if (res.length > 0) {
+                    students.map(item => {
+                        if (res.includes(item.user.id)) {
+                            whoWrong.push({
+                                name: item.user.name
+                            })
+                        }
+                    })
+                    message.error(`${whoWrong.map(item => item.name)}不符合签退条件，请确认`)
+                }
             },
             onCancel: () => {
                 console.log('nocancel');

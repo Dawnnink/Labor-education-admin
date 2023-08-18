@@ -232,7 +232,18 @@ export class Service extends BaseService {
     updateActivity: async (activity: Activity) => {
       return await this.axios.put('/teacher/activity', activity)
     },
-
+    //审核学生签退
+    useSignOut: async (activity_id: number, user_ids: number[]) => {
+      return await this.axios.post('/teacher/activity/checkout', {
+        activity_id,
+        user_ids
+      }).then((res) => {
+        return res.data
+      }).catch(() => {
+        message.error('网络故障')
+      })
+    },
+    //审核学生通过
     usePass: async (id: number, user: number[]) => {
       return await this.axios.post(`/teacher/activity/participate/pass?id=${id}`, user)
         .then((res) => {
@@ -241,6 +252,7 @@ export class Service extends BaseService {
           message.error('网络故障')
         })
     },
+    //审核学生拒绝
     useReject: async (id: number, users: {
       reason: string,
       user_id: number,
