@@ -267,7 +267,7 @@ export const ReadOnlyEditor: FC<IReadOnlyEditor> = (
                             <Button
                                 type='primary'
                                 onClick={() => {
-                                    network.admin.usePass([props.id])
+                                    network.admin.usePass(props.id)
                                         .then(() => {
                                             message.success('审核通过')
                                             Navigate('/check', { replace: true })

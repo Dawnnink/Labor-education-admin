@@ -200,8 +200,9 @@ export class Service extends BaseService {
     location.replace('/')
   }
   teacher = {
+    //获取签到码
     useCode: (id: number) => {
-      return this.useGet<Code>(`/teacher/activity/code?id=${id}`)
+      return this.useGet<Code>(`/teacher/activity/code?id=${id}&type=in`)
     },
     useDepartment: () => {
       return this.useGet<Department[]>('/teacher/department/list')
@@ -296,8 +297,10 @@ export class Service extends BaseService {
     useActivity: (id: number) => {
       return this.useGet<IAdActivity>('/admin/activity/detail', { id })
     },
-    usePass: async (id: number[]) => {
-      return await this.axios.post('/admin/activity/pass', id)
+    usePass: async (id: number) => {
+      return await this.axios.post('/admin/activity/pass', {
+        activity_id: id,
+      })
     },
     useReject: async (id: number, reason: string) => {
       return await this.axios.post('/admin/activity/reject', { id, reason })

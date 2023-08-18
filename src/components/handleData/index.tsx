@@ -325,12 +325,10 @@ const Check: React.FC<{ canup: boolean, id: number }> = (props) => {
 }
 
 const Code: React.FC<{ cansee: boolean; id: number }> = (props) => {
-    const num = {
-        code: 'eddf'
+    let num
+    if (props.id !== -1) {
+        ({ data: num } = network.teacher.useCode(props.id)); // 注意括号的使用
     }
-    // if (props.id !== -1) {
-    // ({ data: num } = network.teacher.useCode(props.id)); // 注意括号的使用
-    // }
 
 
     const [isOpen, setIsOpen] = React.useState(false)
