@@ -44,7 +44,7 @@ interface FormData {
     classname: string
     participate_reason: string
     state: string
-    isOperate: boolean//1是通过，2是打回
+    isOperate: number//1是通过，2是打回
 }
 
 type Order = 'asc' | 'desc';
@@ -301,7 +301,7 @@ export const ActivityStudents = ({ students, id, activity }: ActivityStudentsPro
     const [selected, setSelected] = useState<readonly string[]>([])
     const [page, setPage] = useState(0)
     const [rowsPerPage, setRowsPerPage] = useState(10)
-    let isOperate = false;
+    const [isOperate, setIsOperate] = useState(0);//0代表没有操作，1代表可以学生的通过和打回，2代表可以签退，3代表无法签退
     const [activity_id, setAcitvityId] = useSendState(state => [
         state.activity_id,
         state.setState('activity_id')
@@ -373,7 +373,7 @@ export const ActivityStudents = ({ students, id, activity }: ActivityStudentsPro
         classname: string,
         participate_reason: string,
         state: string,
-        isOperate: boolean
+        isOperate: number
     ): FormData => {
         return {
             name,
@@ -390,7 +390,7 @@ export const ActivityStudents = ({ students, id, activity }: ActivityStudentsPro
         return students.map((item) => {
             //如果正在审核中，则显示操作按钮，可以打回或者通过
             if (item.state === '报名审核中') {
-                isOperate = true;
+                setIsOperate(1);
             }
             //判断状态,首先判断是否开始活动
             const date = dayjs();//获取现在的时间
@@ -415,6 +415,12 @@ export const ActivityStudents = ({ students, id, activity }: ActivityStudentsPro
                 } else if (item.check_out && item.check_out) {
                     State = '已签退'
                 }
+            }
+            //如果说已经签到了，应该就可以签退了
+            if (State === '已签到') {
+                setIsOperate(2)
+            } else if (State === '未签到' || State === '已签退') {
+                setIsOperate(3)
             }
             return createFormData(
                 item.user.name,
@@ -523,7 +529,7 @@ export const ActivityStudents = ({ students, id, activity }: ActivityStudentsPro
                                             <TableCell align='left'>{row.classname}</TableCell>
                                             <TableCell align='left'>{row.participate_reason}</TableCell>
                                             <TableCell align='left'>{row.state}</TableCell>
-                                            {row.isOperate ?
+                                            {row.isOperate === 1 ?
                                                 <TableCell align='left'>
                                                     <Box
                                                         sx={{
@@ -559,8 +565,33 @@ export const ActivityStudents = ({ students, id, activity }: ActivityStudentsPro
                                                     </Box>
                                                 </TableCell>
                                                 :
-                                                null
+                                                (
+                                                    (row.isOperate === 2 || row.isOperate === 3) ?
+                                                        <TableCell align='left'>
+                                                            <Box
+                                                                sx={{
+                                                                    zIndex: 10000
+                                                                }}
+                                                            >
+                                                                <Btn
+                                                                    variant='outlined'
+                                                                    startIcon={<CheckBoxIcon />}
+                                                                    color='success'
+                                                                    onClick={(event: React.MouseEvent) => {
+                                                                        event.stopPropagation();//防止点击穿透
+                                                                        console.log('yes')
+                                                                    }}
+                                                                    disabled={row.isOperate === 3 ? true : false}
+                                                                >
+                                                                    签退
+                                                                </Btn>
+                                                            </Box>
+                                                        </TableCell>
+                                                        :
+                                                        null
+                                                )
                                             }
+
                                         </TableRow>
                                     )
                                 })
