@@ -267,6 +267,13 @@ export class Service extends BaseService {
         message.error('网络故障')
       })
     },
+    //再次提醒学生
+    useNotice: async (activity_id: number, user_id: number) => {
+      return await this.axios.post(`/teacher/activity/activity/notice?id=${activity_id}`, {
+        activity_id: activity_id,
+        user_id: user_id
+      })
+    },
     downloadActivityStudentsExcel: async (activityId: number) => {
       const data = await this.axios.get(
         `/teacher/activity/participate/excel?id=${activityId}`,

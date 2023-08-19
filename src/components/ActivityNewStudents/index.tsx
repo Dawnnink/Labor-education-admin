@@ -36,7 +36,7 @@ import dayjs from 'dayjs'
 import { useSendState } from '~/store/send';
 import { useEffect } from 'react'
 import { Modal, Input, message } from 'antd'
-
+import { network } from '../../utils/network'
 interface FormData {
     name: string
     uid: string
@@ -46,6 +46,7 @@ interface FormData {
     state: string
     changeNotice: boolean | null//用于确认是否收到通知
     isOperate: number//1是通过，2是打回
+    user_id: number//这个不展示，只是用于发请求
 }
 
 type Order = 'asc' | 'desc';
@@ -380,7 +381,8 @@ export const ActivityStudents = ({ students, id, activity }: ActivityStudentsPro
         participate_reason: string,
         state: string,
         changeNotice: boolean | null,
-        isOperate: number
+        isOperate: number,
+        user_id: number
     ): FormData => {
         return {
             name,
@@ -390,7 +392,8 @@ export const ActivityStudents = ({ students, id, activity }: ActivityStudentsPro
             participate_reason,
             state,
             changeNotice,
-            isOperate
+            isOperate,
+            user_id,
         };
     }, [])
     //将拿来的数据搞一下
@@ -438,11 +441,11 @@ export const ActivityStudents = ({ students, id, activity }: ActivityStudentsPro
                 item.participate_reason,
                 State,
                 item.notified,
-                isOperate
+                isOperate,
+                item.user.id
             )
         })
     }, []);
-
     const emptyRows =
         page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
     //可以看到的表格的数据
@@ -500,7 +503,7 @@ export const ActivityStudents = ({ students, id, activity }: ActivityStudentsPro
     useEffect(() => {
         //在组件最初渲染的时候将activity_id加入状态存储库
         setAcitvityId(id)
-    }, [id, setAcitvityId])
+    }, [id, setAcitvityId, ...students.map(item => item.notified)])
     return (
         <Box sx={{ width: '100%' }}>
             <Paper sx={{ width: '100%', mb: 2 }}>
@@ -624,7 +627,17 @@ export const ActivityStudents = ({ students, id, activity }: ActivityStudentsPro
                                                 &&
                                                 <Box>
                                                     <Typography>{row.changeNotice ? "已确认" : "未确认"}</Typography>
-                                                    <Button>
+                                                    <Button
+                                                        onClick={async () => {
+                                                            await network.teacher.useNotice(activity_id, row.user_id)
+                                                                .then(() => {
+                                                                    message.success('成功发送')
+                                                                })
+                                                                .catch(() => {
+                                                                    message.error('网络故障')
+                                                                })
+                                                        }}
+                                                    >
                                                         再次发送
                                                     </Button>
                                                 </Box>
