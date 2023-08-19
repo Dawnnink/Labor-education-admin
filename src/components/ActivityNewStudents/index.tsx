@@ -301,7 +301,7 @@ export const ActivityStudents = ({ students, id, activity }: ActivityStudentsPro
     const [selected, setSelected] = useState<readonly string[]>([])
     const [page, setPage] = useState(0)
     const [rowsPerPage, setRowsPerPage] = useState(10)
-    const [isOperate, setIsOperate] = useState(0);//0代表没有操作，1代表可以学生的通过和打回，2代表可以签退，3代表无法签退
+    const [isOperate, setIsOperate] = useState(1);//0代表没有操作，1代表可以学生的通过和打回，2代表可以签退，3代表无法签退
     const [activity_id, setAcitvityId] = useSendState(state => [
         state.activity_id,
         state.setState('activity_id')
@@ -529,7 +529,7 @@ export const ActivityStudents = ({ students, id, activity }: ActivityStudentsPro
                                             <TableCell align='left'>{row.classname}</TableCell>
                                             <TableCell align='left'>{row.participate_reason}</TableCell>
                                             <TableCell align='left'>{row.state}</TableCell>
-                                            {row.isOperate === 1 ?
+                                            {isOperate === 1 ?
                                                 <TableCell align='left'>
                                                     <Box
                                                         sx={{
@@ -566,7 +566,7 @@ export const ActivityStudents = ({ students, id, activity }: ActivityStudentsPro
                                                 </TableCell>
                                                 :
                                                 (
-                                                    (row.isOperate === 2 || row.isOperate === 3) ?
+                                                    (isOperate === 2 || row.isOperate === 3) ?
                                                         <TableCell align='left'>
                                                             <Box
                                                                 sx={{
@@ -581,7 +581,7 @@ export const ActivityStudents = ({ students, id, activity }: ActivityStudentsPro
                                                                         event.stopPropagation();//防止点击穿透
                                                                         console.log('yes')
                                                                     }}
-                                                                    disabled={row.isOperate === 3 ? true : false}
+                                                                    disabled={isOperate === 3 ? true : false}
                                                                 >
                                                                     签退
                                                                 </Btn>
