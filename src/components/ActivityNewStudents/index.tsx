@@ -44,6 +44,7 @@ interface FormData {
     classname: string
     participate_reason: string
     state: string
+    changeNotice: boolean | null//用于确认是否收到通知
     isOperate: number//1是通过，2是打回
 }
 
@@ -64,8 +65,8 @@ function getComparator<Key extends keyof any>(
     order: Order,
     orderBy: Key,
 ): (
-    a: { [key in Key]: number | string | boolean },
-    b: { [key in Key]: number | string | boolean },
+    a: { [key in Key]: number | string | boolean | null },
+    b: { [key in Key]: number | string | boolean | null },
 ) => number {
     return order === 'desc'
         ? (a, b) => descendingComparator(a, b, orderBy)
@@ -378,6 +379,7 @@ export const ActivityStudents = ({ students, id, activity }: ActivityStudentsPro
         classname: string,
         participate_reason: string,
         state: string,
+        changeNotice: boolean | null,
         isOperate: number
     ): FormData => {
         return {
@@ -387,6 +389,7 @@ export const ActivityStudents = ({ students, id, activity }: ActivityStudentsPro
             classname,
             participate_reason,
             state,
+            changeNotice,
             isOperate
         };
     }, [])
@@ -426,6 +429,7 @@ export const ActivityStudents = ({ students, id, activity }: ActivityStudentsPro
             } else if (State === '未签到' || State === '已签退') {
                 setIsOperate(3)
             }
+
             return createFormData(
                 item.user.name,
                 item.user.uid,
@@ -433,6 +437,7 @@ export const ActivityStudents = ({ students, id, activity }: ActivityStudentsPro
                 item.user.class,
                 item.participate_reason,
                 State,
+                item.notified,
                 isOperate
             )
         })
@@ -496,8 +501,6 @@ export const ActivityStudents = ({ students, id, activity }: ActivityStudentsPro
         //在组件最初渲染的时候将activity_id加入状态存储库
         setAcitvityId(id)
     }, [id, setAcitvityId])
-    console.log('theretherethere', filterStudents)
-    console.log('这里是acitivity_id', activity_id)
     return (
         <Box sx={{ width: '100%' }}>
             <Paper sx={{ width: '100%', mb: 2 }}>
@@ -616,7 +619,16 @@ export const ActivityStudents = ({ students, id, activity }: ActivityStudentsPro
                                                         null
                                                 )
                                             }
-
+                                            {
+                                                row.changeNotice === true || row.changeNotice === false
+                                                &&
+                                                <Box>
+                                                    <Typography>{row.changeNotice ? "已确认" : "未确认"}</Typography>
+                                                    <Button>
+                                                        再次发送
+                                                    </Button>
+                                                </Box>
+                                            }
                                         </TableRow>
                                     )
                                 })
