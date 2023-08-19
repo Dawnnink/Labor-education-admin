@@ -421,7 +421,7 @@ export const ActivityStudents = ({ students, id, activity }: ActivityStudentsPro
                 }
             }
             //如果说已经签到了，应该就可以签退了
-            if (State === '已签到') {
+            if (State === '待签退') {
                 setIsOperate(2)
             } else if (State === '未签到' || State === '已签退') {
                 setIsOperate(3)
@@ -460,15 +460,34 @@ export const ActivityStudents = ({ students, id, activity }: ActivityStudentsPro
         setCanBack(true);
         if (filterStudents.length > 0) {
             //如果选中的学生大于0
-            if (dayjs().isAfter(dayjs(activity.registration_start_time)) && dayjs().isBefore(dayjs(activity.activity_end_time))) {
+            if (dayjs().isAfter(dayjs(activity.registration_start_time)) && dayjs().isBefore(dayjs(activity.activity_start_time))) {
                 //如果是在报名开始时间和活动结束时间 范围内
                 //这个时间范围内是可以操控进行报名通过和报名打回的
-                setCanOperate(false);
+                let flag = false;
+                filterStudents.map((item) => {
+                    if (item.state === '报名审核中') {
+                        flag = true;
+                    }
+                })
+                if (flag) setCanOperate(false);
             }
             if (dayjs().isAfter(dayjs(activity.activity_start_time))) {
                 //活动开始之后可以进行签退
                 //这个时间范围内是可以进行操控是否进行签退的
-                setCanBack(false);
+                let flag = false;//判断是否可进行签退
+                filterStudents.map((item) => {
+                    if (
+                        //只有这三种才能签退
+                        item.state === '报名成功'
+                        &&
+                        item.check_in
+                        &&
+                        !item.check_out
+                    ) flag = true;
+                })
+                if (flag) {
+                    setCanBack(false);
+                }
             }
         }
     }, [filterStudents])
@@ -476,9 +495,9 @@ export const ActivityStudents = ({ students, id, activity }: ActivityStudentsPro
     useEffect(() => {
         //在组件最初渲染的时候将activity_id加入状态存储库
         setAcitvityId(id)
-    }, [])
+    }, [id, setAcitvityId])
     console.log('theretherethere', filterStudents)
-
+    console.log('这里是acitivity_id', activity_id)
     return (
         <Box sx={{ width: '100%' }}>
             <Paper sx={{ width: '100%', mb: 2 }}>

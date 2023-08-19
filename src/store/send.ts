@@ -84,15 +84,27 @@ export const useSendState = create<SendState>((set, get) => ({
     },
     sendBack: () => {
         const { students, activity_id } = get();//获取当前的选中学生数据
+        students.map(item => {
+            if (item.state !== '报名成功' && !item.check_in) {
+                //如果状态不是已签到
+                message.warning('所选人之中有人未签到')
+                return;
+            }
+        })
         const user_ids = students.map((item) => {
             return item.user.id;
         })
         const whoWrong: { name: string }[] = [];//如果有错误的，用于存放错误的人的姓名{name:string}
         Modal.confirm({
-            title: '确认一键签退',
+            title: '确认签退',
             onOk: async () => {
                 console.log('ok')
                 const res = await network.teacher.useSignOut(activity_id, user_ids)
+                if (res.length === 0) {
+                    //没有错误的人返回
+                    message.success('签退成功')
+                    setTimeout(() => location.reload(), 500)
+                }
                 if (res.length > 0) {
                     students.map(item => {
                         if (res.includes(item.user.id)) {
@@ -102,6 +114,7 @@ export const useSendState = create<SendState>((set, get) => ({
                         }
                     })
                     message.error(`${whoWrong.map(item => item.name)}不符合签退条件，请确认`)
+                    setTimeout(() => location.reload(), 500)
                 }
             },
             onCancel: () => {
