@@ -153,7 +153,6 @@ const Exp: React.FC<{ method: string, id: number }> = (props) => {
         setIsModal(false);
         network.teacher.downloadActivityStudentsExcel(props.id)
     };
-
     const handleCancel = () => {
         setIsModal(false);
     };

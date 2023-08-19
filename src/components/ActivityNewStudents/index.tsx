@@ -301,10 +301,15 @@ export const ActivityStudents = ({ students, id, activity }: ActivityStudentsPro
     const [selected, setSelected] = useState<readonly string[]>([])
     const [page, setPage] = useState(0)
     const [rowsPerPage, setRowsPerPage] = useState(10)
-    const [isOperate, setIsOperate] = useState(1);//0代表没有操作，1代表可以学生的通过和打回，2代表可以签退，3代表无法签退
+    const [isOperate, setIsOperate] = useState(0);//0代表没有操作，1代表可以学生的通过和打回，2代表可以签退，3代表无法签退
     const [activity_id, setAcitvityId] = useSendState(state => [
         state.activity_id,
         state.setState('activity_id')
+    ])
+    const [sendPass, sendReject, sendBack] = useSendState(state => [
+        state.sendPass,
+        state.sendReject,
+        state.sendBack
     ])
     const handleRequestSort = (
         event: React.MouseEvent<unknown>,
@@ -394,19 +399,16 @@ export const ActivityStudents = ({ students, id, activity }: ActivityStudentsPro
             }
             //判断状态,首先判断是否开始活动
             const date = dayjs();//获取现在的时间
-            let State = '等待审核中';//设置一个状态值作为最后return值/
-            //已知item.state只会为审核成功审核失败，报名审核中
-            if (date.isBefore(dayjs(activity.activity_start_time))) {
-                //如果现在在活动开始之前
-                if (item.state === '报名审核中') {
-                    State = '等待审核中'
-                }
-                else {
-                    State = item.state
-                }
+            let State = '';//设置一个状态值作为最后return值/
+            //已知item.state只会为审核成功,审核失败，报名审核中
+            if (item.state === '报名审核中') {
+                State = '等待审核中'
             }
-            //如果现在在活动开始之后
-            if (date.isAfter(dayjs(activity.activity_start_time))) {
+            else {
+                State = item.state
+            }
+            //假设还没有报名成功，那么他该是什么就是什么
+            if (item.state === '报名成功' && date.isAfter(dayjs(activity.activity_start_time))) {
                 if (!item.check_in) {
                     //还没有进行签到
                     State = '未签到'
@@ -414,6 +416,8 @@ export const ActivityStudents = ({ students, id, activity }: ActivityStudentsPro
                     State = '待签退'
                 } else if (item.check_out && item.check_out) {
                     State = '已签退'
+                } else {
+                    State = '报名成功'
                 }
             }
             //如果说已经签到了，应该就可以签退了
@@ -452,15 +456,17 @@ export const ActivityStudents = ({ students, id, activity }: ActivityStudentsPro
         })
     }, [selected, students])
     useEffect(() => {
+        setCanOperate(true);
+        setCanBack(true);
         if (filterStudents.length > 0) {
             //如果选中的学生大于0
             if (dayjs().isAfter(dayjs(activity.registration_start_time)) && dayjs().isBefore(dayjs(activity.activity_end_time))) {
-                //如果是在报名开始时间和活动结结束时间 范围内
+                //如果是在报名开始时间和活动结束时间 范围内
                 //这个时间范围内是可以操控进行报名通过和报名打回的
                 setCanOperate(false);
             }
-            if (dayjs().isAfter(dayjs(activity.activity_start_time)) && dayjs().isBefore(dayjs(activity.activity_end_time))) {
-                //如果是在活动开始时间到活动结束时间的范围内
+            if (dayjs().isAfter(dayjs(activity.activity_start_time))) {
+                //活动开始之后可以进行签退
                 //这个时间范围内是可以进行操控是否进行签退的
                 setCanBack(false);
             }
@@ -544,7 +550,7 @@ export const ActivityStudents = ({ students, id, activity }: ActivityStudentsPro
                                                                 color='success'
                                                                 onClick={(event: React.MouseEvent) => {
                                                                     event.stopPropagation();//防止点击穿透
-                                                                    console.log('yes')
+                                                                    sendPass();
                                                                 }}
                                                             >
                                                                 通过
@@ -555,7 +561,7 @@ export const ActivityStudents = ({ students, id, activity }: ActivityStudentsPro
                                                                 color='error'
                                                                 onClick={(event: React.MouseEvent) => {
                                                                     event.stopPropagation();//防止点击穿透
-                                                                    console.log('no')
+                                                                    sendReject()
                                                                 }}
                                                             >
                                                                 打回
@@ -579,7 +585,7 @@ export const ActivityStudents = ({ students, id, activity }: ActivityStudentsPro
                                                                     color='success'
                                                                     onClick={(event: React.MouseEvent) => {
                                                                         event.stopPropagation();//防止点击穿透
-                                                                        console.log('yes')
+                                                                        sendBack();
                                                                     }}
                                                                     disabled={isOperate === 3 ? true : false}
                                                                 >
