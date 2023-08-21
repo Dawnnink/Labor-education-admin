@@ -361,7 +361,7 @@ export const ActivityReEdit = ({
                     >
                         <TextArea
                             rows={4}
-                            placeholder='Please enter your work goals' />
+                            placeholder='请阐释活动简介' />
                     </Form.Item>
                     <Form.Item label='上传海报' tooltip={{ title: '请上传1MB以内的JPG/PNG格式文件', icon: <InfoCircleOutlined /> }}>
 

@@ -365,7 +365,7 @@ export const ActivityEditor = ({
               disabled={disabled}
               // onChange={(e) => { handleDes(e) }}
               rows={4}
-              placeholder='Please enter your work goals' />
+              placeholder='请阐述活动简介' />
           </Form.Item>
           {/* <Form
 
