@@ -66,7 +66,8 @@ export interface OldActivity {
     activity_end_time: string | null,
   ]
   quota: number
-  need_audit: boolean
+  need_audit: boolean//是否需要审核
+  need_checkout: boolean//是否需要签退
   position: string;
   icon: string
 }
@@ -113,7 +114,7 @@ export const ActivityEditor = ({
     }
     const isLt2M = file.size / 1024 / 1024 < 2;
     if (!isLt2M) {
-      message.error('图片大小必须小于2MB!');
+      message.error('图片大小必须小于1MB!');
     }
     return isJpgOrPng && isLt2M;
   };
@@ -274,6 +275,7 @@ export const ActivityEditor = ({
       contact_person: value.contact_person != undefined ? value.contact_person : '',
       contact_phone_number: value.contact_phone_number != undefined ? value.contact_phone_number : '',
       need_audit: value.need_audit != undefined ? value.need_audit : false,
+      need_checkout: value.need_checkout != undefined ? value.need_checkout : false,
       quota: value.quota != undefined ? value.quota : 0,
       registration_start_time: value.registerAt != undefined ? value.registerAt[0] : '',
       registration_end_time: value.registerAt != undefined ? value.registerAt[1] : '',
@@ -321,8 +323,7 @@ export const ActivityEditor = ({
           style={{
             maxWidth: "100%",
           }}
-          disabled={disabled
-          } requiredMark={true}
+          requiredMark={true}
         >
           <Form.Item
             label='活动名称'
@@ -342,6 +343,7 @@ export const ActivityEditor = ({
             ]}
           >
             <Input
+              disabled={disabled}
             // onChange={(e) => { handleName(e) }}
             />
           </Form.Item>
@@ -360,6 +362,7 @@ export const ActivityEditor = ({
             name="description"
           >
             <TextArea
+              disabled={disabled}
               // onChange={(e) => { handleDes(e) }}
               rows={4}
               placeholder='Please enter your work goals' />
@@ -376,7 +379,7 @@ export const ActivityEditor = ({
                       paddingLeft: "13.8%",
                   }}
               > */}
-          <Form.Item label='上传海报' >
+          <Form.Item label='上传海报' tooltip={{ title: '请上传1MB以内的JPG/PNG格式文件', icon: <InfoCircleOutlined /> }} >
 
             <div className='up'>
               <Form.Item
@@ -385,6 +388,7 @@ export const ActivityEditor = ({
               >
                 <div>
                   <Upload
+                    disabled={disabled}
                     className='avatar-uploader'
                     listType="picture-card"
                     showUploadList={false}
@@ -404,9 +408,12 @@ export const ActivityEditor = ({
               <Form.Item
                 label="上传图标"  // 指定绑定的值为 'fileList'
                 name='icon'
+                tooltip={{ title: '请上传1MB以内的JPG/PNG格式文件', icon: <InfoCircleOutlined /> }}
+
               >
                 <div>
                   <Upload
+                    disabled={disabled}
                     className="avatar-uploader"
                     listType="picture-card"
                     showUploadList={false}
@@ -442,7 +449,7 @@ export const ActivityEditor = ({
             name='position'
             required
           >
-            <Input placeholder=' Please describe your customer service, internal customers directly ...' />
+            <Input placeholder='请填写活动地点' disabled={disabled} />
           </Form.Item>
 
           <Form.Item
@@ -466,6 +473,7 @@ export const ActivityEditor = ({
                 style={{ display: 'inline-block', width: 'calc(50% - 8px)', margin: '0 8px' }}
               >
                 <Input
+                  disabled={disabled}
                   placeholder='请输入联系人姓名'
                   prefix={<UserOutlined className="site-form-item-icon" />}
 
@@ -483,6 +491,7 @@ export const ActivityEditor = ({
                 ]}
               >
                 <Input
+                  disabled={disabled}
                   placeholder='请输入联系人电话'
                   prefix={<PhoneOutlined />}
                 />
@@ -503,6 +512,7 @@ export const ActivityEditor = ({
             ]}
           >
             <Select
+              disabled={disabled}
               placeholder='请选择'
               options={OPTIONS.map((item: string) => ({
                 value: item,
@@ -527,6 +537,7 @@ export const ActivityEditor = ({
               showTime
               format='YYYY-MM-DD HH:mm'
               onChange={() => handleDate()}
+              disabled={disabled}
             />
 
           </Form.Item>
@@ -546,6 +557,7 @@ export const ActivityEditor = ({
             }}
           >
             <RangePicker
+              disabled={disabled}
               onChange={() => handleDate()}
               // defaultValue={[dayjs('2023/01/01 00:00', 'YYYY-MM-DD HH:mm'), dayjs('2023/01/01 00:00', 'YYYY-MM-DD HH:mm')]}
               showTime
@@ -576,7 +588,7 @@ export const ActivityEditor = ({
               ]}
 
             >
-              <InputNumber min={1} max={2000} />
+              <InputNumber min={1} max={2000} disabled={disabled} />
             </Form.Item>
             <span className="ant-form-text" style={{ marginLeft: 8 }}>
               人
@@ -593,9 +605,25 @@ export const ActivityEditor = ({
               }
             ]}
           >
-            <Radio.Group>
+            <Radio.Group disabled={disabled}>
               <Radio value={false}>无需审核</Radio>
               <Radio value={true}>需要审核</Radio>
+            </Radio.Group>
+          </Form.Item>
+          <Form.Item
+            name="need_checkout"
+            label="报名是否需要签退"
+            required
+            rules={[
+              {
+                required: true,
+                message: "是否需要签退为必填字段"
+              }
+            ]}
+          >
+            <Radio.Group disabled={disabled}>
+              <Radio value={false}>无需签退</Radio>
+              <Radio value={true}>需要签退</Radio>
             </Radio.Group>
           </Form.Item>
           <Form.Item wrapperCol={{ span: 10, offset: 4 }}>

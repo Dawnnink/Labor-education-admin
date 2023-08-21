@@ -12,6 +12,7 @@ export interface IIN {
     contact_person: string,
     contact_phone_number: string,
     need_audit: boolean,
+    need_checkout: boolean,
     state: string,
     enroll_number: number,
     participate_number: number,

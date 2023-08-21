@@ -21,6 +21,7 @@ export interface IAdActivity {
     contact_people: string
     contact_phone_number: string
     need_audit: boolean
+    need_checkout: boolean
     state: string
     enroll_number: number
     quota: number

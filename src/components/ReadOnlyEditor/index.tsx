@@ -262,6 +262,16 @@ export const ReadOnlyEditor: FC<IReadOnlyEditor> = (
                             <Radio value={true} disabled>需要审核</Radio>
                         </Radio.Group>
                     </Form.Item>
+                    <Form.Item
+                        name="need_checkout"
+                        label="是否需要签退"
+                        required
+                    >
+                        <Radio.Group >
+                            <Radio value={false} disabled>无需签退</Radio>
+                            <Radio value={true} disabled>需要签退</Radio>
+                        </Radio.Group>
+                    </Form.Item>
                     <Form.Item wrapperCol={{ span: 4, offset: 4 }}>
                         <Space>
                             <Button

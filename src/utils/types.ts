@@ -11,6 +11,7 @@ export interface Activity {
   contact_person: string
   contact_phone_number: string
   need_audit: boolean
+  need_checkout: boolean
   state: '审核中' | '审核失败' | '已发布'
   enroll_number: number
   quota: number

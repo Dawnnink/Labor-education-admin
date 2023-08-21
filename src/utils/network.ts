@@ -75,6 +75,7 @@ export type NewActivity = Pick<
   | 'contact_person'
   | 'contact_phone_number'
   | 'need_audit'
+  | 'need_checkout'
   | 'quota'
   | 'registration_start_time'
   | 'registration_end_time'

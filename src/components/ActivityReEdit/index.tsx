@@ -50,6 +50,7 @@ export interface OldActivity {
     ]
     quota: number
     need_audit: boolean
+    need_checkout: boolean
     position: string;
     icon: string
 
@@ -80,6 +81,7 @@ export const ActivityReEdit = ({
             contact_person: '',
             contact_phone_number: '',
             need_audit: false,
+            need_checkout: false,
             quota: 0,
             registration_start_time: '',
             registration_end_time: '',
@@ -113,7 +115,7 @@ export const ActivityReEdit = ({
         }
         const isLt2M = file.size / 1024 / 1024 < 2;
         if (!isLt2M) {
-            message.error('图片大小必须小于2MB!');
+            message.error('图片大小必须小于1MB!');
         }
         return isJpgOrPng && isLt2M;
     }, []);
@@ -250,6 +252,7 @@ export const ActivityReEdit = ({
             contact_person: value.contact_person || ' ',
             contact_phone_number: value.contact_phone_number || ' ',
             need_audit: value.need_audit || false,
+            need_checkout: value.need_checkout || false,
             quota: value.quota || 0,
             registration_start_time: value.registerAt[0],
             registration_end_time: value.registerAt[1],
@@ -360,7 +363,7 @@ export const ActivityReEdit = ({
                             rows={4}
                             placeholder='Please enter your work goals' />
                     </Form.Item>
-                    <Form.Item label='上传海报' >
+                    <Form.Item label='上传海报' tooltip={{ title: '请上传1MB以内的JPG/PNG格式文件', icon: <InfoCircleOutlined /> }}>
 
                         <div className='up'>
                             <Form.Item
@@ -387,6 +390,7 @@ export const ActivityReEdit = ({
                             <Form.Item
                                 label="上传图标"  // 指定绑定的值为 'fileList'
                                 name='icon'
+                                tooltip={{ title: '请上传1MB以内的JPG/PNG格式文件', icon: <InfoCircleOutlined /> }}
                             >
                                 <div>
                                     <Upload
@@ -560,6 +564,22 @@ export const ActivityReEdit = ({
                         <Radio.Group>
                             <Radio value={false}>无需审核</Radio>
                             <Radio value={true}>需要审核</Radio>
+                        </Radio.Group>
+                    </Form.Item>
+                    <Form.Item
+                        name="need_checkout"
+                        label="是否需要签退"
+                        required
+                        rules={[
+                            {
+                                required: true,
+                                message: "是否需要签退为必填字段"
+                            }
+                        ]}
+                    >
+                        <Radio.Group>
+                            <Radio value={false}>无需签退</Radio>
+                            <Radio value={true}>需要签退</Radio>
                         </Radio.Group>
                     </Form.Item>
                     <Form.Item wrapperCol={{ span: 10, offset: 4 }}>
