@@ -237,7 +237,54 @@ export const ActivityEditor = ({
 
   (departments === undefined) ? OPTIONS = ['无数据'] : OPTIONS = OPTIONS.concat(departments.map((item) => item.name));
 
+  const isChange = useMemo(() => {
+    console.log('之类', changedActivity)
+    //主要是获取一下现在的时间，然后如果是在活动开始之前那么就可以更改活动的信息
+    if (changedActivity.joinAt && changedActivity.registerAt) {
+      if (dayjs().isBefore(dayjs(changedActivity.joinAt[0]))) {
+        // 首先确保是在活动开始之前
+        if (dayjs().isBefore(dayjs(changedActivity.registerAt[0]))) {
+          //如果是在活动报名开始之前
+          return 0;
+        } else if (dayjs().isBefore(dayjs(changedActivity.registerAt[1])) && dayjs().isAfter(dayjs(changedActivity.registerAt[0]))) {
+          //如果实在活动报名时间内
+          return 1;
+        } else if (dayjs().isBefore(dayjs(changedActivity.joinAt[0])) && dayjs().isAfter(dayjs(changedActivity.registerAt[1]))) {                //如果是在
+          //如果是在报名结束时间到活动开始之前的范围内
+          return 2;
+        }
+      }
+      else return 3;
+    }
+
+  }, [])
+
   const handleDate = useCallback(() => {
+
+
+    //下面是对假设就是说活动在各个时间线对于活动的日期更改
+    //如果isChange===0
+    //这是报名时间段之前，四个时间段都可以更改
+    if (isChange === 1) {
+      //这是报名时间之内，只能修改报名结束时间
+      //首先拿到修改之后的活动报名结束时间，不能早于当前修改活动的时间
+      const registerEndTime = form.getFieldValue('registerAt')[1]
+      const registerStartTime = form.getFieldValue('registerAt')[0]
+      const originRegisterStartTime = changedActivity.registerAt[0];//拿到活动原本的报名开始时间
+      //首先判断更改后的报名日期是否与之前相同
+      if (!dayjs(registerStartTime).isSame(dayjs(originRegisterStartTime), 'minute')) {
+        //以分钟为精度来比较两个时间是否相同
+        form.setFieldValue('registerAt', [dayjs(originRegisterStartTime), dayjs().add(1, 'day')])
+        message.error('不可修改报名活动时间')
+        return;
+      }
+
+
+      if (dayjs(registerEndTime).isBefore(dayjs())) {
+        form.setFieldValue('registerAt', [dayjs(originRegisterStartTime), dayjs().add(1, 'day')]);
+        message.error('修改后的报名结束时间不能早于当前时间')
+      }
+    }
     if (form.getFieldValue('registerAt')) {
       if (dayjs().isAfter(form.getFieldValue('registerAt')[0])) {
         form.setFieldValue('registerAt', '')
@@ -256,6 +303,7 @@ export const ActivityEditor = ({
         form.setFieldValue('joinAt', '')
       }
     }
+
   }, [])
   // 本地保存数据
   const handleLocal = () => {
@@ -302,26 +350,6 @@ export const ActivityEditor = ({
     Navigate('/activities')
     message.success("保存成功")
   }
-  console.log(changedActivity);
-  const isChange = useMemo(() => {
-    console.log('之类', changedActivity)
-    //主要是获取一下现在的时间，然后如果是在活动开始之前那么就可以更改活动的信息
-    if (dayjs().isBefore(dayjs(changedActivity.joinAt[0]))) {
-      // 首先确保是在活动开始之前
-      if (dayjs().isBefore(dayjs(changedActivity.registerAt[0]))) {
-        //如果是在活动报名开始之前
-        return 0;
-      } else if (dayjs().isBefore(dayjs(changedActivity.registerAt[1])) && dayjs().isAfter(dayjs(changedActivity.registerAt[0]))) {
-        //如果实在活动报名时间内
-        return 1;
-      } else if (dayjs().isBefore(dayjs(changedActivity.joinAt[0])) && dayjs().isAfter(dayjs(changedActivity.registerAt[1]))) {                //如果是在
-        //如果是在报名结束时间到活动开始之前的范围内
-        return 2;
-      }
-    }
-    else return 3;
-  }, [])
-
 
   return (
     <div className='entire'>
@@ -557,8 +585,7 @@ export const ActivityEditor = ({
               showTime
               format='YYYY-MM-DD HH:mm'
               onChange={() => handleDate()}
-              disabled={disabled}
-              allowClear={false}
+              disabled={isChange === 2 || isChange === 3}
             />
 
           </Form.Item>
@@ -607,7 +634,6 @@ export const ActivityEditor = ({
                   message: "活动名额为必填字段"
                 }
               ]}
-
             >
               <InputNumber min={changedActivity.quota ? changedActivity.quota : 1} max={2000} disabled={isChange === 3} />
             </Form.Item>
