@@ -310,7 +310,7 @@ export const ActivityReEdit = ({
                 <Form
                     initialValues={activity}
                     onFinish={async (fieldsValue: any) => {
-                        if (await OnUpdate(fieldsValue, departments, imageUrl, iconUrl, id)) {
+                        if (await OnUpdate(fieldsValue, departments, imageUrl, iconUrl, id, 0)) {
                             Navigate('/activities')
                         }
                     }

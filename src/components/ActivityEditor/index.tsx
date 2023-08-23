@@ -31,6 +31,7 @@ import 'dayjs/locale/zh-cn'; // 导入你所需的日期语言包
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import OnFinish from '~/utils/FormFinish';
 import { compareDates } from '~/utils/hooks/getActivity';
+import OnUpdate from '~/utils/FormUpdate';
 dayjs.extend(customParseFormat);
 
 function formatTime(timeString: string): string {
@@ -258,7 +259,6 @@ export const ActivityEditor = ({
     }
 
   }, [])
-
   const handleDate = useCallback(() => {
 
 
@@ -279,13 +279,12 @@ export const ActivityEditor = ({
         return;
       }
 
-
       if (dayjs(registerEndTime).isBefore(dayjs())) {
         form.setFieldValue('registerAt', [dayjs(originRegisterStartTime), dayjs().add(1, 'day')]);
         message.error('修改后的报名结束时间不能早于当前时间')
       }
     }
-    if (form.getFieldValue('registerAt')) {
+    if (form.getFieldValue('registerAt') && isChange !== 1) {
       if (dayjs().isAfter(form.getFieldValue('registerAt')[0])) {
         form.setFieldValue('registerAt', '')
         message.info("活动报名开始时间不能早于目前时间")
@@ -350,7 +349,13 @@ export const ActivityEditor = ({
     Navigate('/activities')
     message.success("保存成功")
   }
-
+  const handleUpdate = async () => {
+    const fieldsValue = form.getFieldsValue()
+    if (await OnUpdate(fieldsValue, departments, imageUrl, iconUrl, changedActivity.id, 1)) {
+      Navigate('/activities')
+      location.reload()
+    }
+  }
   return (
     <div className='entire'>
       {isShow ? item : null}
@@ -677,28 +682,38 @@ export const ActivityEditor = ({
             <p className={style.tips}>点击"提交审核"后，需要<span>部门审核人</span>通过审核，学生才能看到此活动并报名</p>
           </Form.Item>
           <Form.Item wrapperCol={{ span: 4, offset: 4 }}>
-            <Space>
-              <Button type="primary" htmlType="submit">
-                提交审核
-              </Button>
-              <Button
-                onClick={() => handleLocal()}
-              >
-                保存草稿
-              </Button>
-              {
-                isDel ?
+            {
+              isChange === 0 || isChange === 1 || isChange === 2 ?
+                <Button
+                  type="primary"
+                  onClick={handleUpdate}
+                >
+                  更改活动
+                </Button>
+                :
+                <Space>
+                  <Button type="primary" htmlType="submit" disabled={disabled}>
+                    提交审核
+                  </Button>
                   <Button
-                    onClick={() => handleDelete()}
-                    danger
-                    disabled={!beginDel}
+                    onClick={() => handleLocal()}
+                    disabled={disabled}
                   >
-                    删除活动
-                  </Button> :
-                  null
-              }
-            </Space>
-
+                    保存草稿
+                  </Button>
+                  {
+                    isDel ?
+                      <Button
+                        onClick={() => handleDelete()}
+                        danger
+                        disabled={!beginDel}
+                      >
+                        删除活动
+                      </Button> :
+                      null
+                  }
+                </Space>
+            }
           </Form.Item>
         </Form >
       </div >

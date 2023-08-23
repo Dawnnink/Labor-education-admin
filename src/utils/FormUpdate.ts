@@ -3,8 +3,8 @@ import { network } from '~/utils/network'
 import { Department } from '~/utils/types'
 import dayjs, { Dayjs } from 'dayjs'
 //这边可能有个bug，就是departmentid，虽然上传的时候一定会有有个department，但是如果这个地方收到的数据department是空的的话那么就无法正常更新活动
-export function compare(reTime: Dayjs[], joTime: Dayjs[]): boolean {
-    if (dayjs().isAfter(reTime[0])) {
+export function compare(reTime: Dayjs[], joTime: Dayjs[], isChange: number): boolean {
+    if (dayjs().isAfter(reTime[0]) && isChange === 1) {
         message.warning("报名开始时间过晚")
         return false;
     } else if (dayjs().isAfter(joTime[0])) {
@@ -17,10 +17,10 @@ export function compare(reTime: Dayjs[], joTime: Dayjs[]): boolean {
     return true;
 }
 
-const OnUpdate = (fieldsValue: any, departments: Department[] | undefined, imageUrl: string | undefined, iconUrl: string | undefined, id: number) => {
+const OnUpdate = (fieldsValue: any, departments: Department[] | undefined, imageUrl: string | undefined, iconUrl: string | undefined, id: number, isChange: number) => {
     const registerValue = fieldsValue['registerAt'];
     const joinValue = fieldsValue['joinAt'];
-    if (!compare(registerValue, joinValue)) {
+    if (!compare(registerValue, joinValue, isChange)) {
         return;
     }
     if (fieldsValue['poster'] === undefined) {
@@ -43,19 +43,11 @@ const OnUpdate = (fieldsValue: any, departments: Department[] | undefined, image
     delete values.joinAt;
     // const calue
     const college = values.department_id;
-    let index = 0;
-    let len = 0;
-    departments === undefined ? len = 0 : len = departments.length;
-    if (departments === undefined) {
-        index = 0;
-    } else {
-        for (let i = 0; i < len; i++) {
-            if (departments[i].name == college) {
-                index = departments[i].id;
-            }
+    departments?.map((item) => {
+        if (item.name === college) {
+            values.department_id = item.id;
         }
-    }
-    values.department_id = index;
+    })
     imageUrl === undefined ? values.poster = null : values.poster = imageUrl;
     iconUrl === undefined ? values.icon = null : values.icon = iconUrl;
     // console.log(values)
