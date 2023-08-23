@@ -26,7 +26,6 @@ function formatTime(timeString: string): string {
   return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 }
 const DetailsWithParams = ({ activityId }: { activityId: number }) => {
-
   const [now, setNow] = useState<string>('全部');//读取菜单的值
 
   const { data: activity, error } = network.teacher.useActivity(activityId)

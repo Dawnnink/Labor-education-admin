@@ -1,4 +1,4 @@
-import { useCallback, useState, useEffect } from 'react';
+import { useCallback, useState, useEffect, useMemo } from 'react';
 import style from './index.module.css'
 import {
   InfoCircleOutlined,
@@ -302,6 +302,26 @@ export const ActivityEditor = ({
     Navigate('/activities')
     message.success("保存成功")
   }
+  console.log(changedActivity);
+  const isChange = useMemo(() => {
+    console.log('之类', changedActivity)
+    //主要是获取一下现在的时间，然后如果是在活动开始之前那么就可以更改活动的信息
+    if (dayjs().isBefore(dayjs(changedActivity.joinAt[0]))) {
+      // 首先确保是在活动开始之前
+      if (dayjs().isBefore(dayjs(changedActivity.registerAt[0]))) {
+        //如果是在活动报名开始之前
+        return 0;
+      } else if (dayjs().isBefore(dayjs(changedActivity.registerAt[1])) && dayjs().isAfter(dayjs(changedActivity.registerAt[0]))) {
+        //如果实在活动报名时间内
+        return 1;
+      } else if (dayjs().isBefore(dayjs(changedActivity.joinAt[0])) && dayjs().isAfter(dayjs(changedActivity.registerAt[1]))) {                //如果是在
+        //如果是在报名结束时间到活动开始之前的范围内
+        return 2;
+      }
+    }
+    else return 3;
+  }, [])
+
 
   return (
     <div className='entire'>
@@ -362,8 +382,7 @@ export const ActivityEditor = ({
             name="description"
           >
             <TextArea
-              disabled={disabled}
-              // onChange={(e) => { handleDes(e) }}
+              disabled={isChange === 3}              // onChange={(e) => { handleDes(e) }}
               rows={4}
               placeholder='请阐述活动简介' />
           </Form.Item>
@@ -449,7 +468,8 @@ export const ActivityEditor = ({
             name='position'
             required
           >
-            <Input placeholder='请填写活动地点' disabled={disabled} />
+            <Input placeholder='请填写活动地点' disabled={isChange === 3} />
+            {/* 如果已经过了true,就不能更改了 */}
           </Form.Item>
 
           <Form.Item
@@ -473,7 +493,7 @@ export const ActivityEditor = ({
                 style={{ display: 'inline-block', width: 'calc(50% - 8px)', margin: '0 8px' }}
               >
                 <Input
-                  disabled={disabled}
+                  disabled={isChange === 3}
                   placeholder='请输入联系人姓名'
                   prefix={<UserOutlined className="site-form-item-icon" />}
 
@@ -491,7 +511,7 @@ export const ActivityEditor = ({
                 ]}
               >
                 <Input
-                  disabled={disabled}
+                  disabled={isChange === 3}
                   placeholder='请输入联系人电话'
                   prefix={<PhoneOutlined />}
                 />
@@ -538,6 +558,7 @@ export const ActivityEditor = ({
               format='YYYY-MM-DD HH:mm'
               onChange={() => handleDate()}
               disabled={disabled}
+              allowClear={false}
             />
 
           </Form.Item>
@@ -557,7 +578,7 @@ export const ActivityEditor = ({
             }}
           >
             <RangePicker
-              disabled={disabled}
+              disabled={isChange === 3}
               onChange={() => handleDate()}
               // defaultValue={[dayjs('2023/01/01 00:00', 'YYYY-MM-DD HH:mm'), dayjs('2023/01/01 00:00', 'YYYY-MM-DD HH:mm')]}
               showTime
@@ -588,7 +609,7 @@ export const ActivityEditor = ({
               ]}
 
             >
-              <InputNumber min={1} max={2000} disabled={disabled} />
+              <InputNumber min={changedActivity.quota ? changedActivity.quota : 1} max={2000} disabled={isChange === 3} />
             </Form.Item>
             <span className="ant-form-text" style={{ marginLeft: 8 }}>
               人

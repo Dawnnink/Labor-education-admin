@@ -140,11 +140,11 @@ export const GetActivity = (props: IINList) => {
                     //现在的时间在报名时间之前
                 ) {
                     //待报名
-                    State = 1;
+                    State = 6;
                     draftMove = {
                         Exp: "编辑活动",
-                        canup: true,
-                        cansee: true,
+                        canup: false,
+                        cansee: false,
                     }
 
                 } else if (
@@ -154,10 +154,10 @@ export const GetActivity = (props: IINList) => {
                     //现在时间在活动开始时间之前//报名结束时间之后
                 ) {
                     //待开始
-                    State = 1;
+                    State = 7;
                     draftMove = {
                         Exp: "编辑活动",
-                        canup: true,
+                        canup: false,
                         cansee: true,
                     }
                 } else if (
@@ -167,26 +167,26 @@ export const GetActivity = (props: IINList) => {
                     //正在进行
                 ) {
                     //进行中
-                    State = 1;
+                    State = 8;
                     draftMove = {
                         Exp: "编辑活动",
-                        canup: true,
+                        canup: false,
                         cansee: true,
                     }
                 }
             } else if (item.state == '审核失败') {
-                State = 1;
+                State = 3;
                 draftMove = {
                     Exp: "编辑活动",
-                    canup: true,
-                    cansee: true,
+                    canup: false,
+                    cansee: false,
                 }
             } else if (item.state == '审核中') {
-                State = 1;
+                State = 5;
                 draftMove = {
                     Exp: "编辑活动",
-                    canup: true,
-                    cansee: true,
+                    canup: false,
+                    cansee: false,
                 }
             }
             return data.push(

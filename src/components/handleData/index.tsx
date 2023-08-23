@@ -121,7 +121,7 @@ export const HandleData: FC = () => {
                         ...item,
                         render: (Move: { Exp: string, canup: boolean, cansee: boolean }, record: showRow) => (
                             <div className={style.move}>
-                                <Exp method={Move.Exp} id={record?.id} />
+                                <Exp method={Move.Exp} record={record} />
                                 <Check canup={!Move.canup} id={record?.id} />
                                 <Code cansee={!Move.cansee} id={record?.id} />
                             </div>
@@ -145,17 +145,38 @@ export const HandleData: FC = () => {
 
 
 
-const Exp: React.FC<{ method: string, id: number }> = (props) => {
+const Exp: React.FC<{ method: string, record: showRow }> = (props) => {
     //传进来一个字符串是编辑活动还是导出名单
+    console.log(props.record)
     const Navigate = useNavigate()
     const [isModal, setIsModal] = React.useState(false)
     const handleOk = () => {
         setIsModal(false);
-        network.teacher.downloadActivityStudentsExcel(props.id)
+        network.teacher.downloadActivityStudentsExcel(props.record.id)
     };
     const handleCancel = () => {
         setIsModal(false);
     };
+
+    const isChange = useMemo(() => {
+        //主要是获取一下现在的时间，然后如果是在活动开始之前那么就可以更改活动的信息
+        if (dayjs().isBefore(dayjs(props.record.ActAt.activity_start_time))) {
+            //首先确保是在活动开始之前
+            // if (dayjs().isBefore(dayjs(props.record.registerAt.registration_start_time))) {
+            //     //如果是在活动报名开始之前
+            //     return 0;
+            // } else if (dayjs().isBefore(dayjs(props.record.registerAt.registration_end_time)) && dayjs().isAfter(dayjs(props.record.registerAt.registration_start_time))) {
+            //     //如果实在活动报名时间内
+            //     return 1;
+            // } else if (dayjs().isBefore(dayjs(props.record.ActAt.activity_start_time)) && dayjs().isAfter(dayjs(props.record.registerAt.registration_end_time))) {                //如果是在
+            //     //如果是在报名结束时间到活动开始之前的范围内
+            //     return 2;
+            // }
+            return true;
+        }
+        else return false;
+    }, [])
+
     return (
         <>
             {
@@ -167,7 +188,7 @@ const Exp: React.FC<{ method: string, id: number }> = (props) => {
                         padding: "0"
                     }}
                     type='primary'
-                    onClick={() => Navigate(`/activities/${props.id}`)}
+                    onClick={() => Navigate(`/activities/${props.record.id}`)}
                 >
                     <p style={{
                         margin: "0px",
@@ -191,7 +212,8 @@ const Exp: React.FC<{ method: string, id: number }> = (props) => {
                         padding: "0"
                     }}
                     type='primary'
-                    disabled
+                    disabled={!isChange}
+
                 >
                     <p style={{
                         margin: "0px",
@@ -274,7 +296,7 @@ const Exp: React.FC<{ method: string, id: number }> = (props) => {
                         padding: "0"
                     }}
                     type='primary'
-                    onClick={() => Navigate(`/reset/${props.id}`)}
+                    onClick={() => Navigate(`/reset/${props.record.id}`)}
                 >
                     <p style={{
                         margin: "0px",
@@ -369,6 +391,7 @@ const Code: React.FC<{ cansee: boolean; id: number }> = (props) => {
 
 //下面是点击签到码浮现出的组件
 import { CopyOutlined } from '@ant-design/icons';
+import dayjs from 'dayjs';
 const SignInCode = (props: { code: string | undefined }) => {
     const handleCopy = () => {
         // 复制签到码的逻辑
