@@ -1,5 +1,4 @@
 import React, { useCallback, useMemo, useState } from 'react';
-import { alpha } from '@mui/material/styles';
 import {
     Stack,
     Box,
@@ -15,14 +14,9 @@ import {
     Typography,
     Paper,
     Checkbox,
-    IconButton,
-    Tooltip,
     Divider,
     Button
 } from '@mui/material';
-import DeleteIcon from '@mui/icons-material/Delete';
-import FilterListIcon from '@mui/icons-material/FilterList';
-import { visuallyHidden } from '@mui/utils';
 
 import { ActivityStudentsProps } from '../ActivityStudents';
 import { User } from '~/utils/types';
@@ -218,8 +212,7 @@ interface EnhancedTableToolbarProps {
 
 function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
     const [showModal, setShowModal] = useState(false);//控制打回审核输入原因的Modal.
-    const [students, reason, sendPass, sendReject, sendBack] = useSendState(state => [
-        state.students,
+    const [reason, sendPass, sendReject, sendBack] = useSendState(state => [
         state.reason,
         state.sendPass,
         state.sendReject,
@@ -317,6 +310,7 @@ export const ActivityStudents = ({ students, id, activity }: ActivityStudentsPro
         event: React.MouseEvent<unknown>,
         property: keyof FormData,
     ) => {
+        console.log(event)
         const isAsc = orderBy === property && order === 'asc';
         setOrder(isAsc ? 'desc' : 'asc')
         setOrderBy(property)
@@ -353,15 +347,16 @@ export const ActivityStudents = ({ students, id, activity }: ActivityStudentsPro
             )
         }
         setSelected(newSelected);
+        console.log(event)
     }
 
     const handleChangePage = (
         event: unknown,
         newPage: number
     ) => {
+        console.log(event)
         setPage(newPage);
     }
-
     const handleChangeRowsPerPage = (
         event: React.ChangeEvent<HTMLInputElement>
     ) => {

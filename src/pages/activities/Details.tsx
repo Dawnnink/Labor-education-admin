@@ -8,8 +8,6 @@ import { network } from '~/utils/network'
 import FileDownloadIcon from '@mui/icons-material/FileDownload'
 import dayjs from 'dayjs'
 import style from './index.module.css'
-import { IParticipater } from '~/utils/types'
-import { message, Space } from 'antd'
 import Menu from '~/components/Menu'
 import { useMemo, useState } from 'react';
 import { Box, Typography } from '@mui/material'
@@ -35,18 +33,18 @@ const DetailsWithParams = ({ activityId }: { activityId: number }) => {
     setNow(e);
   }//把这个函数传入子组件，可以通过这个函数更改now的值
   console.log(activity)
-  const studentArray: number[] = [];
-  let AllPassed = false;//设定一个变量，假设学生列表中有人未通过，则设为true，则显示一键通过按钮
-  if (students) {
-    studentArray.push(
-      ...students.map((item: IParticipater) => {
-        if (item.state == '报名审核中') {
-          AllPassed = true;
-        }
-        return item.user.id
-      })
-    )
-  }
+  // const studentArray: number[] = [];
+  // let AllPassed = false;//设定一个变量，假设学生列表中有人未通过，则设为true，则显示一键通过按钮
+  // if (students) {
+  //   studentArray.push(
+  //     ...students.map((item: IParticipater) => {
+  //       if (item.state == '报名审核中') {
+  //         AllPassed = true;
+  //       }
+  //       return item.user.id
+  //     })
+  //   )
+  // }
 
   const filterData = useMemo(() => {
     //在每次menu的值改变的时候触发

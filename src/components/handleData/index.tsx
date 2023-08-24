@@ -213,7 +213,7 @@ const Exp: React.FC<{ method: string, record: showRow }> = (props) => {
                     }}
                     type='primary'
                     disabled={!isChange}
-
+                    onClick={() => Navigate(`/activities/${props.record.id}`)}
                 >
                     <p style={{
                         margin: "0px",
