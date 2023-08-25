@@ -115,7 +115,7 @@ const DetailsWithParams = ({ activityId }: { activityId: number }) => {
         </Box>
         <ErrorDisplay error={error} />
         <OverflowWrapper>
-          {filterData === undefined ? null : <ActivityStudents key={filterData.length} students={filterData} id={activity.id} activity={activity} />}
+          {filterData === undefined ? <Empty /> : <ActivityStudents key={filterData.length} students={filterData} id={activity.id} activity={activity} />}
         </OverflowWrapper>
       </Box>
       {activity && <ActivityEditor initialActivity={activity} isShow={false} disabled={true} />}
