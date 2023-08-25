@@ -174,6 +174,10 @@ const Exp: React.FC<{ method: string, record: showRow }> = (props) => {
             // }
             return true;
         }
+        if (props.record.state === 3) {
+            //审核失败
+            return true;
+        }
         else return false;
     }, [])
 

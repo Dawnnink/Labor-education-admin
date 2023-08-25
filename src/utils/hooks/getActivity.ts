@@ -177,7 +177,7 @@ export const GetActivity = (props: IINList) => {
             } else if (item.state == '审核失败') {
                 State = 3;
                 draftMove = {
-                    Exp: "编辑活动",
+                    Exp: "重新编辑",
                     canup: false,
                     cansee: false,
                 }
