@@ -21,6 +21,7 @@ interface SendState {
     sendPass: () => void;
     sendReject: () => void;
     sendBack: () => void; //签退
+    getExcel: () => void;//导表
     setState: <T extends keyof SendState>(
         key: T
     ) => (value: SendState[T]) => void;
@@ -120,6 +121,19 @@ export const useSendState = create<SendState>((set, get) => ({
             onCancel: () => {
                 console.log('nocancel');
             }
+        })
+    },
+    getExcel: () => {
+        const { activity_id, students } = get()
+        const ids = students.map(it => it.user.id)
+        Modal.confirm({
+            title: '确认导出选中人员名单',
+            onOk: async () => {
+                await network.teacher.downloadActivityStudentsExcel(activity_id, ids);
+            },
+            onCancel: () => {
+                console.log('cancel')
+            },
         })
     },
     setState: (key) => (value) => {

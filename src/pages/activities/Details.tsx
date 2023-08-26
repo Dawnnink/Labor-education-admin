@@ -60,7 +60,7 @@ const DetailsWithParams = ({ activityId }: { activityId: number }) => {
   }, [now, students])
   if (activity) {
     //如果说activity的状态不正确，也就是说状态不是已经报名通过的状态
-    if (activity.state !== '已发布') {
+    if (activity.state === '审核失败') {
       //这个情况下的活动是不能看的
       return (
         <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={'你所观看的活动并不在已发布活动列表中'} />
