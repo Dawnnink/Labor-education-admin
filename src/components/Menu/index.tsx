@@ -11,7 +11,6 @@ import {
     Box
 } from '@mui/material';
 import { useEffect, useRef, useState } from 'react';
-
 interface MenuProps {
     handleKind: (e: string) => void;
     now: string;

@@ -11,13 +11,16 @@ import Menu from '~/components/Menu'
 import { useMemo, useState } from 'react';
 import { Box, Typography } from '@mui/material'
 import { Empty } from 'antd'
-
+import EmptyComponent from '~/components/EmptyComponent'
+import { useSendState } from '~/store/send'
 const DetailsWithParams = ({ activityId }: { activityId: number }) => {
   const [now, setNow] = useState<string>('全部');//读取菜单的值
 
   const { data: activity, error } = network.teacher.useActivity(activityId)
   const { data: students } = network.teacher.useActivityStudents(activityId)
-
+  const [getExcel] = useSendState(state => [
+    state.getExcel
+  ])
   const handleKind = (e: string) => {
     setNow(e);
   }
@@ -75,7 +78,6 @@ const DetailsWithParams = ({ activityId }: { activityId: number }) => {
     ) // 或者显示其他加载中的内容
 
   }
-
   return (
     <Stack
       spacing={2}
@@ -85,38 +87,51 @@ const DetailsWithParams = ({ activityId }: { activityId: number }) => {
       }}
     >
       <Box>
-        <Box
-          sx={{
-            backgroundColor: 'white',
-            p: '16px'
-          }}
-        >
-          <Typography variant='h6'>学生名单</Typography>
-        </Box>
-        <Box
-          sx={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            width: '100%',
-            backgroundColor: 'white',
-          }}
-        >
-          <Menu handleKind={handleKind} now={now} />
-          <Button
-            startDecorator={<FileDownloadIcon />}
-            onClick={() => {
-              network.teacher.downloadActivityStudentsExcel(activityId)
-            }}
-            sx={{ mr: 3 }}
-          >
-            导出学生名单
-          </Button>
-        </Box>
-        <ErrorDisplay error={error} />
-        <OverflowWrapper>
-          {filterData === undefined ? <Empty /> : <ActivityStudents key={filterData.length} students={filterData} id={activity.id} activity={activity} />}
-        </OverflowWrapper>
+        {
+          (filterData && filterData.length === 0) ?
+            <Box
+              sx={{
+                backgroundColor: 'white',
+                borderRadius: '10px',
+                p: '16px'
+              }}
+            >
+              <EmptyComponent message="该活动暂无学生名单" />
+            </Box>
+            :
+            <Box>
+              <Box
+                sx={{
+                  backgroundColor: 'white',
+                  p: '16px'
+                }}
+              >
+                <Typography variant='h6'>学生名单</Typography>
+              </Box>
+              <Box
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  width: '100%',
+                  backgroundColor: 'white',
+                }}
+              >
+                <Menu handleKind={handleKind} now={now} />
+                <Button
+                  startDecorator={<FileDownloadIcon />}
+                  onClick={getExcel}
+                  sx={{ mr: 3 }}
+                >
+                  导出学生名单
+                </Button>
+              </Box>
+              <ErrorDisplay error={error} />
+              <OverflowWrapper>
+                {filterData === undefined ? <Empty /> : <ActivityStudents key={filterData.length} students={filterData} id={activity.id} activity={activity} />}
+              </OverflowWrapper>
+            </Box>
+        }
       </Box>
       {activity && <ActivityEditor initialActivity={activity} isShow={false} disabled={true} />}
     </Stack >

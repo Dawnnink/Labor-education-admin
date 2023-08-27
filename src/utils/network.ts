@@ -277,7 +277,7 @@ export class Service extends BaseService {
     },
     downloadActivityStudentsExcel: async (activityId: number, user_ids?: number[]) => {
       const data = await this.axios.post(
-        `/teacher/activity/participate/excel`,
+        `/teacher/activity/participate/excel/some`,
         {
           activity_id: activityId,
           user_ids: user_ids,
