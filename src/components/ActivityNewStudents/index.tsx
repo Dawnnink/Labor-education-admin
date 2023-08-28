@@ -559,7 +559,7 @@ export const ActivityStudents = ({ students, id, activity }: ActivityStudentsPro
                                                     <TableCell align='left'>{row.participate_reason}</TableCell>
                                                     <TableCell align='left'>{row.state}</TableCell>
                                                     {isOperate === 1 ?
-                                                        <TableCell align='left'>
+                                                        <TableCell align='left' >
                                                             <Box
                                                                 sx={{
                                                                     zIndex: 10000
@@ -598,7 +598,7 @@ export const ActivityStudents = ({ students, id, activity }: ActivityStudentsPro
                                                         :
                                                         (
                                                             (isOperate === 2 || row.isOperate === 3) ?
-                                                                <TableCell align='left'>
+                                                                <TableCell align='left' >
                                                                     <Box
                                                                         sx={{
                                                                             zIndex: 10000
@@ -626,22 +626,31 @@ export const ActivityStudents = ({ students, id, activity }: ActivityStudentsPro
                                                     {
                                                         row.changeNotice === true || row.changeNotice === false
                                                         &&
-                                                        <Box>
-                                                            <Typography>{row.changeNotice ? "已确认" : "未确认"}</Typography>
-                                                            <Button
-                                                                onClick={async () => {
-                                                                    await network.teacher.useNotice(activity_id, row.user_id)
-                                                                        .then(() => {
-                                                                            message.success('成功发送')
-                                                                        })
-                                                                        .catch(() => {
-                                                                            message.error('网络故障')
-                                                                        })
+                                                        <TableCell align='left'>
+                                                            <Box
+                                                                sx={{
+                                                                    display: 'flex',
+                                                                    flexDirection: 'row',
+                                                                    justifyContent: 'center',
+                                                                    alignItems: 'center',
                                                                 }}
                                                             >
-                                                                再次发送
-                                                            </Button>
-                                                        </Box>
+                                                                <Typography>{row.changeNotice ? "已确认" : "未确认"}</Typography>
+                                                                <Button
+                                                                    onClick={async () => {
+                                                                        await network.teacher.useNotice(activity_id, row.user_id)
+                                                                            .then(() => {
+                                                                                message.success('成功发送')
+                                                                            })
+                                                                            .catch(() => {
+                                                                                message.error('网络故障')
+                                                                            })
+                                                                    }}
+                                                                >
+                                                                    再次发送
+                                                                </Button>
+                                                            </Box>
+                                                        </TableCell>
                                                     }
                                                 </TableRow>
                                             )

@@ -56,14 +56,7 @@ const OnUpdate = (fieldsValue: any, departments: Department[] | undefined, image
     const flag = network.teacher.updateActivity(values)
         .then((res) => {
             if (res.status === 200) {
-                (Modal.warning({
-                    title: '已提交成功',
-                    okText: '确定',
-                    onOk: () => {
-                        location.reload();
-                    },
-                    style: { top: "calc(50% - 58px)" }
-                }))
+                message.success('提交成功')
                 return true;
             }
         }).catch(() => {

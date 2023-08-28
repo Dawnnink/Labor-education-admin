@@ -286,20 +286,21 @@ export const ActivityEditor = ({
     }
     if (form.getFieldValue('registerAt') && isChange !== 1) {
       if (dayjs().isAfter(form.getFieldValue('registerAt')[0])) {
-        form.setFieldValue('registerAt', '')
+        form.setFieldValue('registerAt', [dayjs(changedActivity.registerAt[0]), dayjs(changedActivity.registerAt[1])])
         message.info("活动报名开始时间不能早于目前时间")
       }
     }
     if (form.getFieldValue('joinAt')) {
       if (dayjs().isAfter(form.getFieldValue('joinAt')[0])) {
-        form.setFieldValue('joinAt', '')
+        form.setFieldValue('joinAt', [dayjs(changedActivity.joinAt[0]), dayjs(changedActivity.joinAt[1])])
         message.info("活动开始时间不能早于目前时间")
       }
     }
     if (form.getFieldValue('registerAt') && form.getFieldValue('joinAt')) {
       if (compareDates(form.getFieldValue('registerAt')[1].$d, form.getFieldValue('joinAt')[0].$d) > 0) {
         message.info("活动报名结束时间不能晚于活动开始时间")
-        form.setFieldValue('joinAt', '')
+        form.setFieldValue('registerAt', [dayjs(changedActivity.registerAt[0]), dayjs(changedActivity.registerAt[1])])
+        form.setFieldValue('joinAt', [dayjs(changedActivity.joinAt[0]), dayjs(changedActivity.joinAt[1])])
       }
     }
 
@@ -351,9 +352,9 @@ export const ActivityEditor = ({
   }
   const handleUpdate = async () => {
     const fieldsValue = form.getFieldsValue()
-    if (await OnUpdate(fieldsValue, departments, imageUrl, iconUrl, changedActivity.id, 1)) {
+    if (await OnUpdate(fieldsValue, departments, imageUrl, iconUrl, changedActivity.id, 0)) {
       Navigate('/activities')
-      location.reload()
+      setTimeout(() => location.reload(), 1000)
     }
   }
   return (
