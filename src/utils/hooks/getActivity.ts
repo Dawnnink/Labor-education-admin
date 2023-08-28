@@ -80,19 +80,19 @@ export const GetActivity = (props: IINList) => {
     const currentDate = new Date();
     let data: showAct[][] = [[]]
 
-    function formatDateTime(dateTime: string): string {
-        const dateObj = new Date(dateTime);
+    // function formatDateTime(dateTime: string): string {
+    //     const dateObj = new Date(dateTime);
 
-        const year = dateObj.getFullYear();
-        const month = String(dateObj.getMonth() + 1).padStart(2, '0');
-        const day = String(dateObj.getDate()).padStart(2, '0');
-        const hour = String(dateObj.getHours()).padStart(2, '0');
-        const minute = String(dateObj.getMinutes()).padStart(2, '0');
-        const second = String(dateObj.getSeconds()).padStart(2, '0');
+    //     const year = dateObj.getFullYear();
+    //     const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+    //     const day = String(dateObj.getDate()).padStart(2, '0');
+    //     const hour = String(dateObj.getHours()).padStart(2, '0');
+    //     const minute = String(dateObj.getMinutes()).padStart(2, '0');
+    //     const second = String(dateObj.getSeconds()).padStart(2, '0');
 
-        const formattedDateTime = `${year}-${month}-${day} ${hour}:${minute}:${second}`;
-        return formattedDateTime;
-    }
+    //     const formattedDateTime = `${year}-${month}-${day} ${hour}:${minute}:${second}`;
+    //     return formattedDateTime;
+    // }
 
     //抱歉，写这里代码的时候还比较年轻，于是堆了下面一坨答辩，
     //其实是可以改的，每个return的只有state和下面的Move是需要改变的，这里的Move其实是操作的意思。

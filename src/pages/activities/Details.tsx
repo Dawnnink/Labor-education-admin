@@ -6,7 +6,6 @@ import { ErrorDisplay } from '~/components/ErrorDisplay'
 import { OverflowWrapper } from '~/components/OverflowWrapper'
 import { network } from '~/utils/network'
 import FileDownloadIcon from '@mui/icons-material/FileDownload'
-import style from './index.module.css'
 import Menu from '~/components/Menu'
 import { useMemo, useState } from 'react';
 import { Box, Typography, Backdrop, CircularProgress } from '@mui/material'

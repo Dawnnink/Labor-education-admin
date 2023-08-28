@@ -344,7 +344,7 @@ export const ActivityStudents = ({ students, id, activity }: ActivityStudentsPro
             )
         }
         setSelected(newSelected);
-        console.log('here', newSelected)
+        console.log('here', event)
     }
 
     const handleChangePage = (

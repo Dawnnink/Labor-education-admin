@@ -2,7 +2,6 @@ import { ActivityReEdit } from '~/components/ActivityReEdit'
 import { network } from '~/utils/network'
 import onOrigin from '~/utils/FormOrigin'
 import { Department } from '~/utils/types';
-import style from './index.module.css';
 import dayjs from 'dayjs';
 import { Backdrop, CircularProgress } from '@mui/material'
 function formatTime(timeString: string): string {
