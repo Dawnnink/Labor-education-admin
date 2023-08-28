@@ -197,12 +197,12 @@ export const GetActivity = (props: IINList) => {
                     mounts: item.enroll_number,
                     quota: item.quota,
                     registerAt: {
-                        registration_start_time: formatDateTime(item.registration_start_time),
-                        registration_end_time: formatDateTime(item.registration_end_time),
+                        registration_start_time: formatTime(item.registration_start_time),
+                        registration_end_time: formatTime(item.registration_end_time),
                     },
                     ActAt: {
-                        activity_start_time: formatDateTime(item.activity_start_time),
-                        activity_end_time: formatDateTime(item.activity_end_time),
+                        activity_start_time: formatTime(item.activity_start_time),
+                        activity_end_time: formatTime(item.activity_end_time),
                     },
                     Move: draftMove
                 }],
