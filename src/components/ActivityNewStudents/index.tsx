@@ -31,6 +31,7 @@ import { useSendState } from '~/store/send';
 import { useEffect } from 'react'
 import { Modal, Input, message } from 'antd'
 import { network } from '../../utils/network'
+import EmptyComponent from '../EmptyComponent';
 interface FormData {
     name: string
     uid: string
@@ -218,15 +219,9 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
         state.sendReject,
         state.sendBack
     ])
-    const [setStudents, setReason] = useSendState(state => [
-        state.setState('students'),
+    const [setReason] = useSendState(state => [
         state.setState('reason'),
     ])
-    useEffect(() => {
-        //组件挂载的时候首先将传入的students设为状态中使用
-        setStudents(props.students)
-        //这些学生都是已经被选中了的
-    }, [])
     const handleOk = () => {
         console.log('sdsssd' + reason)
         if (reason === '暂无原因') {
@@ -301,10 +296,12 @@ export const ActivityStudents = ({ students, id, activity }: ActivityStudentsPro
         state.activity_id,
         state.setState('activity_id')
     ])
-    const [sendPass, sendReject, sendBack] = useSendState(state => [
+    const [sendPass, sendReject, sendBack, setStudents, setUserId] = useSendState(state => [
         state.sendPass,
         state.sendReject,
-        state.sendBack
+        state.sendBack,
+        state.setState('students'),
+        state.setState('user_id')
     ])
     const handleRequestSort = (
         event: React.MouseEvent<unknown>,
@@ -347,7 +344,7 @@ export const ActivityStudents = ({ students, id, activity }: ActivityStudentsPro
             )
         }
         setSelected(newSelected);
-        console.log(event)
+        console.log('here', newSelected)
     }
 
     const handleChangePage = (
@@ -461,6 +458,7 @@ export const ActivityStudents = ({ students, id, activity }: ActivityStudentsPro
     useEffect(() => {
         setCanOperate(true);
         setCanBack(true);
+        setStudents(filterStudents);//将选中的学生庶几乎放入
         if (filterStudents.length > 0) {
             //如果选中的学生大于0
             if (dayjs().isAfter(dayjs(activity.registration_start_time)) && dayjs().isBefore(dayjs(activity.activity_start_time))) {
@@ -497,6 +495,7 @@ export const ActivityStudents = ({ students, id, activity }: ActivityStudentsPro
 
     useEffect(() => {
         //在组件最初渲染的时候将activity_id加入状态存储库
+        console.log("yes", filterStudents);
         setAcitvityId(id)
     }, [id, setAcitvityId, ...students.map(item => item.notified)])
     return (
@@ -504,154 +503,163 @@ export const ActivityStudents = ({ students, id, activity }: ActivityStudentsPro
             <Paper sx={{ width: '100%', mb: 2 }}>
                 {/* 工具栏 */}
                 <EnhancedTableToolbar students={filterStudents} canOperate={canOperate} canBack={canBack} />
-                <TableContainer>
-                    <Table
-                        sx={{ minWidth: 750 }}
-                        aria-labelledby='tableTitle'
-                    >
-                        <EnhancedTableHead
-                            numSelected={selected.length}
-                            rowCount={rows.length}
-                            onSelectAllClick={handleSelectAllClick}
-                            order={order}
-                            orderBy={orderBy}
-                            onRequestSort={handleRequestSort}
-                        />
-                        <TableBody>
-                            {
-                                visibleRows.map((row, index) => {
-                                    const isItemSelected = isSelected(row.name);
-                                    const labelId = `enhanced-table-checkbox-${index}`
-                                    return (
-                                        <TableRow
-                                            hover
-                                            onClick={(event) => handleClick(event, row.name)}
-                                            role='checkbox'
-                                            aria-checked={isItemSelected}
-                                            tabIndex={-1}
-                                            key={row.name}
-                                            selected={isItemSelected}
-                                            sx={{ cursor: 'pointer' }}
-                                        >
-                                            <TableCell padding='checkbox'>
-                                                <Checkbox
-                                                    color='primary'
-                                                    checked={isItemSelected}
-                                                    inputProps={{
-                                                        'aria-labelledby': labelId
-                                                    }}
-                                                />
-                                            </TableCell>
-                                            <TableCell
-                                                component="th"
-                                                id={labelId}
-                                                scope='row'
-                                                padding='none'
-                                            >
-                                                {row.name}
-                                            </TableCell>
-                                            <TableCell align='left'>{row.uid}</TableCell>
-                                            <TableCell align='left'>{row.college}</TableCell>
-                                            <TableCell align='left'>{row.classname}</TableCell>
-                                            <TableCell align='left'>{row.participate_reason}</TableCell>
-                                            <TableCell align='left'>{row.state}</TableCell>
-                                            {isOperate === 1 ?
-                                                <TableCell align='left'>
-                                                    <Box
-                                                        sx={{
-                                                            zIndex: 10000
-                                                        }}
+                {
+                    visibleRows.length === 0 ?
+                        <EmptyComponent message="暂无学生" />
+                        :
+                        <TableContainer>
+                            <Table
+                                sx={{ minWidth: 750 }}
+                                aria-labelledby='tableTitle'
+                            >
+                                <EnhancedTableHead
+                                    numSelected={selected.length}
+                                    rowCount={rows.length}
+                                    onSelectAllClick={handleSelectAllClick}
+                                    order={order}
+                                    orderBy={orderBy}
+                                    onRequestSort={handleRequestSort}
+                                />
+                                <TableBody>
+                                    {
+                                        visibleRows.map((row, index) => {
+                                            const isItemSelected = isSelected(row.name);
+                                            const labelId = `enhanced-table-checkbox-${index}`
+                                            return (
+                                                <TableRow
+                                                    hover
+                                                    onClick={(event) => handleClick(event, row.name)}
+                                                    role='checkbox'
+                                                    aria-checked={isItemSelected}
+                                                    tabIndex={-1}
+                                                    key={row.name}
+                                                    selected={isItemSelected}
+                                                    sx={{ cursor: 'pointer' }}
+                                                >
+                                                    <TableCell padding='checkbox'>
+                                                        <Checkbox
+                                                            color='primary'
+                                                            checked={isItemSelected}
+                                                            inputProps={{
+                                                                'aria-labelledby': labelId
+                                                            }}
+                                                        />
+                                                    </TableCell>
+                                                    <TableCell
+                                                        component="th"
+                                                        id={labelId}
+                                                        scope='row'
+                                                        padding='none'
                                                     >
-                                                        <Space>
-                                                            <Btn
-
-                                                                variant='outlined'
-                                                                startIcon={<CheckBoxIcon />}
-                                                                color='success'
-                                                                onClick={(event: React.MouseEvent) => {
-                                                                    event.stopPropagation();//防止点击穿透
-                                                                    sendPass();
-                                                                }}
-                                                            >
-                                                                通过
-                                                            </Btn>
-                                                            <Btn
-                                                                variant='outlined'
-                                                                startIcon={<CancelIcon />}
-                                                                color='error'
-                                                                onClick={(event: React.MouseEvent) => {
-                                                                    event.stopPropagation();//防止点击穿透
-                                                                    sendReject()
-                                                                }}
-                                                            >
-                                                                打回
-                                                            </Btn>
-                                                        </Space>
-
-                                                    </Box>
-                                                </TableCell>
-                                                :
-                                                (
-                                                    (isOperate === 2 || row.isOperate === 3) ?
+                                                        {row.name}
+                                                    </TableCell>
+                                                    <TableCell align='left'>{row.uid}</TableCell>
+                                                    <TableCell align='left'>{row.college}</TableCell>
+                                                    <TableCell align='left'>{row.classname}</TableCell>
+                                                    <TableCell align='left'>{row.participate_reason}</TableCell>
+                                                    <TableCell align='left'>{row.state}</TableCell>
+                                                    {isOperate === 1 ?
                                                         <TableCell align='left'>
                                                             <Box
                                                                 sx={{
                                                                     zIndex: 10000
                                                                 }}
                                                             >
-                                                                <Btn
-                                                                    variant='outlined'
-                                                                    startIcon={<CheckBoxIcon />}
-                                                                    color='success'
-                                                                    onClick={(event: React.MouseEvent) => {
-                                                                        event.stopPropagation();//防止点击穿透
-                                                                        sendBack();
-                                                                    }}
-                                                                    disabled={isOperate === 3 ? true : false}
-                                                                >
-                                                                    签退
-                                                                </Btn>
+                                                                <Space>
+                                                                    <Btn
+
+                                                                        variant='outlined'
+                                                                        startIcon={<CheckBoxIcon />}
+                                                                        color='success'
+                                                                        onClick={(event: React.MouseEvent) => {
+                                                                            event.stopPropagation();//防止点击穿透
+                                                                            setUserId(row.user_id)
+                                                                            sendPass();
+                                                                        }}
+                                                                    >
+                                                                        通过
+                                                                    </Btn>
+                                                                    <Btn
+                                                                        variant='outlined'
+                                                                        startIcon={<CancelIcon />}
+                                                                        color='error'
+                                                                        onClick={(event: React.MouseEvent) => {
+                                                                            event.stopPropagation();//防止点击穿透
+                                                                            setUserId(row.user_id)
+                                                                            sendReject()
+                                                                        }}
+                                                                    >
+                                                                        打回
+                                                                    </Btn>
+                                                                </Space>
+
                                                             </Box>
                                                         </TableCell>
                                                         :
-                                                        null
-                                                )
-                                            }
-                                            {
-                                                row.changeNotice === true || row.changeNotice === false
-                                                &&
-                                                <Box>
-                                                    <Typography>{row.changeNotice ? "已确认" : "未确认"}</Typography>
-                                                    <Button
-                                                        onClick={async () => {
-                                                            await network.teacher.useNotice(activity_id, row.user_id)
-                                                                .then(() => {
-                                                                    message.success('成功发送')
-                                                                })
-                                                                .catch(() => {
-                                                                    message.error('网络故障')
-                                                                })
-                                                        }}
-                                                    >
-                                                        再次发送
-                                                    </Button>
-                                                </Box>
-                                            }
-                                        </TableRow>
-                                    )
-                                })
-                            }
-                            {emptyRows > 0
-                                &&
-                                (
-                                    <TableRow>
-                                        <TableCell colSpan={6} />
-                                    </TableRow>
-                                )
-                            }
-                        </TableBody>
-                    </Table>
-                </TableContainer>
+                                                        (
+                                                            (isOperate === 2 || row.isOperate === 3) ?
+                                                                <TableCell align='left'>
+                                                                    <Box
+                                                                        sx={{
+                                                                            zIndex: 10000
+                                                                        }}
+                                                                    >
+                                                                        <Btn
+                                                                            variant='outlined'
+                                                                            startIcon={<CheckBoxIcon />}
+                                                                            color='success'
+                                                                            onClick={(event: React.MouseEvent) => {
+                                                                                event.stopPropagation();//防止点击穿透
+                                                                                setUserId(row.user_id)
+                                                                                sendBack();
+                                                                            }}
+                                                                            disabled={isOperate === 3 ? true : false}
+                                                                        >
+                                                                            签退
+                                                                        </Btn>
+                                                                    </Box>
+                                                                </TableCell>
+                                                                :
+                                                                null
+                                                        )
+                                                    }
+                                                    {
+                                                        row.changeNotice === true || row.changeNotice === false
+                                                        &&
+                                                        <Box>
+                                                            <Typography>{row.changeNotice ? "已确认" : "未确认"}</Typography>
+                                                            <Button
+                                                                onClick={async () => {
+                                                                    await network.teacher.useNotice(activity_id, row.user_id)
+                                                                        .then(() => {
+                                                                            message.success('成功发送')
+                                                                        })
+                                                                        .catch(() => {
+                                                                            message.error('网络故障')
+                                                                        })
+                                                                }}
+                                                            >
+                                                                再次发送
+                                                            </Button>
+                                                        </Box>
+                                                    }
+                                                </TableRow>
+                                            )
+                                        })
+                                    }
+                                    {emptyRows > 0
+                                        &&
+                                        (
+                                            <TableRow>
+                                                <TableCell colSpan={6} />
+                                            </TableRow>
+                                        )
+                                    }
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
+                }
+
                 <Stack
                     direction='row'
                     alignItems='center'

@@ -4,6 +4,7 @@ import onOrigin from '~/utils/FormOrigin'
 import { Department } from '~/utils/types';
 import style from './index.module.css';
 import dayjs from 'dayjs';
+import { Backdrop, CircularProgress } from '@mui/material'
 function formatTime(timeString: string): string {
     const inputDate = new Date(timeString);
     const year = inputDate.getUTCFullYear().toString().padStart(4, '0');
@@ -40,9 +41,12 @@ const Reset = () => {
     }
     if (!activities) {
         return (
-            <div className={style.box}>
-                Loading...
-            </div >
+            <Backdrop
+                sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                open={true}
+            >
+                <CircularProgress color='inherit' />
+            </Backdrop>
         ) // 或者显示其他加载中的内容
     }
     return <ActivityReEdit initialActivity={newActivity} isShow={true} id={parseInt(Id as string)} />

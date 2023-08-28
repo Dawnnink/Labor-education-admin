@@ -18,6 +18,7 @@ interface SendState {
     }[];
     reason: string//存放错误的原因
     activity_id: number;//活动的id
+    user_id: number;//有些时候会单独打回或者通过
     sendPass: () => void;
     sendReject: () => void;
     sendBack: () => void; //签退
@@ -34,14 +35,21 @@ export const useSendState = create<SendState>((set, get) => ({
     students: [],
     reason: '暂无原因',
     activity_id: 0,
+    user_id: 0,
     sendPass: () => {
-        const { students, activity_id } = get();//获取当前的选中学生数据
-        const ids = students.map(it => it.user.id);
+        const { students, activity_id, user_id } = get();//获取当前的选中学生数据
+        let ids: number[] = []
+        if (user_id !== 0) {
+            ids = [user_id]
+        } else {
+            ids = students.map(it => it.user.id);
+        }
         Modal.confirm({
             title: '确认通过审核？',
             onOk: async () => {
                 console.log('ok')
-                network.teacher.usePass(activity_id, ids)
+                const res = network.teacher.usePass(activity_id, ids)
+                console.log(res)
             },
             onCancel: () => {
                 console.log('cancel');
@@ -49,16 +57,23 @@ export const useSendState = create<SendState>((set, get) => ({
         })
     },
     sendReject: () => {
-        const { students, reason, activity_id } = get();//获取当前的选中学生数据
+        const { students, reason, activity_id, user_id } = get();//获取当前的选中学生数据
         const ids = students.map(it => it.user.id);
         const whoWrong: { name: string }[] = [];//如果有错误的，用于存放错误的人的姓名{name:string}
         const users: Array<RejectUsers> = [];
-        ids.map((item) => {
+        if (user_id !== 0) {
             users.push({
                 reason: reason,
-                user_id: item,
+                user_id: user_id,
             })
-        })
+        } else {
+            ids.map((item) => {
+                users.push({
+                    reason: reason,
+                    user_id: item,
+                })
+            })
+        }
         Modal.confirm({
             title: '确认打回审核',
             onOk: async () => {
@@ -66,6 +81,7 @@ export const useSendState = create<SendState>((set, get) => ({
                 console.log(activity_id);
                 console.log(users)
                 const res = await network.teacher.useReject(activity_id, users)//2个参数，users是个数组
+                console.log(res)
                 if (res.length > 0) {
                     students.map(item => {
                         if (res.includes(item.user.id)) {
@@ -84,7 +100,7 @@ export const useSendState = create<SendState>((set, get) => ({
         })
     },
     sendBack: () => {
-        const { students, activity_id } = get();//获取当前的选中学生数据
+        const { students, activity_id, user_id } = get();//获取当前的选中学生数据
         students.map(item => {
             if (item.state !== '报名成功' && !item.check_in) {
                 //如果状态不是已签到
@@ -92,9 +108,15 @@ export const useSendState = create<SendState>((set, get) => ({
                 return;
             }
         })
-        const user_ids = students.map((item) => {
-            return item.user.id;
-        })
+        console.log('这里', students)
+        let user_ids: number[] = [];
+        if (user_id !== 0) {
+            user_ids.push(user_id)
+        } else {
+            user_ids = students.map((item) => {
+                return item.user.id;
+            })
+        }
         const whoWrong: { name: string }[] = [];//如果有错误的，用于存放错误的人的姓名{name:string}
         Modal.confirm({
             title: '确认签退',
@@ -126,6 +148,11 @@ export const useSendState = create<SendState>((set, get) => ({
     getExcel: () => {
         const { activity_id, students } = get()
         const ids = students.map(it => it.user.id)
+        console.log("ids", ids)
+        if (ids.length === 0) {
+            message.warning('请先选择学生')
+            return
+        }
         Modal.confirm({
             title: '确认导出选中人员名单',
             onOk: async () => {

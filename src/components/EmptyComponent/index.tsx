@@ -10,8 +10,8 @@ const EmptyComponent = ({ message }: any) => {
             justifyContent="center"
             minHeight={200}
         >
-            <AllInboxIcon fontSize='large' />
-            <Typography variant="body1">{message}</Typography>
+            <AllInboxIcon color='disabled' fontSize='large' />
+            <Typography sx={{ color: 'grey' }} variant="body1">{message}</Typography>
         </Box>
     );
 };

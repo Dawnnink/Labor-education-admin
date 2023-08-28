@@ -117,6 +117,7 @@ export class Service extends BaseService {
       }
 
       const token = useStore.getState().token
+      console.log(token)
       if (token) {
         config.headers.Authorization = `passport ${token}`
       }
@@ -249,6 +250,7 @@ export class Service extends BaseService {
     usePass: async (id: number, user: number[]) => {
       return await this.axios.post(`/teacher/activity/participate/pass?id=${id}`, user)
         .then((res) => {
+          location.reload()
           return res.data
         }).catch(() => {
           message.error('网络故障')
@@ -263,6 +265,7 @@ export class Service extends BaseService {
         activity_id: id,
         users: users,
       }).then((res) => {
+        location.reload()
         return res.data
       }).catch(() => {
         message.error('网络故障')
@@ -284,20 +287,24 @@ export class Service extends BaseService {
           responseType: 'blob',
         }
       ).then((res) => {
+        console.log(res.data);
         return res.data;
       }).catch(() => {
         message.error("报名成功人数为零")
         return false;
       })
+      console.log(JSON.stringify({
+        activity_id: activityId,
+        user_ids: user_ids,
+        responseType: 'blob',
+      }))
       if (data) {
         fileDownload(
           data,
           `活动学生列表-${activityId}-${new Date().toLocaleDateString()}.xls`
         )
         message.success("已成功导出")
-
       }
-
     },
   }
   admin = {
