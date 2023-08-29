@@ -292,17 +292,35 @@ export const ActivityStudents = ({ students, id, activity }: ActivityStudentsPro
     const [page, setPage] = useState(0)
     const [rowsPerPage, setRowsPerPage] = useState(10)
     const [isOperate, setIsOperate] = useState(0);//0代表没有操作，1代表可以学生的通过和打回，2代表可以签退，3代表无法签退
+    const [showModal, setShowModal] = useState(false)
     const [activity_id, setAcitvityId] = useSendState(state => [
         state.activity_id,
         state.setState('activity_id')
     ])
-    const [sendPass, sendReject, sendBack, setStudents, setUserId] = useSendState(state => [
+    const [reason, setReason, sendPass, sendReject, sendBack, setStudents, setUserId] = useSendState(state => [
+        state.reason,
+        state.setState('reason'),
         state.sendPass,
         state.sendReject,
         state.sendBack,
         state.setState('students'),
         state.setState('user_id')
     ])
+    const handleOk = () => {
+        console.log('sdsssd' + reason)
+        if (reason === '暂无原因') {
+            message.info('请输入打回原因')
+            return;
+        }
+        setShowModal(false);
+        setTimeout(sendReject, 500)
+    }
+    const handleCancel = () => {
+        setShowModal(false);
+    }
+    const handlePut = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setReason(e.target.value)
+    }
     const handleRequestSort = (
         event: React.MouseEvent<unknown>,
         property: keyof FormData,
@@ -586,7 +604,7 @@ export const ActivityStudents = ({ students, id, activity }: ActivityStudentsPro
                                                                         onClick={(event: React.MouseEvent) => {
                                                                             event.stopPropagation();//防止点击穿透
                                                                             setUserId(row.user_id)
-                                                                            sendReject()
+                                                                            setShowModal(true)
                                                                         }}
                                                                     >
                                                                         打回
@@ -685,7 +703,14 @@ export const ActivityStudents = ({ students, id, activity }: ActivityStudentsPro
                     <Box sx={{ mr: 3 }}>{page + 1} / {Math.floor(rows.length / rowsPerPage + 1)}</Box>
                 </Stack>
             </Paper>
-
+            <Modal
+                title="请输入打回理由"
+                open={showModal}
+                onOk={handleOk}
+                onCancel={handleCancel}
+            >
+                <Input onChange={handlePut} max={30} />
+            </Modal>
         </Box>
     )
 }
