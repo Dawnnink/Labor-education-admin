@@ -284,8 +284,9 @@ export class Service extends BaseService {
         {
           activity_id: activityId,
           user_ids: user_ids,
-          responseType: 'blob',
-        }
+        }, {
+        responseType: 'blob'
+      }
       ).then((res) => {
         console.log('响应', res);
         return res.data;
@@ -296,7 +297,7 @@ export class Service extends BaseService {
       if (data) {
         fileDownload(
           data,
-          `活动学生列表-${activityId}-${new Date().toLocaleDateString()}.xls`
+          `活动学生列表-${activityId}-${new Date().toLocaleDateString()}.xlsx`
         )
         message.success("已成功导出")
       }
