@@ -52,6 +52,7 @@ export interface ActivityEditorProps {
   isDel?: boolean
   isDraft?: boolean
   beginDel?: boolean
+  Edit?: boolean//是否在编辑状态
 }
 export interface OldActivity {
   name: string
@@ -80,6 +81,7 @@ export const ActivityEditor = ({
   isDel,
   isDraft,
   beginDel,
+  Edit,
 }: ActivityEditorProps) => {
 
   const { data: department } = network.teacher.useDepartment()
@@ -101,7 +103,7 @@ export const ActivityEditor = ({
   const [load, setLoad] = useState(false);
   const [imageUrl, setImageUrl] = useState<string>(changedActivity.poster);
   const [iconUrl, setIconUrl] = useState<string>(changedActivity.icon);
-
+  const [isEdit, setIsEdit] = useState(Edit);///只有编辑状态才能更改，刚开始的时候不是编辑装填
   const getBase64 = (img: RcFile, callback: (url: string) => void) => {
     const reader = new FileReader();
     reader.addEventListener('load', () => callback(reader.result as string));
@@ -416,7 +418,9 @@ export const ActivityEditor = ({
             name="description"
           >
             <TextArea
-              disabled={isChange === 3}              // onChange={(e) => { handleDes(e) }}
+              // disabled={isChange === 3 && isEdit}
+              disabled={!isEdit ? true : (isChange === 3)}
+              // onChange={(e) => { handleDes(e) }}
               rows={4}
               placeholder='请阐述活动简介' />
           </Form.Item>
@@ -502,7 +506,7 @@ export const ActivityEditor = ({
             name='position'
             required
           >
-            <Input placeholder='请填写活动地点' disabled={isChange === 3} />
+            <Input placeholder='请填写活动地点' disabled={!isEdit ? true : (isChange === 3)} />
             {/* 如果已经过了true,就不能更改了 */}
           </Form.Item>
 
@@ -527,7 +531,7 @@ export const ActivityEditor = ({
                 style={{ display: 'inline-block', width: 'calc(50% - 8px)', margin: '0 8px' }}
               >
                 <Input
-                  disabled={isChange === 3}
+                  disabled={!isEdit ? true : (isChange === 3)}
                   placeholder='请输入联系人姓名'
                   prefix={<UserOutlined className="site-form-item-icon" />}
 
@@ -545,7 +549,7 @@ export const ActivityEditor = ({
                 ]}
               >
                 <Input
-                  disabled={isChange === 3}
+                  disabled={!isEdit ? true : (isChange === 3)}
                   placeholder='请输入联系人电话'
                   prefix={<PhoneOutlined />}
                 />
@@ -591,7 +595,7 @@ export const ActivityEditor = ({
               showTime
               format='YYYY-MM-DD HH:mm'
               onChange={() => handleDate()}
-              disabled={isChange === 2 || isChange === 3}
+              disabled={!isEdit ? true : (isChange === 2 || isChange === 3)}
             />
 
           </Form.Item>
@@ -611,7 +615,7 @@ export const ActivityEditor = ({
             }}
           >
             <RangePicker
-              disabled={isChange === 3}
+              disabled={!isEdit ? true : (isChange === 3)}
               onChange={() => handleDate()}
               // defaultValue={[dayjs('2023/01/01 00:00', 'YYYY-MM-DD HH:mm'), dayjs('2023/01/01 00:00', 'YYYY-MM-DD HH:mm')]}
               showTime
@@ -641,7 +645,7 @@ export const ActivityEditor = ({
                 }
               ]}
             >
-              <InputNumber min={changedActivity.quota ? changedActivity.quota : 1} max={2000} disabled={isChange === 3} />
+              <InputNumber min={changedActivity.quota ? changedActivity.quota : 1} max={2000} disabled={!isEdit ? true : (isChange === 3)} />
             </Form.Item>
             <span className="ant-form-text" style={{ marginLeft: 8 }}>
               人
@@ -684,37 +688,41 @@ export const ActivityEditor = ({
           </Form.Item>
           <Form.Item wrapperCol={{ span: 4, offset: 4 }}>
             {
-              isChange === 0 || isChange === 1 || isChange === 2 ?
-                <Button
-                  type="primary"
-                  onClick={handleUpdate}
-                >
-                  更改活动
-                </Button>
-                :
+              (isChange === 0 || isChange === 1 || isChange === 2) ? (
+                !isEdit ? (
+                  <Button type="primary" onClick={() => setIsEdit(true)}>
+                    开始更改活动
+                  </Button>
+                ) : (
+                  <div>
+                    <Space>
+                      <Button type="primary" onClick={handleUpdate}>
+                        确认更改
+                      </Button>
+                      <Button danger onClick={() => setIsEdit(false)}>
+                        取消更改
+                      </Button>
+                    </Space>
+                  </div>
+
+                )
+              ) : (
                 <Space>
                   <Button type="primary" htmlType="submit" disabled={disabled}>
                     提交审核
                   </Button>
-                  <Button
-                    onClick={() => handleLocal()}
-                    disabled={disabled}
-                  >
+                  <Button onClick={handleLocal} disabled={disabled}>
                     保存草稿
                   </Button>
-                  {
-                    isDel ?
-                      <Button
-                        onClick={() => handleDelete()}
-                        danger
-                        disabled={!beginDel}
-                      >
-                        删除活动
-                      </Button> :
-                      null
-                  }
+                  {isDel && (
+                    <Button onClick={handleDelete} danger disabled={!beginDel}>
+                      删除活动
+                    </Button>
+                  )}
                 </Space>
+              )
             }
+
           </Form.Item>
         </Form >
       </div >

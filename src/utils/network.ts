@@ -287,17 +287,12 @@ export class Service extends BaseService {
           responseType: 'blob',
         }
       ).then((res) => {
-        console.log(res.data);
+        console.log('响应', res);
         return res.data;
       }).catch(() => {
         message.error("报名成功人数为零")
         return false;
       })
-      console.log(JSON.stringify({
-        activity_id: activityId,
-        user_ids: user_ids,
-        responseType: 'blob',
-      }))
       if (data) {
         fileDownload(
           data,

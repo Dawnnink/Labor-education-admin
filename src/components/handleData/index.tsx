@@ -52,7 +52,7 @@ export const HandleData: FC = () => {
     data === undefined ? null : base = GetActivity(data);
 
     const { columns, rows } = ChangeData(columnsData, base as showAct[][]);
-    console.log(columns)
+    console.log(rows)
     const columnsRender = useMemo(() => {
         if (base) {
             return columns.map((item: ITableColumn, index: number) => {
@@ -147,7 +147,6 @@ export const HandleData: FC = () => {
 
 const Exp: React.FC<{ method: string, record: showRow }> = (props) => {
     //传进来一个字符串是编辑活动还是导出名单
-    console.log(props.record)
     const Navigate = useNavigate()
     const [isModal, setIsModal] = React.useState(false)
     const handleOk = () => {
