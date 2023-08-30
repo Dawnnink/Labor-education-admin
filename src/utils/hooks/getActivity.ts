@@ -61,24 +61,7 @@ export const GetActivity = (props: IINList) => {
 
 
     // 使用示例
-    function parseDateString(dateString: string): Date {
-        const [datePart, timePart] = dateString.split(' ');
-        const [year, month, day] = datePart.split('-').map(Number);
-        const [hours, minutes, seconds] = timePart.split(':').map(Number);
-        return new Date(year, month - 1, day, hours, minutes, seconds);
-    }
-    function formatTime(timeString: string): string {
-        const inputDate = new Date(timeString);
-        const year = inputDate.getUTCFullYear().toString().padStart(4, '0');
-        const month = (inputDate.getUTCMonth() + 1).toString().padStart(2, '0');
-        const day = inputDate.getUTCDate().toString().padStart(2, '0');
-        const hours = inputDate.getUTCHours().toString().padStart(2, '0');
-        const minutes = inputDate.getUTCMinutes().toString().padStart(2, '0');
-        const seconds = inputDate.getUTCSeconds().toString().padStart(2, '0');
 
-        return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
-    }
-    const currentDate = new Date();
     let data: showAct[][] = [[]]
 
     // function formatDateTime(dateTime: string): string {
@@ -110,7 +93,7 @@ export const GetActivity = (props: IINList) => {
             if (item.state == "已发布") {
                 // console.log(props)
                 if (
-                    compareDates(currentDate, parseDateString(formatTime(item.activity_end_time))) > 0
+                    dayjs().isAfter(dayjs(item.activity_end_time))
                     //如果说现在的时间在结束时间之后
                 ) {
                     //已结束
@@ -123,9 +106,9 @@ export const GetActivity = (props: IINList) => {
 
                 }
                 else if (
-                    compareDates(currentDate, parseDateString(formatTime(item.registration_start_time))) >= 0
+                    dayjs().isAfter(dayjs(item.registration_start_time))
                     &&
-                    compareDates(currentDate, parseDateString(formatTime(item.registration_end_time))) < 0
+                    dayjs().isBefore(dayjs(item.registration_end_time))
                     // 现在的时间在报名时间范围内
                 ) {
                     //报名中
@@ -137,7 +120,7 @@ export const GetActivity = (props: IINList) => {
                     }
 
                 } else if (
-                    compareDates(currentDate, parseDateString(formatTime(item.registration_start_time))) < 0
+                    dayjs().isBefore(dayjs(item.registration_start_time))
                     //现在的时间在报名时间之前
                 ) {
                     //待报名
@@ -149,9 +132,9 @@ export const GetActivity = (props: IINList) => {
                     }
 
                 } else if (
-                    compareDates(currentDate, parseDateString(formatTime(item.activity_start_time))) < 0
+                    dayjs().isBefore(dayjs(item.activity_start_time))
                     &&
-                    compareDates(currentDate, parseDateString(formatTime(item.registration_end_time))) > 0
+                    dayjs().isAfter(dayjs(item.registration_end_time))
                     //现在时间在活动开始时间之前//报名结束时间之后
                 ) {
                     //待开始
@@ -162,9 +145,9 @@ export const GetActivity = (props: IINList) => {
                         cansee: true,
                     }
                 } else if (
-                    compareDates(currentDate, parseDateString(formatTime(item.activity_start_time))) >= 0
+                    dayjs().isAfter(dayjs(item.activity_start_time))
                     &&
-                    compareDates(currentDate, parseDateString(formatTime(item.activity_end_time))) < 0
+                    dayjs().isBefore(dayjs(item.activity_end_time))
                     //正在进行
                 ) {
                     //进行中
@@ -190,7 +173,7 @@ export const GetActivity = (props: IINList) => {
                     cansee: false,
                 }
             }
-            console.log('sfsf', dayjs(item.registration_start_time).subtract(8, 'hours').format('YYYY-MM-DD HH:mm:ss'))
+            console.log('sfsf', State)
             return data.push(
                 [{
                     id: item.id,
