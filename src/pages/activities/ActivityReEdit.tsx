@@ -4,17 +4,6 @@ import onOrigin from '~/utils/FormOrigin'
 import { Department } from '~/utils/types';
 import dayjs from 'dayjs';
 import { Backdrop, CircularProgress } from '@mui/material'
-function formatTime(timeString: string): string {
-    const inputDate = new Date(timeString);
-    const year = inputDate.getUTCFullYear().toString().padStart(4, '0');
-    const month = (inputDate.getUTCMonth() + 1).toString().padStart(2, '0');
-    const day = inputDate.getUTCDate().toString().padStart(2, '0');
-    const hours = inputDate.getUTCHours().toString().padStart(2, '0');
-    const minutes = inputDate.getUTCMinutes().toString().padStart(2, '0');
-    const seconds = inputDate.getUTCSeconds().toString().padStart(2, '0');
-
-    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
-}
 
 const Reset = () => {
     const params: string = window.location.pathname;
@@ -32,11 +21,11 @@ const Reset = () => {
         delete newActivity.registerAt;
         delete newActivity.joinAt;
         newActivity.registerAt = []
-        newActivity.registerAt.push(dayjs((activities.registration_start_time)))
-        newActivity.registerAt.push(dayjs((activities.registration_end_time)))
+        newActivity.registerAt.push(dayjs(activities.registration_start_time))
+        newActivity.registerAt.push(dayjs(activities.registration_end_time))
         newActivity.joinAt = []
-        newActivity.joinAt.push(dayjs((activities.activity_start_time)))
-        newActivity.joinAt.push(dayjs((activities.activity_end_time)))
+        newActivity.joinAt.push(dayjs(activities.activity_start_time))
+        newActivity.joinAt.push(dayjs(activities.activity_end_time))
     }
     if (!activities) {
         return (
