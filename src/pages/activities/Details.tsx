@@ -123,7 +123,7 @@ const DetailsWithParams = ({ activityId }: { activityId: number }) => {
             <ActivityStudents key={filterData.length} students={filterData} id={activity.id} activity={activity} />}
         </OverflowWrapper>
       </Box>
-      {activity && <ActivityEditor initialActivity={activity} isShow={false} disabled={true} />}
+      {activity && <ActivityEditor initialActivity={activity} isShow={false} disabled={true} isDraft={false} />}
     </Stack >
   )
 }

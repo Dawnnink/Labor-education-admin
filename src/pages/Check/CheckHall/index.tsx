@@ -3,7 +3,7 @@ import { ReadOnlyEditor } from '~/components/ReadOnlyEditor'
 import { network } from '~/utils/network'
 import onOrigin from '~/utils/FormOrigin'
 import { Department } from '~/utils/types'
-import ReadOnlyTime from '~/utils/hooks/ReadOnlyTime'
+import { Backdrop, CircularProgress } from '@mui/material'
 import { Box } from '@mui/material'
 export const CheckHall: FC = () => {
     const params: string = window.location.pathname;
@@ -18,8 +18,14 @@ export const CheckHall: FC = () => {
     const { data } = network.admin.useActivity(parseInt(Id as string))
     const { data: department } = network.teacher.useDepartment()
     if (!data) {
-        return <>Loading...
-        </>
+        return (
+            <Backdrop
+                sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                open={true}
+            >
+                <CircularProgress color='inherit' />
+            </Backdrop>
+        )
     }
     const lastData = onOrigin(data, department as Department[])
     return (

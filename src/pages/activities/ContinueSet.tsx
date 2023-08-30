@@ -1,7 +1,7 @@
 import { ActivityEditor } from '~/components/ActivityEditor'
 import { Activity } from '~/utils/types';
 import { network } from '~/utils/network'
-import { message } from 'antd'
+import { Backdrop, CircularProgress } from '@mui/material'
 const Continue = () => {
     const { data: departments } = network.teacher.useDepartment()
     const activity = JSON.parse(localStorage.getItem('activity') as string) as Activity;
@@ -12,9 +12,12 @@ const Continue = () => {
     let index = 0;
     if (departments === undefined) {
         return (
-            <>
-                Loading...
-            </>
+            <Backdrop
+                sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                open={true}
+            >
+                <CircularProgress color='inherit' />
+            </Backdrop>
         );
     } else {
         if (str == '') {
