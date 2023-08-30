@@ -1,6 +1,6 @@
 import MenuIcon from '@mui/icons-material/Menu'
 import { Box, IconButton, IconButtonProps, Stack, Typography } from '@mui/joy'
-import logoSvg from './logo.svg'
+import logoSvg from '../../../public/vite.png'
 import { UserInfo } from '../UserInfo'
 import { User } from '~/utils/types'
 
@@ -14,7 +14,7 @@ const Brand = () => {
         userSelect: 'none',
       }}
     >
-      <img src={logoSvg} />
+      <img src={logoSvg} style={{ maxWidth: "40px" }} />
       <Typography level="h5">南昌大学劳动教育平台管理端</Typography>
     </Stack>
   )
