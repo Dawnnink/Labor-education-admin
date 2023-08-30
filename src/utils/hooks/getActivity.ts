@@ -1,5 +1,6 @@
 import React from 'react';
 import { showAct } from '../types';
+import dayjs from 'dayjs'
 export interface IIN {
     id: number,
     department: string,
@@ -189,6 +190,7 @@ export const GetActivity = (props: IINList) => {
                     cansee: false,
                 }
             }
+            console.log('sfsf', dayjs(item.registration_start_time).subtract(8, 'hours').format('YYYY-MM-DD HH:mm:ss'))
             return data.push(
                 [{
                     id: item.id,
@@ -197,18 +199,19 @@ export const GetActivity = (props: IINList) => {
                     mounts: item.enroll_number,
                     quota: item.quota,
                     registerAt: {
-                        registration_start_time: formatTime(item.registration_start_time),
-                        registration_end_time: formatTime(item.registration_end_time),
+                        registration_start_time: dayjs(item.registration_start_time).format('YYYY-MM-DD HH:mm'),
+                        registration_end_time: dayjs(item.registration_end_time).format('YYYY-MM-DD HH:mm'),
                     },
                     ActAt: {
-                        activity_start_time: formatTime(item.activity_start_time),
-                        activity_end_time: formatTime(item.activity_end_time),
+                        activity_start_time: dayjs(item.activity_start_time).format('YYYY-MM-DD HH:mm'),
+                        activity_end_time: dayjs(item.activity_end_time).format('YYYY-MM-DD HH:mm'),
                     },
                     Move: draftMove
                 }],
             )
         })) || [];
     }, [])
+
     return data;
 }
 

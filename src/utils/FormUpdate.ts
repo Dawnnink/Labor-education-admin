@@ -30,14 +30,14 @@ const OnUpdate = (fieldsValue: any, departments: Department[] | undefined, image
     const values = {
         ...fieldsValue,
         "registration_start_time":
-            registerValue[0].format('YYYY-MM-DDTHH:mm:ss[Z]'),
+            registerValue[0].format('YYYY-MM-DDTHH:mm:ssZ'),
         'registration_end_time':
-            registerValue[1].format('YYYY-MM-DDTHH:mm:ss[Z]'),
+            registerValue[1].format('YYYY-MM-DDTHH:mm:ssZ'),
 
         'activity_start_time':
-            joinValue[0].format('YYYY-MM-DDTHH:mm:ss[Z]'),
+            joinValue[0].format('YYYY-MM-DDTHH:mm:ssZ'),
         'activity_end_time':
-            joinValue[1].format('YYYY-MM-DDTHH:mm:ss[Z]'),
+            joinValue[1].format('YYYY-MM-DDTHH:mm:ssZ'),
     }
     delete values.registerAt;
     delete values.joinAt;

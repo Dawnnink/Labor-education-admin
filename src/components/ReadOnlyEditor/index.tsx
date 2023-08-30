@@ -83,6 +83,7 @@ export const ReadOnlyEditor: FC<IReadOnlyEditor> = (
     const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
         setReason(e.target.value);
     }
+    console.log(props.initialActivity)
     return (
         <div className='entire'>
             {props.isShow ? item : null}
@@ -121,7 +122,7 @@ export const ReadOnlyEditor: FC<IReadOnlyEditor> = (
                             rows={4}
                         />
                     </Form.Item>
-                    <Form.Item label='上传海报' >
+                    <Form.Item label='海报' >
                         <div className='up'>
                             <Form.Item
                                 name="poster"
@@ -139,7 +140,7 @@ export const ReadOnlyEditor: FC<IReadOnlyEditor> = (
                                 </div>
                             </Form.Item>
                             <Form.Item
-                                label="上传图标"  // 指定绑定的值为 'fileList'
+                                label="图标"  // 指定绑定的值为 'fileList'
                                 name='icon'
                             >
                                 <div

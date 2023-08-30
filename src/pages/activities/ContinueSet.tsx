@@ -11,8 +11,11 @@ const Continue = () => {
     let str = ""
     let index = 0;
     if (departments === undefined) {
-        message.warning("暂未获取发布部门信息，请稍后再试")
-        return;
+        return (
+            <>
+                Loading...
+            </>
+        );
     } else {
         if (str == '') {
             for (let i = 0; i < len; i++) {
@@ -28,7 +31,7 @@ const Continue = () => {
 
     return (
         <div>
-            <ActivityEditor initialActivity={activity as Activity} isShow={true} isDel={true} isDraft={true} beginDel={true} />
+            <ActivityEditor initialActivity={activity as Activity} isShow={true} isDel={true} isDraft={true} beginDel={true} Edit={true} />
         </div>
 
     )

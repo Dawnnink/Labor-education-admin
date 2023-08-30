@@ -32,11 +32,11 @@ const Reset = () => {
         delete newActivity.registerAt;
         delete newActivity.joinAt;
         newActivity.registerAt = []
-        newActivity.registerAt.push(dayjs(formatTime(activities.registration_start_time)))
-        newActivity.registerAt.push(dayjs(formatTime(activities.registration_end_time)))
+        newActivity.registerAt.push(dayjs((activities.registration_start_time)))
+        newActivity.registerAt.push(dayjs((activities.registration_end_time)))
         newActivity.joinAt = []
-        newActivity.joinAt.push(dayjs(formatTime(activities.activity_start_time)))
-        newActivity.joinAt.push(dayjs(formatTime(activities.activity_end_time)))
+        newActivity.joinAt.push(dayjs((activities.activity_start_time)))
+        newActivity.joinAt.push(dayjs((activities.activity_end_time)))
     }
     if (!activities) {
         return (

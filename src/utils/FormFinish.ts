@@ -10,14 +10,14 @@ const OnFinish = (fieldsValue: any, departments: Department[] | undefined, image
     const values = {
         ...fieldsValue,
         "registration_start_time":
-            registerValue[0].format('YYYY-MM-DDTHH:mm:ss[Z]'),
+            registerValue[0].format('YYYY-MM-DDTHH:mm:ssZ'),
         'registration_end_time':
-            registerValue[1].format('YYYY-MM-DDTHH:mm:ss[Z]'),
+            registerValue[1].format('YYYY-MM-DDTHH:mm:ssZ'),
 
         'activity_start_time':
-            joinValue[0].format('YYYY-MM-DDTHH:mm:ss[Z]'),
+            joinValue[0].format('YYYY-MM-DDTHH:mm:ssZ'),
         'activity_end_time':
-            joinValue[1].format('YYYY-MM-DDTHH:mm:ss[Z]'),
+            joinValue[1].format('YYYY-MM-DDTHH:mm:ssZ'),
     }
     delete values.registerAt;
     delete values.joinAt;
@@ -43,6 +43,7 @@ const OnFinish = (fieldsValue: any, departments: Department[] | undefined, image
     values.department_id = index;
     imageUrl === undefined ? values.poster = null : values.poster = imageUrl;
     iconUrl === undefined ? values.icon = null : values.icon = iconUrl;
+    console.log(values)
     const flag = network.teacher.createActivity(values)
         .then((res) => {
             if (res.status === 200) {

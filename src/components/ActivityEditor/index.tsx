@@ -34,17 +34,17 @@ import { compareDates } from '~/utils/hooks/getActivity';
 import OnUpdate from '~/utils/FormUpdate';
 dayjs.extend(customParseFormat);
 
-function formatTime(timeString: string): string {
-  const inputDate = new Date(timeString);
-  const year = inputDate.getUTCFullYear().toString().padStart(4, '0');
-  const month = (inputDate.getUTCMonth() + 1).toString().padStart(2, '0');
-  const day = inputDate.getUTCDate().toString().padStart(2, '0');
-  const hours = inputDate.getUTCHours().toString().padStart(2, '0');
-  const minutes = inputDate.getUTCMinutes().toString().padStart(2, '0');
-  const seconds = inputDate.getUTCSeconds().toString().padStart(2, '0');
+// function formatTime(timeString: string): string {
+//   const inputDate = new Date(timeString);
+//   const year = inputDate.getUTCFullYear().toString().padStart(4, '0');
+//   const month = (inputDate.getUTCMonth() + 1).toString().padStart(2, '0');
+//   const day = inputDate.getUTCDate().toString().padStart(2, '0');
+//   const hours = inputDate.getUTCHours().toString().padStart(2, '0');
+//   const minutes = inputDate.getUTCMinutes().toString().padStart(2, '0');
+//   const seconds = inputDate.getUTCSeconds().toString().padStart(2, '0');
 
-  return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
-}
+//   return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+// }
 export interface ActivityEditorProps {
   initialActivity: Activity | null
   disabled?: boolean
@@ -90,11 +90,11 @@ export const ActivityEditor = ({
     delete changedActivity.registerAt;
     delete changedActivity.joinAt;
     changedActivity.registerAt = []
-    changedActivity.registerAt.push(dayjs(formatTime(initialActivity.registration_start_time)))
-    changedActivity.registerAt.push(dayjs(formatTime(initialActivity.registration_end_time)))
+    changedActivity.registerAt.push(dayjs(initialActivity.registration_start_time))
+    changedActivity.registerAt.push(dayjs(initialActivity.registration_end_time))
     changedActivity.joinAt = []
-    changedActivity.joinAt.push(dayjs(formatTime(initialActivity.activity_start_time)))
-    changedActivity.joinAt.push(dayjs(formatTime(initialActivity.activity_end_time)))
+    changedActivity.joinAt.push(dayjs(initialActivity.activity_start_time))
+    changedActivity.joinAt.push(dayjs(initialActivity.activity_end_time))
   }
   const { RangePicker } = DatePicker;
   const { TextArea } = Input;
@@ -688,7 +688,7 @@ export const ActivityEditor = ({
           </Form.Item>
           <Form.Item wrapperCol={{ span: 4, offset: 4 }}>
             {
-              (isChange === 0 || isChange === 1 || isChange === 2) ? (
+              ((isChange === 0 || isChange === 1 || isChange === 2) && !isDraft) ? (
                 !isEdit ? (
                   <Button type="primary" onClick={() => setIsEdit(true)}>
                     开始更改活动

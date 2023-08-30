@@ -42,6 +42,7 @@ export const CheckTable: FC = () => {
     const Navigate = useNavigate();
 
     const { data } = network.admin.useActivities();
+    console.log(data);
     let base: IChange[] = [];
     data === undefined ? null : base = CheckChange(data);
     const { columns, rows } = ChangeForm(columnsData, base);

@@ -34,7 +34,7 @@ export interface showRow {
 export const HandleData: FC = () => {
     const Navigate = useNavigate();
     const { data } = network.teacher.useActivities();
-
+    console.log('jiance', data)
     let flag = 0
     if (localStorage.getItem('activity') && data != undefined) {
         for (let i = 0; i < data.length; i++) {

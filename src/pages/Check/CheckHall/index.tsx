@@ -21,8 +21,7 @@ export const CheckHall: FC = () => {
         return <>Loading...
         </>
     }
-    const newData = ReadOnlyTime(data)
-    const lastData = onOrigin(newData, department as Department[])
+    const lastData = onOrigin(data, department as Department[])
     return (
         <Box
             sx={{
