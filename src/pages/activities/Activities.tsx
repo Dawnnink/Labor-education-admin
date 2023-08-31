@@ -7,11 +7,12 @@ import { useEffect } from 'react'
 const Activities = () => {
   const { data, error } = network.teacher.useActivities()
   useEffect(() => {
-    const timer = setTimeout(() => {
-      location.reload()
-    }, 30000);
+    let count = 0
+    const timer = setInterval(() => {
+      count = count + 1
+    }, 1000);
     return () => {
-      clearTimeout(timer)
+      clearInterval(timer)
     }
   }, [])
   return (
