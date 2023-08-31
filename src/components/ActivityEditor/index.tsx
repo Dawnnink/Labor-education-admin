@@ -239,6 +239,9 @@ export const ActivityEditor = ({
 
   const isChange = useMemo(() => {
     console.log('之类', changedActivity)
+    if (isDraft) {
+      return 4;
+    }
     //主要是获取一下现在的时间，然后如果是在活动开始之前那么就可以更改活动的信息
     if (changedActivity.joinAt && changedActivity.registerAt) {
       if (dayjs().isBefore(dayjs(changedActivity.joinAt[0]))) {
