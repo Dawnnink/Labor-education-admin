@@ -229,9 +229,6 @@ export const ActivityEditor = ({
       <div className={style.smallB2}>
         <div className={style.sP}>发布活动</div>
       </div>
-      <div className={style.smallB3}>
-        发布活动须知:巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉
-      </div>
     </div>
   )
   //selector  
