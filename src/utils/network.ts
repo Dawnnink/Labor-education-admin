@@ -31,7 +31,7 @@ export class BaseService {
     query?: Record<string, string | number | undefined>
   ) => {
     if (url === null) {
-      return useSWR<T, ApiError>(null, this.fetcher)
+      return useSWR<T, ApiError>(null, this.fetcher, { refreshInterval: 1000 })
     }
     const filteredQuery =
       query &&
@@ -44,7 +44,8 @@ export class BaseService {
     return useSWR<T, ApiError>(
       url +
       (filteredQuery ? `?${String(new URLSearchParams(filteredQuery))}` : ''),
-      this.fetcher
+      this.fetcher,
+      { refreshInterval: 1000 }
     )
   }
 }
