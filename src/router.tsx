@@ -24,9 +24,16 @@ const IndexLoginGuard = () => {
       const credentials = useCrenditial.getState().crenditial
       network.login(credentials);
     }, 60000)
+    //每半个小时，清楚浏览器缓存
+    const clear = setTimeout(() => {
+      if (timer) {
+        useCrenditial.getState().removeCrenditial;
+      }
+    }, 1800000)
 
     return () => {
-      clearInterval(timer)
+      clearTimeout(clear);
+      clearInterval(timer);
     }
   }, [])
   if (!token) {

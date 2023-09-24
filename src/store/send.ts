@@ -101,6 +101,9 @@ export const useSendState = create<SendState>((set, get) => ({
                 message.warning('所选人之中有人未签到')
                 return;
             }
+            if (item.check_out) {
+                message.warning('所选人之中有人已签退')
+            }
         })
         let user_ids: number[] = [];
         if (user_id !== 0) {

@@ -326,6 +326,7 @@ export const ActivityStudents = ({ students, id, activity }: ActivityStudentsPro
         const isAsc = orderBy === property && order === 'asc';
         setOrder(isAsc ? 'desc' : 'asc')
         setOrderBy(property)
+        console.log(event)
     }
 
     const handleSelectAllClick = (
@@ -359,6 +360,7 @@ export const ActivityStudents = ({ students, id, activity }: ActivityStudentsPro
             )
         }
         setSelected(newSelected);
+        console.log(event)
     }
 
     const handleChangePage = (
@@ -366,6 +368,7 @@ export const ActivityStudents = ({ students, id, activity }: ActivityStudentsPro
         newPage: number
     ) => {
         setPage(newPage);
+        console.log(event)
     }
     const handleChangeRowsPerPage = (
         event: React.ChangeEvent<HTMLInputElement>
