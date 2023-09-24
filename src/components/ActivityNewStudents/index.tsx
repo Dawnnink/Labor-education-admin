@@ -407,9 +407,12 @@ export const ActivityStudents = ({ students, id, activity }: ActivityStudentsPro
     //将拿来的数据搞一下
     const rows = useMemo(() => {
         return students.map((item) => {
+
             //如果正在审核中，则显示操作按钮，可以打回或者通过
-            if (item.state === '报名审核中') {
+            if (item.state === '报名审核中' && activity.need_audit === true) {
                 setIsOperate(1);
+            } else if (item.state === '报名审核中' && activity.need_audit === false) {
+                setIsOperate(3)
             }
             //判断状态,首先判断是否开始活动
             const date = dayjs();//获取现在的时间
@@ -436,7 +439,8 @@ export const ActivityStudents = ({ students, id, activity }: ActivityStudentsPro
             }
             //如果说已经签到了，应该就可以签退了
             if (State === '待签退') {
-                setIsOperate(2)
+                if (activity.need_checkout === true) setIsOperate(2)
+                else if (activity.need_checkout === false) setIsOperate(3)
             } else if (State === '未签到' || State === '已签退') {
                 setIsOperate(3)
             }
@@ -481,7 +485,11 @@ export const ActivityStudents = ({ students, id, activity }: ActivityStudentsPro
                 //这个时间范围内是可以操控进行报名通过和报名打回的
                 let flag = false;
                 filterStudents.map((item) => {
-                    if (item.state === '报名审核中') {
+                    if (
+                        item.state === '报名审核中'
+                        &&
+                        activity.need_audit === true
+                    ) {
                         flag = true;
                     }
                 })
@@ -499,6 +507,8 @@ export const ActivityStudents = ({ students, id, activity }: ActivityStudentsPro
                         item.check_in
                         &&
                         !item.check_out
+                        &&
+                        activity.need_checkout === true
                     ) flag = true;
                 })
                 if (flag) {
@@ -507,7 +517,6 @@ export const ActivityStudents = ({ students, id, activity }: ActivityStudentsPro
             }
         }
     }, [filterStudents])
-
     useEffect(() => {
         //在组件最初渲染的时候将activity_id加入状态存储库
         setAcitvityId(id)
