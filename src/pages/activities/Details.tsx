@@ -23,12 +23,10 @@ const DetailsWithParams = ({ activityId }: { activityId: number }) => {
   const handleKind = (e: string) => {
     setNow(e);
   }
-  console.log(activity)
 
   const filterData = useMemo(() => {
     //在每次menu的值改变的时候触发
     if (now === '待审核') {
-      console.log('待审核')
       return students?.filter((item) => {
         if (item.state === '报名审核中') {
           return true;
@@ -37,7 +35,6 @@ const DetailsWithParams = ({ activityId }: { activityId: number }) => {
       })
     }
     if (now === '待签退') {
-      console.log('待签退')
       return students?.filter((item) => {
         if (item.state === '报名成功' && item.check_in) {
           return true;
@@ -47,7 +44,6 @@ const DetailsWithParams = ({ activityId }: { activityId: number }) => {
       })
     }
     if (now === '已签退') {
-      console.log('已签退')
       return students?.filter((item) => {
         if (item.state === '报名成功' && item.check_out) {
           return true;

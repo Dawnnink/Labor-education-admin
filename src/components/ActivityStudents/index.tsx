@@ -24,7 +24,6 @@ export interface ActivityStudentsProps {
 }
 export const ActivityStudents = ({ students, id }: ActivityStudentsProps) => {
   const theme = useTheme()
-  console.log('themethemetheme', theme)
   const getColor = (status: string) => {
     switch (status) {
       case '报名成功':

@@ -43,7 +43,6 @@ const OnFinish = (fieldsValue: any, departments: Department[] | undefined, image
     values.department_id = index;
     imageUrl === undefined ? values.poster = null : values.poster = imageUrl;
     iconUrl === undefined ? values.icon = null : values.icon = iconUrl;
-    console.log(values)
     const flag = network.teacher.createActivity(values)
         .then((res) => {
             if (res.status === 200) {

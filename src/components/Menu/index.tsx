@@ -35,7 +35,6 @@ const Menu = (props: MenuProps) => {
             &&
             anchorRef.current.contains(event.target as HTMLElement)
         ) {
-            console.log(anchorRef.current)
             return;
         }
         setOpenPopper(false)

@@ -238,7 +238,6 @@ export const ActivityEditor = ({
   (departments === undefined) ? OPTIONS = ['无数据'] : OPTIONS = OPTIONS.concat(departments.map((item) => item.name));
 
   const isChange = useMemo(() => {
-    console.log('之类', changedActivity)
     if (isDraft) {
       return 4;
     }

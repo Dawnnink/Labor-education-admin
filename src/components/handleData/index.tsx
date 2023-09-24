@@ -10,7 +10,6 @@ import { GetActivity } from '~/utils/hooks/getActivity'
 import { showAct } from '~/utils/types'
 import { useNavigate } from 'react-router-dom'
 import { ITableColumn } from '~/pages/Check/CheckTable';
-
 export interface showRow {
     id: number;
     name: string;
@@ -34,9 +33,9 @@ export interface showRow {
 export const HandleData: FC = () => {
     const Navigate = useNavigate();
     const { data } = network.teacher.useActivities();
-    console.log('jiance', data)
     let flag = 0
-    if (localStorage.getItem('activity') && data != undefined) {
+
+    if (localStorage.getItem('activity') && data !== undefined) {
         for (let i = 0; i < data.length; i++) {
             if (data[i].id == -1) {
                 flag = 1;
@@ -52,7 +51,6 @@ export const HandleData: FC = () => {
     data === undefined ? null : base = GetActivity(data);
 
     const { columns, rows } = ChangeData(columnsData, base as showAct[][]);
-    console.log(rows)
     const columnsRender = useMemo(() => {
         if (base) {
             return columns.map((item: ITableColumn, index: number) => {

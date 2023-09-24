@@ -223,7 +223,6 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
         state.setState('reason'),
     ])
     const handleOk = () => {
-        console.log('sdsssd' + reason)
         if (reason === '暂无原因') {
             message.info('请输入打回原因')
             return;
@@ -307,7 +306,6 @@ export const ActivityStudents = ({ students, id, activity }: ActivityStudentsPro
         state.setState('user_id')
     ])
     const handleOk = () => {
-        console.log('sdsssd' + reason)
         if (reason === '暂无原因') {
             message.info('请输入打回原因')
             return;
@@ -325,7 +323,6 @@ export const ActivityStudents = ({ students, id, activity }: ActivityStudentsPro
         event: React.MouseEvent<unknown>,
         property: keyof FormData,
     ) => {
-        console.log(event)
         const isAsc = orderBy === property && order === 'asc';
         setOrder(isAsc ? 'desc' : 'asc')
         setOrderBy(property)
@@ -362,14 +359,12 @@ export const ActivityStudents = ({ students, id, activity }: ActivityStudentsPro
             )
         }
         setSelected(newSelected);
-        console.log('here', event)
     }
 
     const handleChangePage = (
         event: unknown,
         newPage: number
     ) => {
-        console.log(event)
         setPage(newPage);
     }
     const handleChangeRowsPerPage = (
@@ -466,7 +461,6 @@ export const ActivityStudents = ({ students, id, activity }: ActivityStudentsPro
                 page * rowsPerPage + rowsPerPage,
             );
         }, [order, orderBy, page, rowsPerPage])
-    console.log(students, id)
     //对选中的人的数据进行一个筛选，传给tableTool用来对选中的学生的信息进行操作
     const filterStudents = useMemo(() => {
         return students.filter((item) => {
@@ -513,7 +507,6 @@ export const ActivityStudents = ({ students, id, activity }: ActivityStudentsPro
 
     useEffect(() => {
         //在组件最初渲染的时候将activity_id加入状态存储库
-        console.log("yes", filterStudents);
         setAcitvityId(id)
     }, [id, setAcitvityId, ...students.map(item => item.notified)])
     return (

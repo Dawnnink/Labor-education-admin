@@ -29,8 +29,7 @@ const NavListButton = ({ to, title, Icon, disabled }: NavListButtonProps) => {
       selected={!!match}
       variant={match ? 'soft' : undefined}
       onClick={() => {
-        navigate(to);
-        location.reload();
+        navigate(to, { replace: true });
       }}
       disabled={disabled}
     >
@@ -52,7 +51,7 @@ export const NavList = () => {
         setRight(data);
       }
       catch (err) {
-        console.log(err)
+        console.log('err')
       }
     }
     getRight();

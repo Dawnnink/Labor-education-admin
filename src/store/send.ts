@@ -47,9 +47,7 @@ export const useSendState = create<SendState>((set, get) => ({
         Modal.confirm({
             title: '确认通过审核？',
             onOk: async () => {
-                console.log('ok')
-                const res = network.teacher.usePass(activity_id, ids)
-                console.log(res)
+                network.teacher.usePass(activity_id, ids)
             },
             onCancel: () => {
                 console.log('cancel');
@@ -77,11 +75,7 @@ export const useSendState = create<SendState>((set, get) => ({
         Modal.confirm({
             title: '确认打回审核',
             onOk: async () => {
-                console.log('ok')
-                console.log(activity_id);
-                console.log(users)
                 const res = await network.teacher.useReject(activity_id, users)//2个参数，users是个数组
-                console.log(res)
                 if (res.length > 0) {
                     students.map(item => {
                         if (res.includes(item.user.id)) {
@@ -108,7 +102,6 @@ export const useSendState = create<SendState>((set, get) => ({
                 return;
             }
         })
-        console.log('这里', students)
         let user_ids: number[] = [];
         if (user_id !== 0) {
             user_ids.push(user_id)
@@ -121,7 +114,6 @@ export const useSendState = create<SendState>((set, get) => ({
         Modal.confirm({
             title: '确认签退',
             onOk: async () => {
-                console.log('ok')
                 const res = await network.teacher.useSignOut(activity_id, user_ids)
                 if (res.length === 0) {
                     //没有错误的人返回
@@ -148,7 +140,6 @@ export const useSendState = create<SendState>((set, get) => ({
     getExcel: () => {
         const { activity_id, students } = get()
         const ids = students.map(it => it.user.id)
-        console.log("ids", ids)
         if (ids.length === 0) {
             message.warning('请先选择学生')
             return

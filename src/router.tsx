@@ -1,7 +1,7 @@
 /* eslint-disable react-refresh/only-export-components */
 import { Navigate, createBrowserRouter } from 'react-router-dom'
 import Index from '~/pages/Index'
-import { useStore } from '~/utils/store'
+import { useCrenditial, useStore } from '~/utils/store'
 
 import Dashboard from '~/pages/Dashboard'
 import Activities from '~/pages/activities/Activities'
@@ -14,9 +14,21 @@ import Continue from '~/pages/activities/ContinueSet'
 import Check from '~/pages/Check'
 import { network } from './utils/network'
 import { CheckHall } from './pages/Check/CheckHall'
+import { useEffect } from 'react'
 
 const IndexLoginGuard = () => {
   const token = useStore((state) => state.token)
+  useEffect(() => {
+    //每3秒请求一次，然后存储
+    const timer = setInterval(() => {
+      const credentials = useCrenditial.getState().crenditial
+      network.login(credentials);
+    }, 60000)
+
+    return () => {
+      clearInterval(timer)
+    }
+  }, [])
   if (!token) {
     return <Navigate to="/login" replace />
   }
@@ -30,6 +42,8 @@ const JudgeCheck = () => {
   }
   return <Check />
 }
+
+
 export const router = createBrowserRouter([
   {
     path: 'login',

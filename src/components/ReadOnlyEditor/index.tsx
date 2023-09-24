@@ -83,7 +83,6 @@ export const ReadOnlyEditor: FC<IReadOnlyEditor> = (
     const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
         setReason(e.target.value);
     }
-    console.log(props.initialActivity)
     return (
         <div className='entire'>
             {props.isShow ? item : null}

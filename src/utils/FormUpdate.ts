@@ -60,7 +60,7 @@ const OnUpdate = (fieldsValue: any, departments: Department[] | undefined, image
                 return true;
             }
         }).catch(() => {
-            message.error("请稍后再试")
+            message.error("请检查更改活动后的活动格式（尤其是时间格式）")
             return false;
         })
     return flag;

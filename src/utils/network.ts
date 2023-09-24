@@ -118,7 +118,6 @@ export class Service extends BaseService {
       }
 
       const token = useStore.getState().token
-      console.log(token)
       if (token) {
         config.headers.Authorization = `passport ${token}`
       }
@@ -135,6 +134,7 @@ export class Service extends BaseService {
       }
     )
   }
+
 
   login = async (request: AuthRequest) => {
     const {
@@ -244,7 +244,7 @@ export class Service extends BaseService {
       }).then((res) => {
         return res.data
       }).catch(() => {
-        message.error('网络故障')
+        message.error('签退失败')
       })
     },
     //审核学生通过
@@ -254,7 +254,7 @@ export class Service extends BaseService {
           location.reload()
           return res.data
         }).catch(() => {
-          message.error('网络故障')
+          message.error('通过失败')
         })
     },
     //审核学生拒绝
@@ -269,7 +269,7 @@ export class Service extends BaseService {
         location.reload()
         return res.data
       }).catch(() => {
-        message.error('网络故障')
+        message.error('拒绝失败')
       })
     },
     //再次提醒学生
@@ -289,7 +289,6 @@ export class Service extends BaseService {
         responseType: 'blob'
       }
       ).then((res) => {
-        console.log('响应', res);
         return res.data;
       }).catch(() => {
         message.error("报名成功人数为零")

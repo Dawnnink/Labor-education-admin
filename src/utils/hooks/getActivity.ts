@@ -58,30 +58,9 @@ export function compareDates(date1: Date, date2: Date): number {
     }
 }
 export const GetActivity = (props: IINList) => {
-
-
-    // 使用示例
-
-    let data: showAct[][] = [[]]
-
-    // function formatDateTime(dateTime: string): string {
-    //     const dateObj = new Date(dateTime);
-
-    //     const year = dateObj.getFullYear();
-    //     const month = String(dateObj.getMonth() + 1).padStart(2, '0');
-    //     const day = String(dateObj.getDate()).padStart(2, '0');
-    //     const hour = String(dateObj.getHours()).padStart(2, '0');
-    //     const minute = String(dateObj.getMinutes()).padStart(2, '0');
-    //     const second = String(dateObj.getSeconds()).padStart(2, '0');
-
-    //     const formattedDateTime = `${year}-${month}-${day} ${hour}:${minute}:${second}`;
-    //     return formattedDateTime;
-    // }
-
-    //抱歉，写这里代码的时候还比较年轻，于是堆了下面一坨答辩，
-    //其实是可以改的，每个return的只有state和下面的Move是需要改变的，这里的Move其实是操作的意思。
+    const data: showAct[][] = [[]]
     React.useMemo(() => {
-        data === undefined ? data = initialShowAct : (props.map((item) => {
+        data === undefined ? initialShowAct : (props.map((item) => {
             // console.log(item)
             let State, draftMove;//用来存储现在目前的状态码
             State = 2;
@@ -173,7 +152,6 @@ export const GetActivity = (props: IINList) => {
                     cansee: false,
                 }
             }
-            console.log('sfsf', State)
             return data.push(
                 [{
                     id: item.id,
@@ -193,7 +171,7 @@ export const GetActivity = (props: IINList) => {
                 }],
             )
         })) || [];
-    }, [])
+    }, [...props.map((item) => { return item.state }), data, props])
 
     return data;
 }

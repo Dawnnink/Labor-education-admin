@@ -14,6 +14,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { LoginBackground } from '~/components/LoginBackground'
 import { network } from '~/utils/network'
+import { useCrenditial } from '~/utils/store'
 
 export default function Login() {
   const [credentials, setCredentials] = useState({
@@ -26,23 +27,24 @@ export default function Login() {
   const navigate = useNavigate()
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
-      ; (async () => {
-        try {
-          setSubmitting(true)
-          await network.login(credentials)
-          navigate('/', { replace: true })
-        } catch (err) {
-          if (err instanceof AxiosError) {
-            const message: string | undefined = err.response?.data.message
-            setErrorMessage(message || err.message)
-          } else if (err instanceof Error) {
-            setErrorMessage(err.message)
-          }
-        } finally {
-          setSubmitting(false)
+    event.preventDefault();
+    useCrenditial.getState().setCrenditial(credentials);
+    (async () => {
+      try {
+        setSubmitting(true)
+        await network.login(credentials)
+        navigate('/', { replace: true })
+      } catch (err) {
+        if (err instanceof AxiosError) {
+          const message: string | undefined = err.response?.data.message
+          setErrorMessage(message || err.message)
+        } else if (err instanceof Error) {
+          setErrorMessage(err.message)
         }
-      })()
+      } finally {
+        setSubmitting(false)
+      }
+    })()
   }
 
   return (
