@@ -104,6 +104,11 @@ export const ActivityEditor = ({
   const [imageUrl, setImageUrl] = useState<string>(changedActivity.poster);
   const [iconUrl, setIconUrl] = useState<string>(changedActivity.icon);
   const [isEdit, setIsEdit] = useState(Edit);///只有编辑状态才能更改，刚开始的时候不是编辑装填
+
+  //取消暂时更改的函数
+  const cancelChange = () => {
+    setIsEdit(false);
+  }
   const getBase64 = (img: RcFile, callback: (url: string) => void) => {
     const reader = new FileReader();
     reader.addEventListener('load', () => callback(reader.result as string));
@@ -238,73 +243,105 @@ export const ActivityEditor = ({
   (departments === undefined) ? OPTIONS = ['无数据'] : OPTIONS = OPTIONS.concat(departments.map((item) => item.name));
 
   const isChange = useMemo(() => {
+    console.log('changedActivity', changedActivity)
     if (isDraft) {
       return 4;
     }
     //主要是获取一下现在的时间，然后如果是在活动开始之前那么就可以更改活动的信息
-    if (changedActivity.joinAt && changedActivity.registerAt) {
-      if (dayjs().isBefore(dayjs(changedActivity.joinAt[0]))) {
+    if (changedActivity?.joinAt && changedActivity?.registerAt) {
+      if (dayjs().isBefore(dayjs(changedActivity?.joinAt[0]))) {
         // 首先确保是在活动开始之前
-        if (dayjs().isBefore(dayjs(changedActivity.registerAt[0]))) {
+        if (dayjs().isBefore(dayjs(changedActivity?.registerAt[0]))) {
           //如果是在活动报名开始之前
           return 0;
-        } else if (dayjs().isBefore(dayjs(changedActivity.registerAt[1])) && dayjs().isAfter(dayjs(changedActivity.registerAt[0]))) {
+        } else if (dayjs().isBefore(dayjs(changedActivity?.registerAt[1])) && dayjs().isAfter(dayjs(changedActivity.registerAt[0]))) {
           //如果实在活动报名时间内
           return 1;
-        } else if (dayjs().isBefore(dayjs(changedActivity.joinAt[0])) && dayjs().isAfter(dayjs(changedActivity.registerAt[1]))) {                //如果是在
+        } else if (dayjs().isBefore(dayjs(changedActivity?.joinAt[0])) && dayjs().isAfter(dayjs(changedActivity.registerAt[1]))) {                //如果是在
           //如果是在报名结束时间到活动开始之前的范围内
           return 2;
         }
       }
       else return 3;
     }
-
+    //如果是发布活动的话就会返回5
+    return 5
   }, [])
-  const handleDate = useCallback(() => {
 
+  console.log('isChanged', isChange)
+  const handleDate = useCallback(() => {
+    //下面是最基本的
+    //如果在没有更改的情况下，仅仅是在发布活动的时候
+    if (form.getFieldValue('registerAt')) {
+      //如果只填写了活动报名时间框
+      if (dayjs().isAfter(form.getFieldValue('registerAt')[0])) {
+        //如果现在的时间已经在活动报名开始时间之后了
+        form.setFieldValue('registerAt', [dayjs().add(1, 'hour'), dayjs().add(2, 'hour')])
+        message.info("活动报名开始时间过早")
+      }
+    }
+    if (form.getFieldValue('registerAt') && form.getFieldValue('joinAt')) {
+      //如果只填写了活动时间框
+      if (dayjs().isAfter(form.getFieldValue('joinAt'[0]))) {
+        //如果活动开始时间过晚（比现在的时间过晚
+        form.setFieldValue('joinAt', [dayjs(form.getFieldValue('registerAt')[1]).add(1, 'day'), dayjs(form.getFieldValue('registerAt')[1]).add(2, 'day')])
+        //报错
+        message.info("活动开始时间早")
+      }
+      if (dayjs(form.getFieldValue('joinAt')[0]).isBefore(form.getFieldValue('registerAt')[1])) {
+        form.setFieldValue('joinAt', [dayjs(form.getFieldValue('registerAt')[1]).add(1, 'day'), dayjs(form.getFieldValue('registerAt')[1]).add(2, 'day')])
+        message.info('活动开始时间比报名结束时间还早')
+      }
+    }
 
     //下面是对假设就是说活动在各个时间线对于活动的日期更改
     //如果isChange===0
     //这是报名时间段之前，四个时间段都可以更改
-    if (isChange === 1) {
-      //这是报名时间之内，只能修改报名结束时间
-      //首先拿到修改之后的活动报名结束时间，不能早于当前修改活动的时间
-      const registerEndTime = form.getFieldValue('registerAt')[1]
-      const registerStartTime = form.getFieldValue('registerAt')[0]
-      const originRegisterStartTime = changedActivity.registerAt[0];//拿到活动原本的报名开始时间
-      //首先判断更改后的报名日期是否与之前相同
-      if (!dayjs(registerStartTime).isSame(dayjs(originRegisterStartTime), 'minute')) {
-        //以分钟为精度来比较两个时间是否相同
-        form.setFieldValue('registerAt', [dayjs(originRegisterStartTime), dayjs().add(1, 'day')])
-        message.error('不可修改报名活动时间')
-        return;
-      }
+    console.log(changedActivity)
+    if (changedActivity.registerAt) {
+      const originRegisterStartTime = changedActivity?.registerAt[0];//拿到活动原本的报名开始时间
+      const originRegisterEndTime = changedActivity?.registerAt[1];//活动报名结束时间
+      const originJoinStartTime = changedActivity?.joinAt[0];//活动开始时间
+      const originJoinEndTime = changedActivity?.joinAt[1];
+      if (isChange === 1) {
+        //这是报名时间之内，只能修改报名结束时间
+        //首先拿到修改之后的活动报名结束时间，不能早于当前修改活动的时间
+        const registerEndTime = form.getFieldValue('registerAt')[1]
+        const registerStartTime = form.getFieldValue('registerAt')[0]
 
-      if (dayjs(registerEndTime).isBefore(dayjs())) {
-        form.setFieldValue('registerAt', [dayjs(originRegisterStartTime), dayjs().add(1, 'day')]);
-        message.error('修改后的报名结束时间不能早于当前时间')
-      }
-    }
-    if (form.getFieldValue('registerAt') && isChange !== 1) {
-      if (dayjs().isAfter(form.getFieldValue('registerAt')[0])) {
-        form.setFieldValue('registerAt', [dayjs(changedActivity.registerAt[0]), dayjs(changedActivity.registerAt[1])])
-        message.info("活动报名开始时间不能早于目前时间")
-      }
-    }
-    if (form.getFieldValue('joinAt')) {
-      if (dayjs().isAfter(form.getFieldValue('joinAt')[0])) {
-        form.setFieldValue('joinAt', [dayjs(changedActivity.joinAt[0]), dayjs(changedActivity.joinAt[1])])
-        message.info("活动开始时间不能早于目前时间")
-      }
-    }
-    if (form.getFieldValue('registerAt') && form.getFieldValue('joinAt')) {
-      if (compareDates(form.getFieldValue('registerAt')[1].$d, form.getFieldValue('joinAt')[0].$d) > 0) {
-        message.info("活动报名结束时间不能晚于活动开始时间")
-        form.setFieldValue('registerAt', [dayjs(changedActivity.registerAt[0]), dayjs(changedActivity.registerAt[1])])
-        form.setFieldValue('joinAt', [dayjs(changedActivity.joinAt[0]), dayjs(changedActivity.joinAt[1])])
-      }
-    }
+        //首先判断更改后的报名日期是否与之前相同
+        if (!dayjs(registerStartTime).isSame(dayjs(originRegisterStartTime), 'minute')) {
+          //以分钟为精度来比较两个时间是否相同
+          form.setFieldValue('registerAt', [dayjs(originRegisterStartTime), dayjs().add(1, 'day')])
+          message.error('不可修改报名活动时间')
+          return;
+        }
 
+        if (dayjs(registerEndTime).isBefore(dayjs())) {
+          form.setFieldValue('registerAt', [dayjs(originRegisterStartTime), dayjs().add(1, 'day')]);
+          message.error('修改后的报名结束时间不能早于当前时间')
+        }
+      }
+      if (form.getFieldValue('registerAt') && isChange !== 1) {
+        if (dayjs().isAfter(form.getFieldValue('registerAt')[0])) {
+          form.setFieldValue('registerAt', [dayjs(originRegisterStartTime), dayjs(originRegisterEndTime)])
+          message.info("活动报名开始时间不能早于目前时间")
+        }
+      }
+      if (form.getFieldValue('joinAt')) {
+        if (dayjs().isAfter(form.getFieldValue('joinAt')[0])) {
+          form.setFieldValue('joinAt', [dayjs(originJoinStartTime), dayjs(originJoinEndTime)])
+          message.info("活动开始时间不能早于目前时间")
+        }
+      }
+      if (form.getFieldValue('registerAt') && form.getFieldValue('joinAt')) {
+        if (compareDates(form.getFieldValue('registerAt')[1].$d, form.getFieldValue('joinAt')[0].$d) > 0) {
+          message.info("活动报名结束时间不能晚于活动开始时间")
+          form.setFieldValue('registerAt', [dayjs(originRegisterStartTime), dayjs(originRegisterEndTime)])
+          form.setFieldValue('joinAt', [dayjs(originJoinStartTime), dayjs(originJoinEndTime)])
+        }
+      }
+    }
   }, [])
   // 本地保存数据
   const handleLocal = () => {
@@ -698,7 +735,7 @@ export const ActivityEditor = ({
                       <Button type="primary" onClick={handleUpdate}>
                         确认更改
                       </Button>
-                      <Button danger onClick={() => setIsEdit(false)}>
+                      <Button danger onClick={cancelChange}>
                         取消更改
                       </Button>
                     </Space>
