@@ -252,7 +252,6 @@ export const ActivityEditor = ({
   (departments === undefined) ? OPTIONS = ['无数据'] : OPTIONS = OPTIONS.concat(departments.map((item) => item.name));
 
   const isChange = useMemo(() => {
-    console.log('changedActivity', changedActivity)
     if (isDraft) {
       return 4;
     }
@@ -277,7 +276,6 @@ export const ActivityEditor = ({
     return 5
   }, [])
 
-  console.log('isChanged', isChange)
   const handleDate = useCallback(() => {
     //下面是最基本的
     //如果在没有更改的情况下，仅仅是在发布活动的时候
@@ -306,7 +304,6 @@ export const ActivityEditor = ({
     //下面是对假设就是说活动在各个时间线对于活动的日期更改
     //如果isChange===0
     //这是报名时间段之前，四个时间段都可以更改
-    console.log(changedActivity)
     if (changedActivity.registerAt) {
       const originRegisterStartTime = changedActivity?.registerAt[0];//拿到活动原本的报名开始时间
       const originRegisterEndTime = changedActivity?.registerAt[1];//活动报名结束时间
