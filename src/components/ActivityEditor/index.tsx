@@ -244,7 +244,6 @@ export const ActivityEditor = ({
     form.setFieldValue('registerAt', [dayjs(changedActivity.registerAt[0]), dayjs(changedActivity.registerAt[1])])
     form.setFieldValue('quota', changedActivity.quota)
   }
-  console.log(changedActivity)
   //selector  
   const { data: departments } = network.teacher.useDepartment()
   let OPTIONS: string[] = [];
