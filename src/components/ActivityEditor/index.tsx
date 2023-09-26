@@ -105,10 +105,6 @@ export const ActivityEditor = ({
   const [iconUrl, setIconUrl] = useState<string>(changedActivity.icon);
   const [isEdit, setIsEdit] = useState(Edit);///只有编辑状态才能更改，刚开始的时候不是编辑装填
 
-  //取消暂时更改的函数
-  const cancelChange = () => {
-    setIsEdit(false);
-  }
   const getBase64 = (img: RcFile, callback: (url: string) => void) => {
     const reader = new FileReader();
     reader.addEventListener('load', () => callback(reader.result as string));
@@ -236,6 +232,19 @@ export const ActivityEditor = ({
       </div>
     </div>
   )
+
+  //取消暂时更改的函数
+  const cancelChange = () => {
+    setIsEdit(false);
+    form.setFieldValue('description', changedActivity.description)
+    form.setFieldValue('position', changedActivity.position)
+    form.setFieldValue('contact_person', changedActivity.contact_person)
+    form.setFieldValue('contact_phone_number', changedActivity.contact_phone_number)
+    form.setFieldValue('joinAt', [dayjs(changedActivity.joinAt[0]), dayjs(changedActivity.joinAt[1])])
+    form.setFieldValue('registerAt', [dayjs(changedActivity.registerAt[0]), dayjs(changedActivity.registerAt[1])])
+    form.setFieldValue('quota', changedActivity.quota)
+  }
+  console.log(changedActivity)
   //selector  
   const { data: departments } = network.teacher.useDepartment()
   let OPTIONS: string[] = [];
