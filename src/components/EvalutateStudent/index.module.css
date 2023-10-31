@@ -1,0 +1,33 @@
+.all{
+    width:16.5vw;
+    height:53.7vh;
+    z-index: 100;
+    position:fixed;
+    top:50%;
+    left:50%;
+    transform: translate(-50%, -50%);
+    z-index: 100;
+    border-radius: 2px;
+    box-shadow: 1px 1px 5px 1px;
+    background-color: white;
+}
+
+.popContainer{
+    width: 100%;
+}
+
+.mask{
+    width:100vw;
+    height:100vh;
+    position:absolute;
+    z-index:100;
+    overflow: hidden;
+    top:0;
+    left:0;
+}
+
+input[type="checkbox"]{
+    border-radius:50%;
+    width:13px;
+    height:13px;
+}
