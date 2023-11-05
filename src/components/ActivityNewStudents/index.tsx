@@ -32,6 +32,7 @@ import { useEffect } from 'react'
 import { Modal, Input, message } from 'antd'
 import { network } from '../../utils/network'
 import EmptyComponent from '../EmptyComponent';
+import EvaluateStudent from '../EvalutateStudent';
 interface FormData {
     name: string
     uid: string
@@ -42,6 +43,8 @@ interface FormData {
     changeNotice: boolean | null//用于确认是否收到通知
     isOperate: number//1是通过，2是打回
     user_id: number//这个不展示，只是用于发请求
+    evaluate: string;//这个用于评价学生
+    zhanweifu: string;//弹窗占位符
 }
 
 type Order = 'asc' | 'desc';
@@ -130,6 +133,18 @@ const headCells: readonly HeadCell[] = [
         numeric: false,
         disablePadding: false,
         label: '操作'
+    },
+    {
+        id: 'evaluate',
+        numeric: false,
+        disablePadding: false,
+        label: '评价'
+    },
+    {
+        id: 'zhanweifu',
+        numeric: false,
+        disablePadding: false,
+        label: '',
     }
 ]
 
@@ -292,6 +307,7 @@ export const ActivityStudents = ({ students, id, activity }: ActivityStudentsPro
     const [rowsPerPage, setRowsPerPage] = useState(10)
     const [isOperate, setIsOperate] = useState(0);//0代表没有操作，1代表可以学生的通过和打回，2代表可以签退，3代表无法签退
     const [showModal, setShowModal] = useState(false)
+    const [openEvaluate, setOpenEvaluate] = useState(false)//打开评价学生弹窗
     const [activity_id, setAcitvityId] = useSendState(state => [
         state.activity_id,
         state.setState('activity_id')
@@ -339,7 +355,6 @@ export const ActivityStudents = ({ students, id, activity }: ActivityStudentsPro
         }
         setSelected([]);
     }
-
     const handleClick = (
         event: React.MouseEvent<unknown>,
         name: string,
@@ -390,7 +405,9 @@ export const ActivityStudents = ({ students, id, activity }: ActivityStudentsPro
         state: string,
         changeNotice: boolean | null,
         isOperate: number,
-        user_id: number
+        user_id: number,
+        evaluate: string,
+        zhanweifu: string,
     ): FormData => {
         return {
             name,
@@ -402,6 +419,8 @@ export const ActivityStudents = ({ students, id, activity }: ActivityStudentsPro
             changeNotice,
             isOperate,
             user_id,
+            evaluate,
+            zhanweifu,
         };
     }, [])
     //将拿来的数据搞一下
@@ -444,7 +463,7 @@ export const ActivityStudents = ({ students, id, activity }: ActivityStudentsPro
             } else if (State === '未签到' || State === '已签退') {
                 setIsOperate(3)
             }
-
+            const evaluate = '评价';
             return createFormData(
                 item.user.name,
                 item.user.uid,
@@ -454,7 +473,9 @@ export const ActivityStudents = ({ students, id, activity }: ActivityStudentsPro
                 State,
                 item.notified,
                 isOperate,
-                item.user.id
+                item.user.id,
+                evaluate,
+                '',
             )
         })
     }, []);
@@ -474,6 +495,7 @@ export const ActivityStudents = ({ students, id, activity }: ActivityStudentsPro
             return selected.includes(item.user.name)
         })
     }, [selected, students])
+    console.log('stru', filterStudents)
     useEffect(() => {
         setCanOperate(true);
         setCanBack(true);
@@ -581,6 +603,7 @@ export const ActivityStudents = ({ students, id, activity }: ActivityStudentsPro
                                                     <TableCell align='left'>{row.classname}</TableCell>
                                                     <TableCell align='left'>{row.participate_reason}</TableCell>
                                                     <TableCell align='left'>{row.state}</TableCell>
+
                                                     {isOperate === 1 ?
                                                         <TableCell align='left' >
                                                             <Box
@@ -673,6 +696,23 @@ export const ActivityStudents = ({ students, id, activity }: ActivityStudentsPro
                                                                     再次发送
                                                                 </Button>
                                                             </Box>
+                                                        </TableCell>
+                                                    }
+                                                    <TableCell align='left'>
+                                                        <Button variant='text'
+                                                            onClick={(event: React.MouseEvent) => {
+                                                                event.stopPropagation();
+                                                                console.log(openEvaluate)
+                                                                setOpenEvaluate(true);
+                                                            }}
+                                                        >评价</Button>
+                                                    </TableCell>
+
+                                                    {
+                                                        openEvaluate
+                                                        &&
+                                                        <TableCell>
+                                                            <EvaluateStudent handleOpen={() => { setOpenEvaluate(false) }} activity_id={id} user_id={row.user_id} />
                                                         </TableCell>
                                                     }
                                                 </TableRow>

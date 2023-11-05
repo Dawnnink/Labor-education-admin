@@ -28,7 +28,8 @@ export class BaseService {
 
   protected useGet = <T>(
     url: string | null,
-    query?: Record<string, string | number | undefined>
+    refreshInterval: number = 10000,
+    query?: Record<string, string | number | undefined>,
   ) => {
     if (url === null) {
       return useSWR<T, ApiError>(null, this.fetcher, { refreshInterval: 1000 })
@@ -45,7 +46,7 @@ export class BaseService {
       url +
       (filteredQuery ? `?${String(new URLSearchParams(filteredQuery))}` : ''),
       this.fetcher,
-      { refreshInterval: 1000 }
+      { refreshInterval: refreshInterval }
     )
   }
 }
@@ -103,6 +104,12 @@ export interface IUser {
   college: string
   phone_number: string
   role_ids: number[]
+}
+//学生评价的接口
+export interface IStudentEvaluateProps {
+  comment: string;
+  image1: string;
+  image2: string;
 }
 
 export class Service extends BaseService {
@@ -205,7 +212,7 @@ export class Service extends BaseService {
   teacher = {
     //获取签到码
     useCode: (id: number) => {
-      return this.useGet<Code>(`/teacher/activity/code?id=${id}&type=in`)
+      return this.useGet<Code>(`/teacher/activity/code?id=${id}&type=in`, 1000000)
     },
     useDepartment: () => {
       return this.useGet<Department[]>('/teacher/department/list')
@@ -219,12 +226,13 @@ export class Service extends BaseService {
     },
 
     useActivity: (id: number) => {
-      return this.useGet<Activity>(`/teacher/activity/detail`, { id })
+      return this.useGet<Activity>(`/teacher/activity/detail`, 10000, { id })
     },
 
     useActivityStudents: (id: number) => {
       return this.useGet<ActivityStudentsProps['students']>(
         `/teacher/activity/participate`,
+        10000,
         { id }
       )
     },
@@ -279,6 +287,27 @@ export class Service extends BaseService {
         user_id: user_id
       })
     },
+    //获取学生评价
+    useStudentEvaluate: (activity_id: number, user_id: number) => {
+      return this.useGet<IStudentEvaluateProps>('/teacher/activity/participate/comment',
+        10000, {
+        activity_id: activity_id,
+        user_id: user_id
+      })
+    }
+    ,
+    //评价学生
+    useEvaluateStudent: (t_state: number, t_comment: string) => {
+      return this.axios.post('/teacher/activity/participate/comment', {
+        t_state: t_state,
+        t_comment: t_comment,
+      }).then((res) => {
+        return res.data;
+      }).catch(() => {
+        message.error("评价学生失败");
+      })
+    }
+    ,
     downloadActivityStudentsExcel: async (activityId: number, user_ids?: number[]) => {
       const data = await this.axios.post(
         `/teacher/activity/participate/excel/some`,
@@ -308,7 +337,7 @@ export class Service extends BaseService {
       return this.useGet<Array<IAdActivity>>('/admin/activity/list')
     },
     useActivity: (id: number) => {
-      return this.useGet<IAdActivity>('/admin/activity/detail', { id })
+      return this.useGet<IAdActivity>('/admin/activity/detail', 10000, { id })
     },
     usePass: async (id: number) => {
       return await this.axios.post('/admin/activity/pass', {

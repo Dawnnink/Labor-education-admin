@@ -352,7 +352,6 @@ const Code: React.FC<{ cansee: boolean; id: number }> = (props) => {
         ({ data: num } = network.teacher.useCode(props.id)); // 注意括号的使用
     }
 
-
     const [isOpen, setIsOpen] = React.useState(false)
     return (
         <div>
