@@ -167,12 +167,15 @@ export class Service extends BaseService {
   private signFileUploadUrl = async (
     filename: string
   ): Promise<SignOssResponse> => {
+    console.log(filename)
     const { data } = await this.axios.post<SignOssResponse>(
       '/teacher/activity/file',
       {
         filename,
       }
     )
+    console.log(data)
+
     return data
   }
 
@@ -296,12 +299,29 @@ export class Service extends BaseService {
       })
     }
     ,
-    //评价学生
-    useEvaluateStudent: (t_state: number, t_comment: string) => {
+    //评价学生：一个
+    useEvaluateSingleStudent: (activity_id: number, user_ids: number, t_state: number, t_comment: string) => {
       return this.axios.post('/teacher/activity/participate/comment', {
+        activity_id: activity_id,
+        user_ids: user_ids,
         t_state: t_state,
         t_comment: t_comment,
       }).then((res) => {
+        message.success('评价学生成功');
+        return res.data;
+      }).catch(() => {
+        message.error("评价学生失败");
+      })
+    },
+    //评价学生（批量）
+    useEvaluateStudent: (activity_id: number, user_ids: Array<number>, t_state: number, t_comment: string) => {
+      return this.axios.post('/teacher/activity/participate/comments', {
+        activity_id: activity_id,
+        user_ids: user_ids,
+        t_state: t_state,
+        t_comment: t_comment,
+      }).then((res) => {
+        message.success('评价学生成功');
         return res.data;
       }).catch(() => {
         message.error("评价学生失败");

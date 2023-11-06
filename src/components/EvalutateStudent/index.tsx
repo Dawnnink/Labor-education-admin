@@ -1,14 +1,15 @@
 import { TextareaAutosize, Stack, Button, Typography, FormGroup, Radio, FormControlLabel, RadioGroup } from '@mui/material';
 
-import React, { ChangeEvent, FC, useState } from 'react';
+import React, { useEffect, ChangeEvent, FC, useState } from 'react';
 
 import close from '~/assets/svg/Close.svg'
 import style from './index.module.css'
 
 import { network } from '~/utils/network'
+import { useSendState } from '~/store/send';
 //需要默认传入一个open的boolean参数
 interface IEvalutate {
-    handleOpen: () => void;
+    handleClose: () => void;
     activity_id: number;
     user_id: number;
 }
@@ -17,14 +18,34 @@ const EvaluateStudent: FC<IEvalutate> = (props) => {
     //选择的评价
     const [selectedValue, setSelectedValue] = useState<string>('');
     const [evaluateValue, setEvaluateValue] = useState<string>('');
-    const { data: evaluate } = network.teacher.useStudentEvaluate(props.activity_id, props.user_id);
-    console.log(evaluate)
+    const [setLevel, setTeacherSay, sendEvaluates, setActivityId, setUserId] = useSendState(state => [
+        state.setState('level'),
+        state.setState('teacherSay'),
+        state.sendEvaluates,
+        state.setState('activity_id'),
+        state.setState('user_id')
+    ])
+    let evaluate;
+    if (props.user_id) {
+        ({ data: evaluate } = network.teacher.useStudentEvaluate(props.activity_id, props.user_id));
+    }
     const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
         setSelectedValue(event.target.value);
     }
     const handleInput = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
         setEvaluateValue(event.target.value);
+        console.log(evaluateValue)
     }
+    //副作用函数，在加载的时候自动刷新获取activity_id和user_id
+    useEffect(() => {
+        setActivityId(props.activity_id);
+        setUserId(props.user_id);
+    }, [])
+
+    useEffect(() => {
+        setLevel(parseInt(selectedValue));
+        setTeacherSay(evaluateValue);
+    }, [selectedValue, evaluateValue])
     return (
         <Stack>
             <Stack className={style.all} sx={{
@@ -37,18 +58,28 @@ const EvaluateStudent: FC<IEvalutate> = (props) => {
                         <Typography variant='h5'>
                             评价
                         </Typography>
-                        <Stack sx={{ cursor: 'pointer' }} onClick={props.handleOpen}>
+                        <Stack sx={{ cursor: 'pointer' }} onClick={() => {
+                            setUserId(0)
+                            props.handleClose();
+                        }
+                        }>
                             <img src={close} alt="" />
                         </Stack>
                     </Stack>
                     <Stack className={style.studentsFeel} sx={{ ml: 2, mb: 1, mr: 2 }}>
-                        <Typography variant="h6">
-                            学生心得体会
-                        </Typography>
-                        <Stack sx={{ fontSize: '16px' }}>
+                        {
+                            props.user_id !== 0
+                            &&
+                            <Typography variant="h6">
+                                学生心得体会
+                            </Typography>
+                        }
 
+                        <Stack sx={{ fontSize: '16px' }}>
+                            {evaluate?.comment}
                         </Stack>
-                        <img src="" alt="" />
+                        <img src={evaluate?.image1} alt="" />
+                        <img src={evaluate?.image2} alt="" />
                     </Stack>
                     <Stack className={style.teachersEvaluate} sx={{ ml: 2, mb: 2, mr: 2, mt: 1 }}>
                         <Typography variant='h6'>
@@ -72,11 +103,16 @@ const EvaluateStudent: FC<IEvalutate> = (props) => {
                                 minRows={4}
                                 maxRows={4}
                                 onChange={handleInput}
-
+                                className={style.textarea}
                             />
                         </Stack>
                         <Stack direction='row' justifyContent='center'>
-                            <Button sx={{ width: '30%' }} variant='contained'>确认</Button>
+                            <Button sx={{ width: '30%' }} variant='contained' onClick={async () => {
+                                if (sendEvaluates()) {
+                                    setUserId(0);
+                                    props.handleClose;
+                                }
+                            }}>确认</Button>
                         </Stack>
                     </Stack>
                 </Stack>

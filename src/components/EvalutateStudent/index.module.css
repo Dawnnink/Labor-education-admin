@@ -1,8 +1,9 @@
 .all{
-    width:17%;
-    max-height:53.7%;
+    width:17vw;
+    max-height:53.7vh;
+    min-height:40vh;
     z-index: 100;
-    position:absolute;
+    position:fixed;
     top:50%;
     left:50%;
     transform: translate(-50%, -50%);
@@ -31,4 +32,9 @@ input[type="checkbox"]{
     border-radius:50%;
     width:13px;
     height:13px;
+}
+.textarea{
+    outline:none;
+    border-radius: 8px;
+    max-width: 100%;
 }

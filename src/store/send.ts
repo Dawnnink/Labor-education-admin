@@ -19,6 +19,10 @@ interface SendState {
     reason: string//存放错误的原因
     activity_id: number;//活动的id
     user_id: number;//有些时候会单独打回或者通过
+    level: number;//教师给学生的评价
+    teacherSay: string;//评价
+    sendEvaluate: () => void;//单个学生评价
+    sendEvaluates: () => boolean;//评价
     sendPass: () => void;
     sendReject: () => void;
     sendBack: () => void; //签退
@@ -36,6 +40,35 @@ export const useSendState = create<SendState>((set, get) => ({
     reason: '暂无原因',
     activity_id: 0,
     user_id: 0,
+    level: 0,
+    teacherSay: '',
+    sendEvaluate: () => {
+        const { activity_id, user_id, level, teacherSay } = get();
+        try {
+            network.teacher.useEvaluateSingleStudent(activity_id, user_id, level, teacherSay)
+        } catch (err) {
+            console.error(err);
+        }
+
+    },
+    sendEvaluates: () => {
+        const { activity_id, students, user_id, level, teacherSay } = get();
+        let ids: number[] = [];
+        console.log(user_id);
+        if (user_id !== 0) {
+            ids = [user_id];
+        } else {
+            ids = students.map(it => it.user.id)
+        }
+        let flag = true;
+        try {
+            network.teacher.useEvaluateStudent(activity_id, ids, level, teacherSay)
+        } catch (err) {
+            flag = false;
+            console.error(err);
+        }
+        return flag;
+    },
     sendPass: () => {
         const { students, activity_id, user_id } = get();//获取当前的选中学生数据
         let ids: number[] = []

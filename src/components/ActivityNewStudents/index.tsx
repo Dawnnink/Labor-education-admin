@@ -224,16 +224,20 @@ interface EnhancedTableToolbarProps {
     }[]
     canOperate: boolean
     canBack: boolean
+    canEvaluate: boolean
 }
 
 function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
     const [showModal, setShowModal] = useState(false);//控制打回审核输入原因的Modal.
-    const [reason, sendPass, sendReject, sendBack] = useSendState(state => [
+    const [activity_id, user_id, reason, sendPass, sendReject, sendBack] = useSendState(state => [
+        state.activity_id,
+        state.user_id,
         state.reason,
         state.sendPass,
         state.sendReject,
         state.sendBack
     ])
+    const [openAllEvaluate, setOpenAllEvaluate] = useState(false);//评价选中学生
     const [setReason] = useSendState(state => [
         state.setState('reason'),
     ])
@@ -283,6 +287,11 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
                     onClick={sendBack}
                     disabled={props.canBack}
                 >签退</Button>
+                <Divider orientation='vertical' flexItem />
+                <Button
+                    disabled={props.canEvaluate}
+                    onClick={() => { setOpenAllEvaluate(true); }}
+                >评价</Button>
             </Stack>
             <Modal
                 title="请输入打回理由"
@@ -292,6 +301,11 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
             >
                 <Input onChange={handlePut} max={30} />
             </Modal>
+            {
+                openAllEvaluate
+                &&
+                <EvaluateStudent handleClose={() => { setOpenAllEvaluate(false) }} activity_id={activity_id} user_id={user_id} />
+            }
         </Toolbar>
     )
 }
@@ -300,6 +314,7 @@ export const ActivityStudents = ({ students, id, activity }: ActivityStudentsPro
     //state定义
     const [canOperate, setCanOperate] = useState(true);//控制能否进行操作，假设没有选中学生则无法进行操作
     const [canBack, setCanBack] = useState(true);//控制能否进行签退
+    const [canEvaluate, setCanEvaluate] = useState(true);//控制能否进行评价
     const [order, setOrder] = useState<Order>('asc')
     const [orderBy, setOrderBy] = useState<keyof FormData>('name')
     const [selected, setSelected] = useState<readonly string[]>([])
@@ -321,6 +336,7 @@ export const ActivityStudents = ({ students, id, activity }: ActivityStudentsPro
         state.setState('students'),
         state.setState('user_id')
     ])
+
     const handleOk = () => {
         if (reason === '暂无原因') {
             message.info('请输入打回原因')
@@ -495,10 +511,10 @@ export const ActivityStudents = ({ students, id, activity }: ActivityStudentsPro
             return selected.includes(item.user.name)
         })
     }, [selected, students])
-    console.log('stru', filterStudents)
     useEffect(() => {
         setCanOperate(true);
         setCanBack(true);
+        setCanEvaluate(true);
         setStudents(filterStudents);//将选中的学生庶几乎放入
         if (filterStudents.length > 0) {
             //如果选中的学生大于0
@@ -537,8 +553,26 @@ export const ActivityStudents = ({ students, id, activity }: ActivityStudentsPro
                     setCanBack(false);
                 }
             }
+            if (dayjs().isAfter(dayjs(activity.activity_start_time))) {
+                //活动开始之后
+                let flag = false;
+                filterStudents.map((item) => {
+                    if (
+                        item.state === '报名成功'
+                        &&
+                        item.check_in
+                    ) {
+                        flag = true;
+                    }
+                })
+                if (flag) {
+                    setCanEvaluate(false);
+                }
+            }
         }
     }, [filterStudents])
+    console.log(filterStudents)
+
     useEffect(() => {
         //在组件最初渲染的时候将activity_id加入状态存储库
         setAcitvityId(id)
@@ -547,7 +581,7 @@ export const ActivityStudents = ({ students, id, activity }: ActivityStudentsPro
         <Box sx={{ width: '100%' }}>
             <Paper sx={{ width: '100%', mb: 2 }}>
                 {/* 工具栏 */}
-                <EnhancedTableToolbar students={filterStudents} canOperate={canOperate} canBack={canBack} />
+                <EnhancedTableToolbar students={filterStudents} canOperate={canOperate} canBack={canBack} canEvaluate={canEvaluate} />
                 {
                     visibleRows.length === 0 ?
                         <EmptyComponent message="暂无学生" />
@@ -712,7 +746,7 @@ export const ActivityStudents = ({ students, id, activity }: ActivityStudentsPro
                                                         openEvaluate
                                                         &&
                                                         <TableCell>
-                                                            <EvaluateStudent handleOpen={() => { setOpenEvaluate(false) }} activity_id={id} user_id={row.user_id} />
+                                                            <EvaluateStudent handleClose={() => { setOpenEvaluate(false) }} activity_id={id} user_id={row.user_id} />
                                                         </TableCell>
                                                     }
                                                 </TableRow>
