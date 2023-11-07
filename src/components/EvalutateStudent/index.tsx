@@ -7,6 +7,7 @@ import style from './index.module.css'
 
 import { network } from '~/utils/network'
 import { useSendState } from '~/store/send';
+import { useUtilsState } from '~/store/utils';
 //需要默认传入一个open的boolean参数
 interface IEvalutate {
     handleClose: () => void;
@@ -16,6 +17,10 @@ interface IEvalutate {
 
 const EvaluateStudent: FC<IEvalutate> = (props) => {
     //选择的评价
+    let evaluate;
+    if (props.user_id) {
+        ({ data: evaluate } = network.teacher.useStudentEvaluate(props.activity_id, props.user_id));
+    }
     const [selectedValue, setSelectedValue] = useState<string>('');
     const [evaluateValue, setEvaluateValue] = useState<string>('');
     const [setLevel, setTeacherSay, sendEvaluates, setActivityId, setUserId] = useSendState(state => [
@@ -25,10 +30,9 @@ const EvaluateStudent: FC<IEvalutate> = (props) => {
         state.setState('activity_id'),
         state.setState('user_id')
     ])
-    let evaluate;
-    if (props.user_id) {
-        ({ data: evaluate } = network.teacher.useStudentEvaluate(props.activity_id, props.user_id));
-    }
+    const [name] = useUtilsState(state => [
+        state.name,
+    ])
     const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
         setSelectedValue(event.target.value);
     }
@@ -71,7 +75,7 @@ const EvaluateStudent: FC<IEvalutate> = (props) => {
                             props.user_id !== 0
                             &&
                             <Typography variant="h6">
-                                学生心得体会
+                                {name ? name : '学生'}的心得体会
                             </Typography>
                         }
 
@@ -109,7 +113,6 @@ const EvaluateStudent: FC<IEvalutate> = (props) => {
                         <Stack direction='row' justifyContent='center'>
                             <Button sx={{ width: '30%' }} variant='contained' onClick={async () => {
                                 if (sendEvaluates()) {
-                                    setUserId(0);
                                     props.handleClose;
                                 }
                             }}>确认</Button>

@@ -225,17 +225,17 @@ export class Service extends BaseService {
       return res
     },
     useActivities: () => {
-      return this.useGet<IIN[]>(`/teacher/activity/list`)
+      return this.useGet<IIN[]>(`/teacher/activity/list`, 10000)
     },
 
     useActivity: (id: number) => {
-      return this.useGet<Activity>(`/teacher/activity/detail`, 10000, { id })
+      return this.useGet<Activity>(`/teacher/activity/detail`, 1000000, { id })
     },
 
     useActivityStudents: (id: number) => {
       return this.useGet<ActivityStudentsProps['students']>(
         `/teacher/activity/participate`,
-        10000,
+        1000000,
         { id }
       )
     },
@@ -293,7 +293,7 @@ export class Service extends BaseService {
     //获取学生评价
     useStudentEvaluate: (activity_id: number, user_id: number) => {
       return this.useGet<IStudentEvaluateProps>('/teacher/activity/participate/comment',
-        10000, {
+        1000000, {
         activity_id: activity_id,
         user_id: user_id
       })
@@ -357,7 +357,7 @@ export class Service extends BaseService {
       return this.useGet<Array<IAdActivity>>('/admin/activity/list')
     },
     useActivity: (id: number) => {
-      return this.useGet<IAdActivity>('/admin/activity/detail', 10000, { id })
+      return this.useGet<IAdActivity>('/admin/activity/detail', 1000000, { id })
     },
     usePass: async (id: number) => {
       return await this.axios.post('/admin/activity/pass', {

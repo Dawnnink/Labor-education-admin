@@ -44,12 +44,12 @@ export const useSendState = create<SendState>((set, get) => ({
     teacherSay: '',
     sendEvaluate: () => {
         const { activity_id, user_id, level, teacherSay } = get();
+
         try {
-            network.teacher.useEvaluateSingleStudent(activity_id, user_id, level, teacherSay)
+            network.teacher.useEvaluateSingleStudent(activity_id, user_id, level, teacherSay);
         } catch (err) {
             console.error(err);
         }
-
     },
     sendEvaluates: () => {
         const { activity_id, students, user_id, level, teacherSay } = get();
