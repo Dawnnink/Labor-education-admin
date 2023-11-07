@@ -44,8 +44,21 @@ export const useSendState = create<SendState>((set, get) => ({
     teacherSay: '',
     sendEvaluate: () => {
         const { activity_id, user_id, level, teacherSay } = get();
+        console.log('sajfdskfhkshk', level)
 
         try {
+            if (!level) {
+                //还没有选等级
+                message.warning('请选择评价')
+                return;
+            }
+            if (teacherSay.length === 0) {
+                message.warning('请写教师评价')
+                return;
+            } else if (teacherSay.length > 20) {
+                message.warning('教师评语请限制在20字内');
+                return;
+            }
             network.teacher.useEvaluateSingleStudent(activity_id, user_id, level, teacherSay);
         } catch (err) {
             console.error(err);
@@ -53,8 +66,19 @@ export const useSendState = create<SendState>((set, get) => ({
     },
     sendEvaluates: () => {
         const { activity_id, students, user_id, level, teacherSay } = get();
+        if (!level) {
+            //还没有选等级
+            message.warning('请选择评价')
+            return false;
+        }
+        if (teacherSay.length === 0) {
+            message.warning('请写教师评价')
+            return false;
+        } else if (teacherSay.length > 20) {
+            message.warning('教师评语请限制在20字内');
+            return false;
+        }
         let ids: number[] = [];
-        console.log(user_id);
         if (user_id !== 0) {
             ids = [user_id];
         } else {

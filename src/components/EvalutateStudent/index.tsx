@@ -1,4 +1,4 @@
-import { TextareaAutosize, Stack, Button, Typography, FormGroup, Radio, FormControlLabel, RadioGroup } from '@mui/material';
+import { TextareaAutosize, Stack, Button, Typography, FormGroup, Radio, FormControlLabel, RadioGroup, Box } from '@mui/material';
 
 import React, { useEffect, ChangeEvent, FC, useState } from 'react';
 
@@ -64,6 +64,8 @@ const EvaluateStudent: FC<IEvalutate> = (props) => {
                         </Typography>
                         <Stack sx={{ cursor: 'pointer' }} onClick={() => {
                             setUserId(0)
+                            setLevel(0);
+                            setTeacherSay('');
                             props.handleClose();
                         }
                         }>
@@ -80,10 +82,17 @@ const EvaluateStudent: FC<IEvalutate> = (props) => {
                         }
 
                         <Stack sx={{ fontSize: '16px' }}>
-                            {evaluate?.comment}
+                            <Box>
+                                {evaluate?.comment}
+                                {evaluate?.image1 &&
+                                    <img src={evaluate?.image1} className={style.image} alt="" />
+                                }
+                                {evaluate?.image2 &&
+                                    <img src={evaluate?.image2} className={style.image} alt="" />
+                                }
+                            </Box>
                         </Stack>
-                        <img src={evaluate?.image1} alt="" />
-                        <img src={evaluate?.image2} alt="" />
+
                     </Stack>
                     <Stack className={style.teachersEvaluate} sx={{ ml: 2, mb: 2, mr: 2, mt: 1 }}>
                         <Typography variant='h6'>
@@ -113,7 +122,7 @@ const EvaluateStudent: FC<IEvalutate> = (props) => {
                         <Stack direction='row' justifyContent='center'>
                             <Button sx={{ width: '30%' }} variant='contained' onClick={async () => {
                                 if (sendEvaluates()) {
-                                    props.handleClose;
+                                    props.handleClose();
                                 }
                             }}>确认</Button>
                         </Stack>

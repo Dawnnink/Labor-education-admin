@@ -33,6 +33,7 @@ import { Modal, Input, message } from 'antd'
 import { network } from '../../utils/network'
 import EmptyComponent from '../EmptyComponent';
 import EvaluateStudent from '../EvalutateStudent';
+import { useUtilsState } from '~/store/utils';
 interface FormData {
     name: string
     uid: string
@@ -327,7 +328,8 @@ export const ActivityStudents = ({ students, id, activity }: ActivityStudentsPro
         state.activity_id,
         state.setState('activity_id')
     ])
-    const [reason, setReason, sendPass, sendReject, sendBack, setStudents, setUserId] = useSendState(state => [
+    const [user_id, reason, setReason, sendPass, sendReject, sendBack, setStudents, setUserId] = useSendState(state => [
+        state.user_id,
         state.reason,
         state.setState('reason'),
         state.sendPass,
@@ -336,7 +338,9 @@ export const ActivityStudents = ({ students, id, activity }: ActivityStudentsPro
         state.setState('students'),
         state.setState('user_id')
     ])
-
+    const [setName] = useUtilsState(state => [
+        state.setState('name'),
+    ]);//用来给弹窗传递name值
     const handleOk = () => {
         if (reason === '暂无原因') {
             message.info('请输入打回原因')
@@ -511,6 +515,14 @@ export const ActivityStudents = ({ students, id, activity }: ActivityStudentsPro
             return selected.includes(item.user.name)
         })
     }, [selected, students])
+
+    //写一个函数，传入的参数是学生的user_id传出的是学生的名字
+    const IdToName = (id: number) => {
+        const select = students.filter((item) => {
+            return id === item.user.id;
+        })
+        return select[0].user.name;
+    }
     useEffect(() => {
         setCanOperate(true);
         setCanBack(true);
@@ -700,7 +712,11 @@ export const ActivityStudents = ({ students, id, activity }: ActivityStudentsPro
                                                                     </Box>
                                                                 </TableCell>
                                                                 :
-                                                                null
+                                                                <TableCell>
+                                                                    <Stack>
+                                                                        无
+                                                                    </Stack>
+                                                                </TableCell>
                                                         )
                                                     }
                                                     {
@@ -738,17 +754,13 @@ export const ActivityStudents = ({ students, id, activity }: ActivityStudentsPro
                                                                 event.stopPropagation();
                                                                 console.log(openEvaluate)
                                                                 setOpenEvaluate(true);
+                                                                // console.log('这里的id', row.user_id)
+                                                                setUserId(row.user_id)
+                                                                setName(IdToName(row.user_id))
                                                             }}
+                                                        // disabled={canEvaluate}
                                                         >评价</Button>
                                                     </TableCell>
-
-                                                    {
-                                                        openEvaluate
-                                                        &&
-                                                        <TableCell>
-                                                            <EvaluateStudent handleClose={() => { setOpenEvaluate(false) }} activity_id={id} user_id={row.user_id} />
-                                                        </TableCell>
-                                                    }
                                                 </TableRow>
                                             )
                                         })
@@ -790,6 +802,12 @@ export const ActivityStudents = ({ students, id, activity }: ActivityStudentsPro
             >
                 <Input onChange={handlePut} max={30} />
             </Modal>
+            {
+                openEvaluate
+                &&
+                <EvaluateStudent handleClose={() => { setOpenEvaluate(false) }} activity_id={id} user_id={user_id} />
+            }
+
         </Box>
     )
 }
