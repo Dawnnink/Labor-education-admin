@@ -758,7 +758,7 @@ export const ActivityStudents = ({ students, id, activity }: ActivityStudentsPro
                                                                 setUserId(row.user_id)
                                                                 setName(IdToName(row.user_id))
                                                             }}
-                                                        // disabled={canEvaluate}
+                                                            disabled={canEvaluate}
                                                         >评价</Button>
                                                     </TableCell>
                                                 </TableRow>
