@@ -225,7 +225,7 @@ interface EnhancedTableToolbarProps {
     }[]
     canOperate: boolean
     canBack: boolean
-    canEvaluate: boolean
+    canEvaluates: boolean
 }
 
 function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
@@ -290,7 +290,7 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
                 >签退</Button>
                 <Divider orientation='vertical' flexItem />
                 <Button
-                    disabled={props.canEvaluate}
+                    disabled={props.canEvaluates}
                     onClick={() => { setOpenAllEvaluate(true); }}
                 >评价</Button>
             </Stack>
@@ -315,7 +315,8 @@ export const ActivityStudents = ({ students, id, activity }: ActivityStudentsPro
     //state定义
     const [canOperate, setCanOperate] = useState(true);//控制能否进行操作，假设没有选中学生则无法进行操作
     const [canBack, setCanBack] = useState(true);//控制能否进行签退
-    const [canEvaluate, setCanEvaluate] = useState(true);//控制能否进行评价
+    const [canEvaluates, setCanEvaluates] = useState(true);//控制能否进行评价(批量)
+    const [canEvaluate, setCanEvaluate] = useState(true);//控制能否进行单人评价
     const [order, setOrder] = useState<Order>('asc')
     const [orderBy, setOrderBy] = useState<keyof FormData>('name')
     const [selected, setSelected] = useState<readonly string[]>([])
@@ -441,6 +442,7 @@ export const ActivityStudents = ({ students, id, activity }: ActivityStudentsPro
             user_id,
             evaluate,
             zhanweifu,
+
         };
     }, [])
     //将拿来的数据搞一下
@@ -484,6 +486,9 @@ export const ActivityStudents = ({ students, id, activity }: ActivityStudentsPro
                 setIsOperate(3)
             }
             const evaluate = '评价';
+            if (item.check_in && item.state === '报名成功') {
+                setCanEvaluate(true);
+            }
             return createFormData(
                 item.user.name,
                 item.user.uid,
@@ -496,6 +501,7 @@ export const ActivityStudents = ({ students, id, activity }: ActivityStudentsPro
                 item.user.id,
                 evaluate,
                 '',
+
             )
         })
     }, []);
@@ -578,7 +584,7 @@ export const ActivityStudents = ({ students, id, activity }: ActivityStudentsPro
                     }
                 })
                 if (flag) {
-                    setCanEvaluate(false);
+                    setCanEvaluates(false);
                 }
             }
         }
@@ -593,7 +599,7 @@ export const ActivityStudents = ({ students, id, activity }: ActivityStudentsPro
         <Box sx={{ width: '100%' }}>
             <Paper sx={{ width: '100%', mb: 2 }}>
                 {/* 工具栏 */}
-                <EnhancedTableToolbar students={filterStudents} canOperate={canOperate} canBack={canBack} canEvaluate={canEvaluate} />
+                <EnhancedTableToolbar students={filterStudents} canOperate={canOperate} canBack={canBack} canEvaluates={canEvaluates} />
                 {
                     visibleRows.length === 0 ?
                         <EmptyComponent message="暂无学生" />
@@ -758,7 +764,7 @@ export const ActivityStudents = ({ students, id, activity }: ActivityStudentsPro
                                                                 setUserId(row.user_id)
                                                                 setName(IdToName(row.user_id))
                                                             }}
-                                                            disabled={canEvaluate}
+                                                            disabled={!canEvaluate}
                                                         >评价</Button>
                                                     </TableCell>
                                                 </TableRow>
