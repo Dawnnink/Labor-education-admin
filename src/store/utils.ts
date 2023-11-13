@@ -8,7 +8,7 @@ export interface IUtilsStateProps {
     ) => (value: IUtilsStateProps[T]) => void
 }
 
-export const useUtilsState = create<IUtilsStateProps>((set, get) => ({
+export const useUtilsState = create<IUtilsStateProps>((set) => ({
     name: '',
     setState: (key) => (value) => {
         set(
