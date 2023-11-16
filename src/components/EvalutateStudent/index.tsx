@@ -4,7 +4,7 @@ import React, { useEffect, ChangeEvent, FC, useState } from 'react';
 
 import close from '~/assets/svg/Close.svg'
 import style from './index.module.css'
-import iII from '~/assets/微信图片_20230809145410.jpg'
+
 import { network } from '~/utils/network'
 import { useSendState } from '~/store/send';
 import { useUtilsState } from '~/store/utils';
@@ -95,11 +95,11 @@ const EvaluateStudent: FC<IEvalutate> = (props) => {
                                         {evaluate?.image1 &&
                                             (bigImg1 ?
                                                 <Stack className={style.bigImg}>
-                                                    <img src={evaluate?.image1} alt="" style={{ 'zIndex': '10004' }} />
+                                                    <img src={evaluate?.image1} alt="" />
                                                 </Stack>
                                                 :
                                                 <Stack className={evaluate?.image1}>
-                                                    <img src={iII} alt="" />
+                                                    <img src={evaluate?.image1} alt="" />
                                                 </Stack>
                                             )
                                         }
