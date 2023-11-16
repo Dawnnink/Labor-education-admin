@@ -448,7 +448,7 @@ export const ActivityStudents = ({ students, id, activity }: ActivityStudentsPro
     //将拿来的数据搞一下
     const rows = useMemo(() => {
         return students.map((item) => {
-
+            console.log('nishuodedui ', item)
             //如果正在审核中，则显示操作按钮，可以打回或者通过
             if (item.state === '报名审核中' && activity.need_audit === true) {
                 setIsOperate(1);
@@ -486,7 +486,7 @@ export const ActivityStudents = ({ students, id, activity }: ActivityStudentsPro
                 setIsOperate(3)
             }
             const evaluate = '评价';
-            if (item.check_in && item.state === '报名成功') {
+            if (item.check_in !== null && item.state === '报名成功') {
                 setCanEvaluate(true);
             }
             return createFormData(
@@ -532,7 +532,7 @@ export const ActivityStudents = ({ students, id, activity }: ActivityStudentsPro
     useEffect(() => {
         setCanOperate(true);
         setCanBack(true);
-        setCanEvaluate(true);
+        setCanEvaluates(true);
         setStudents(filterStudents);//将选中的学生庶几乎放入
         if (filterStudents.length > 0) {
             //如果选中的学生大于0

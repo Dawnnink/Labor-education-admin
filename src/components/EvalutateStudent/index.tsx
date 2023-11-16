@@ -1,10 +1,10 @@
-import { TextareaAutosize, Stack, Button, Typography, FormGroup, Radio, FormControlLabel, RadioGroup, Box } from '@mui/material';
+import { TextareaAutosize, Stack, Button, Typography, FormGroup, Radio, FormControlLabel, RadioGroup } from '@mui/material';
 
 import React, { useEffect, ChangeEvent, FC, useState } from 'react';
 
 import close from '~/assets/svg/Close.svg'
 import style from './index.module.css'
-
+import iII from '~/assets/微信图片_20230809145410.jpg'
 import { network } from '~/utils/network'
 import { useSendState } from '~/store/send';
 import { useUtilsState } from '~/store/utils';
@@ -23,6 +23,8 @@ const EvaluateStudent: FC<IEvalutate> = (props) => {
     }
     const [selectedValue, setSelectedValue] = useState<string>('');
     const [evaluateValue, setEvaluateValue] = useState<string>('');
+    const [bigImg1, setBigImg1] = useState(false);
+    const [bigImg2, setBigImg2] = useState(false);
     const [setLevel, setTeacherSay, sendEvaluates, setActivityId, setUserId] = useSendState(state => [
         state.setState('level'),
         state.setState('teacherSay'),
@@ -52,9 +54,7 @@ const EvaluateStudent: FC<IEvalutate> = (props) => {
     }, [selectedValue, evaluateValue])
     return (
         <Stack>
-            <Stack className={style.all} sx={{
-                overflow: 'auto',
-            }}
+            <Stack className={style.all}
                 onClick={(event: React.MouseEvent) => event.stopPropagation()}
             >
                 <Stack className={style.popContainer}>
@@ -76,22 +76,53 @@ const EvaluateStudent: FC<IEvalutate> = (props) => {
                         {
                             props.user_id !== 0
                             &&
-                            <Typography variant="h6">
-                                {name ? name : '学生'}的心得体会
-                            </Typography>
+                            <Stack>
+                                <Typography variant="h6">
+                                    {name ? name : '学生'}的心得体会
+                                </Typography>
+
+                                <Stack sx={{ fontSize: '16px' }} direction='column' >
+                                    <Stack sx={{
+                                        wordBreak: 'break-all'
+                                    }}>
+                                        {evaluate?.comment}
+                                    </Stack>
+                                    <Stack
+                                        onClick={() => {
+                                            setBigImg1(bigImg1 ? (false) : (true));
+                                        }}
+                                    >
+                                        {evaluate?.image1 &&
+                                            (bigImg1 ?
+                                                <Stack className={style.bigImg}>
+                                                    <img src={evaluate?.image1} alt="" style={{ 'zIndex': '10004' }} />
+                                                </Stack>
+                                                :
+                                                <Stack className={evaluate?.image1}>
+                                                    <img src={iII} alt="" />
+                                                </Stack>
+                                            )
+                                        }
+                                    </Stack>
+                                    <Stack
+                                        onClick={() => {
+                                            setBigImg2(bigImg2 ? false : true);
+                                        }}
+                                    >
+                                        {evaluate?.image2 &&
+                                            (bigImg2 ?
+                                                <img src={evaluate?.image2} className={style.bigImg} alt="" />
+                                                :
+                                                <img src={evaluate?.image2} className={style.image} alt="" />
+                                            )
+                                        }
+                                    </Stack>
+
+                                </Stack>
+                            </Stack>
+
                         }
 
-                        <Stack sx={{ fontSize: '16px' }}>
-                            <Box>
-                                {evaluate?.comment}
-                                {evaluate?.image1 &&
-                                    <img src={evaluate?.image1} className={style.image} alt="" />
-                                }
-                                {evaluate?.image2 &&
-                                    <img src={evaluate?.image2} className={style.image} alt="" />
-                                }
-                            </Box>
-                        </Stack>
 
                     </Stack>
                     <Stack className={style.teachersEvaluate} sx={{ ml: 2, mb: 2, mr: 2, mt: 1 }}>
@@ -119,7 +150,11 @@ const EvaluateStudent: FC<IEvalutate> = (props) => {
                                 className={style.textarea}
                             />
                         </Stack>
-                        <Stack direction='row' justifyContent='center'>
+                        <Stack direction='row' justifyContent='center' sx={{
+                            position: 'sticky',
+                            bottom: '16px',
+                            backgroundColor: 'white'
+                        }}>
                             <Button sx={{ width: '30%' }} variant='contained' onClick={async () => {
                                 if (sendEvaluates()) {
                                     props.handleClose();

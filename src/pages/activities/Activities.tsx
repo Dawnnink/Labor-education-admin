@@ -3,6 +3,7 @@ import { ActivityTable } from '~/components/ActivityTable'
 import { ErrorDisplay } from '~/components/ErrorDisplay'
 import { OverflowWrapper } from '~/components/OverflowWrapper'
 import { network } from '~/utils/network'
+
 const Activities = () => {
 
   const { data, error } = network.teacher.useActivities()

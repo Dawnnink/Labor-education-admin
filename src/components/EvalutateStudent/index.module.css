@@ -1,8 +1,6 @@
 .all{
-    width:17vw;
-    max-height:53.7vh;
-    min-height:40vh;
-    z-index: 100;
+    max-width:300px;
+    min-height:400px;
     position:fixed;
     top:50%;
     left:50%;
@@ -11,6 +9,21 @@
     border-radius: 12px;
     /* box-shadow: 1px 1px 5px 1px; */
     background-color: white;
+    scrollbar-width:none;
+}
+
+.bigImg{
+    width:90vw;
+    height:90vh;
+    position:absolute;
+    top:50%;
+    left:50%;
+    transform: translate(-50%, -50%);
+    z-index: 10002;
+}
+
+:global ::-webkit-scrollbar{
+    display: none;
 }
 
 .popContainer{
