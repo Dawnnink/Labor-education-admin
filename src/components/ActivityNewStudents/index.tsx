@@ -153,7 +153,8 @@ interface EnhancedTableProps {
     onRequestSort: (event: React.MouseEvent<unknown>, property: keyof FormData) => void;//当用户请求进行排序就用这个事件处理函数
     order: Order;//表示排序顺序‘asc’ 和上面那个，自己去看，我定义了的
     orderBy: string;//表示当前排序的字段，类型为字符串
-    onSelectAllClick: (event: React.ChangeEvent<HTMLInputElement>) => void;//表示data对象的键之一
+    // onSelectAllClick: (event: React.ChangeEvent<HTMLInputElement>) => void;//表示data对象的键之一
+    onSelectAllClick: () => void;//表示data对象的键之一
     rowCount: number;//表示数据行数
     numSelected: number;//表示选中的项目数量
 }
@@ -171,15 +172,20 @@ function EnhancedTableHead(props: EnhancedTableProps) {
         <TableHead>
             <TableRow>
                 <TableCell padding='checkbox'>
-                    <Checkbox
-                        color='primary'
-                        indeterminate={numSelected > 0 && numSelected < rowCount}
-                        checked={rowCount > 0 && numSelected === rowCount}
-                        onChange={onSelectAllClick}
-                        inputProps={{
-                            'aria-label': 'select all'
-                        }}
-                    />
+                    <Stack
+                        onClick={onSelectAllClick}
+                    >
+                        <Checkbox
+                            color='primary'
+                            indeterminate={numSelected > 0 && numSelected < rowCount}
+                            checked={rowCount > 0 && numSelected === rowCount}
+                            // onChange={onSelectAllClick}
+                            inputProps={{
+                                'aria-label': 'select all'
+                            }}
+                        />
+                    </Stack>
+
                 </TableCell>
                 {
                     headCells.map((headCell) => (
@@ -367,14 +373,33 @@ export const ActivityStudents = ({ students, id, activity }: ActivityStudentsPro
     }
 
     const handleSelectAllClick = (
-        event: React.ChangeEvent<HTMLInputElement>,
+        // event: React.ChangeEvent<HTMLInputElement>,
     ) => {
-        if (event.target.checked) {
-            const newSelected = rows.map((n) => n.name)
+        console.log('sfsafsfsfs')
+        let flag = false;
+
+        const newSelected = rows.map((n) => n.name)
+        if (selected.length === 0 && rows.length !== 0) {
+            flag = true;
+        } else {
+            selected.map(item => {
+                if (!newSelected.includes(item)) {
+                    flag = true;
+                    //有不包含的就设置
+                }
+            })
+        }
+
+        console.log('wwww', selected)
+
+        console.log("这里输出", newSelected)
+        console.log('flag', flag)
+        if (flag) {
             setSelected(newSelected);
             return;
+        } else {
+            setSelected([]);
         }
-        setSelected([]);
     }
     const handleClick = (
         event: React.MouseEvent<unknown>,
@@ -448,7 +473,6 @@ export const ActivityStudents = ({ students, id, activity }: ActivityStudentsPro
     //将拿来的数据搞一下
     const rows = useMemo(() => {
         return students.map((item) => {
-            console.log('nishuodedui ', item)
             //如果正在审核中，则显示操作按钮，可以打回或者通过
             if (item.state === '报名审核中' && activity.need_audit === true) {
                 setIsOperate(1);
@@ -758,7 +782,6 @@ export const ActivityStudents = ({ students, id, activity }: ActivityStudentsPro
                                                         <Button variant='text'
                                                             onClick={(event: React.MouseEvent) => {
                                                                 event.stopPropagation();
-                                                                console.log(openEvaluate)
                                                                 setOpenEvaluate(true);
                                                                 // console.log('这里的id', row.user_id)
                                                                 setUserId(row.user_id)

@@ -40,7 +40,7 @@ const Menu = (props: MenuProps) => {
         setOpenPopper(false)
         if ((event.target as HTMLElement).textContent) {
             if (
-                ['全部', '已签退', '待签退', '待审核'].includes(((event.target as HTMLElement).textContent) as string)
+                ['全部', '已签退', '待签退', '待审核', '待签到'].includes(((event.target as HTMLElement).textContent) as string)
             ) {
                 handleKind((event.target as HTMLElement).textContent as string);
             }
@@ -138,6 +138,7 @@ const Menu = (props: MenuProps) => {
                                     <MenuItem onClick={handleClose}>待审核</MenuItem>
                                     <MenuItem onClick={handleClose}>待签退</MenuItem>
                                     <MenuItem onClick={handleClose}>已签退</MenuItem>
+                                    <MenuItem onClick={handleClose}>待签到</MenuItem>
                                 </MenuList>
                             </ClickAwayListener>
                         </Paper>

@@ -17,6 +17,7 @@ const DetailsWithParams = ({ activityId }: { activityId: number }) => {
 
   const { data: activity, error } = network.teacher.useActivity(activityId)
   const { data: students } = network.teacher.useActivityStudents(activityId)
+  // console.log(activity)
   const [getExcel] = useSendState(state => [
     state.getExcel
   ])
@@ -48,6 +49,16 @@ const DetailsWithParams = ({ activityId }: { activityId: number }) => {
         if (item.state === '报名成功' && item.check_out) {
           return true;
         } else {
+          return false;
+        }
+      })
+    }
+    if (now === '待签到') {
+      return students?.filter((item) => {
+        if (item.check_in === null && item.state === '报名成功') {
+          return true;
+        }
+        else {
           return false;
         }
       })
@@ -84,6 +95,7 @@ const DetailsWithParams = ({ activityId }: { activityId: number }) => {
         m: '0 auto'
       }}
     >
+
       <Box>
         <Box
           sx={{
