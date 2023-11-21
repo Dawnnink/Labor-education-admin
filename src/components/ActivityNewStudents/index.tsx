@@ -369,13 +369,15 @@ export const ActivityStudents = ({ students, id, activity }: ActivityStudentsPro
         const isAsc = orderBy === property && order === 'asc';
         setOrder(isAsc ? 'desc' : 'asc')
         setOrderBy(property)
-        console.log(event)
+        if (!event) {
+            console.log(event)
+        }
     }
 
     const handleSelectAllClick = (
         // event: React.ChangeEvent<HTMLInputElement>,
     ) => {
-        console.log('sfsafsfsfs')
+        // console.log('sfsafsfsfs')
         let flag = false;
 
         const newSelected = rows.map((n) => n.name)
@@ -390,10 +392,7 @@ export const ActivityStudents = ({ students, id, activity }: ActivityStudentsPro
             })
         }
 
-        console.log('wwww', selected)
 
-        console.log("这里输出", newSelected)
-        console.log('flag', flag)
         if (flag) {
             setSelected(newSelected);
             return;
@@ -421,7 +420,9 @@ export const ActivityStudents = ({ students, id, activity }: ActivityStudentsPro
             )
         }
         setSelected(newSelected);
-        console.log(event)
+        if (!event) {
+            console.log(event)
+        }
     }
 
     const handleChangePage = (
@@ -429,7 +430,9 @@ export const ActivityStudents = ({ students, id, activity }: ActivityStudentsPro
         newPage: number
     ) => {
         setPage(newPage);
-        console.log(event)
+        if (!event) {
+            console.log(event)
+        }
     }
     const handleChangeRowsPerPage = (
         event: React.ChangeEvent<HTMLInputElement>
@@ -613,7 +616,6 @@ export const ActivityStudents = ({ students, id, activity }: ActivityStudentsPro
             }
         }
     }, [filterStudents])
-    console.log(filterStudents)
 
     useEffect(() => {
         //在组件最初渲染的时候将activity_id加入状态存储库
