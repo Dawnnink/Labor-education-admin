@@ -10,7 +10,6 @@ import {
 } from '@mui/joy'
 import { RouterProvider } from 'react-router-dom'
 import { router } from './router'
-
 const materialTheme = materialExtendTheme({
   // Disable ripple effect
   components: {

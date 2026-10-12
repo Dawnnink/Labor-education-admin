@@ -40,7 +40,7 @@ const EvaluateStudent: FC<IEvalutate> = (props) => {
     }
     const handleInput = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
         setEvaluateValue(event.target.value);
-        console.log(evaluateValue)
+        // console.log(evaluateValue)
     }
     //副作用函数，在加载的时候自动刷新获取activity_id和user_id
     useEffect(() => {

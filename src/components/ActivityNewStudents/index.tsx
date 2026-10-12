@@ -691,7 +691,9 @@ export const ActivityStudents = ({ students, id, activity }: ActivityStudentsPro
                                                             >
                                                                 <Space>
                                                                     <Btn
-
+                                                                        sx={{
+                                                                            whiteSpace: 'nowrap'
+                                                                        }}
                                                                         variant='outlined'
                                                                         startIcon={<CheckBoxIcon />}
                                                                         color='success'
@@ -704,6 +706,9 @@ export const ActivityStudents = ({ students, id, activity }: ActivityStudentsPro
                                                                         通过
                                                                     </Btn>
                                                                     <Btn
+                                                                        sx={{
+                                                                            whiteSpace: 'nowrap'
+                                                                        }}
                                                                         variant='outlined'
                                                                         startIcon={<CancelIcon />}
                                                                         color='error'
@@ -729,6 +734,9 @@ export const ActivityStudents = ({ students, id, activity }: ActivityStudentsPro
                                                                         }}
                                                                     >
                                                                         <Btn
+                                                                            sx={{
+                                                                                whiteSpace: 'nowrap'
+                                                                            }}
                                                                             variant='outlined'
                                                                             startIcon={<CheckBoxIcon />}
                                                                             color='success'

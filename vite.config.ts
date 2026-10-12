@@ -16,10 +16,6 @@ export default defineConfig({
       localsConvention: 'camelCaseOnly',
       scopeBehaviour: "local",
     },
-    postcss: {
-      plugins: [
-        PostcssPresetEnv()
-      ]
-    }
+
   },
 })
